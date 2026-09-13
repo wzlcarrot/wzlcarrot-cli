@@ -15,9 +15,9 @@ from typing import Any
 
 import httpx
 
-from .config import config_dir
+from .config import DIST_NAME, config_dir
 
-PYPI_JSON_URL = "https://pypi.org/pypi/zhihu-cli/json"
+PYPI_JSON_URL = f"https://pypi.org/pypi/{DIST_NAME}/json"
 CHECK_INTERVAL = 24 * 3600.0
 NO_CHECK_ENV = "ZHIHU_CLI_NO_UPDATE_CHECK"
 
@@ -29,7 +29,7 @@ def _cache_path() -> Path:
 def _read_cache() -> dict[str, Any]:
     try:
         data = json.loads(_cache_path().read_text(encoding="utf-8"))
-        if isinstance(data, dict):
+        if isinstance(data, dict) and data.get("name") == DIST_NAME:
             return data
     except (OSError, ValueError):
         pass
@@ -41,7 +41,8 @@ def _write_cache(latest: str, checked_at: float) -> None:
     try:
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(
-            json.dumps({"latest": latest, "checked_at": checked_at}), encoding="utf-8"
+            json.dumps({"name": DIST_NAME, "latest": latest, "checked_at": checked_at}),
+            encoding="utf-8",
         )
     except OSError:
         pass

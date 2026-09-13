@@ -504,7 +504,7 @@ wheels = [
 ]
 
 [[package]]
-name = "zhihu-cli"
+name = "wzlcarrot-zhihu-cli"
 version = "0.18.0"
 source = { editable = "." }
 dependencies = [

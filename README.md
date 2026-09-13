@@ -32,6 +32,15 @@
 
 ## 安装
 
+从 PyPI（发行包名 `wzlcarrot-zhihu-cli`，命令仍是 `zhihu`）：
+
+```bash
+uv tool install wzlcarrot-zhihu-cli
+# 或 pip install wzlcarrot-zhihu-cli
+```
+
+从源码：
+
 ```bash
 cd ~/zhihu-cli
 uv sync                 # 或： pip install -e .

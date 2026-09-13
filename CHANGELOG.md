@@ -7,6 +7,10 @@
 - **版本检查**：每天首次使用时查询一次 PyPI 公开版本信息（仅此查询，无遥测），发现新版在命令前提示一行；`ZHIHU_CLI_NO_UPDATE_CHECK=1` 可关闭。
 - **`zhihu upgrade` 命令**：自动识别安装方式（uv tool / pipx / pip）并执行对应升级；源码 editable 安装时提示 `git pull && uv sync`。
 - **发布工作流**：`.github/workflows/release.yml` 在 `v*` tag 上自动构建并发布到 PyPI（Trusted Publishing，GitHub 侧不存 token）。
+### Fixed
+- 更新检查此前查询的是 PyPI 上**同名但非本项目**的 `zhihu-cli`，导致误报新版本；现改为按真实发行名查询，并在缓存中记录包名（旧缓存自动失效）。
+### Changed
+- PyPI 发行包名由 `zhihu-cli` 改为 **`wzlcarrot-zhihu-cli`**（`zhihu-cli` 已被他人占用）；命令行仍为 `zhihu`，使用方式不变。
 
 ## [0.18.0] - 2026-09-13
 ### Added

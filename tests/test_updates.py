@@ -77,8 +77,8 @@ class _Proc:
 
 
 def test_detect_upgrade_command_prefers_uv(monkeypatch):
-    monkeypatch.setattr(upgrade, "_run", lambda cmd, timeout=15.0: _Proc("zhihu-cli v0.17.3"))
-    assert upgrade.detect_upgrade_command() == ["uv", "tool", "upgrade", "zhihu-cli"]
+    monkeypatch.setattr(upgrade, "_run", lambda cmd, timeout=15.0: _Proc(f"{upgrade.DIST_NAME} v0.17.3"))
+    assert upgrade.detect_upgrade_command() == ["uv", "tool", "upgrade", upgrade.DIST_NAME]
 
 
 def test_detect_upgrade_command_falls_back_to_pipx(monkeypatch):
@@ -86,11 +86,11 @@ def test_detect_upgrade_command_falls_back_to_pipx(monkeypatch):
         if cmd[0] == "uv":
             return _Proc("warning: no tools installed", returncode=0)
         if cmd[0] == "pipx":
-            return _Proc("tools include zhihu-cli 0.17.3")
+            return _Proc(f"tools include {upgrade.DIST_NAME} 0.17.3")
         return None
 
     monkeypatch.setattr(upgrade, "_run", fake_run)
-    assert upgrade.detect_upgrade_command() == ["pipx", "upgrade", "zhihu-cli"]
+    assert upgrade.detect_upgrade_command() == ["pipx", "upgrade", upgrade.DIST_NAME]
 
 
 def test_upgrade_rejects_editable_install(monkeypatch):
@@ -101,7 +101,7 @@ def test_upgrade_rejects_editable_install(monkeypatch):
 
 def test_upgrade_runs_detected_command(monkeypatch):
     monkeypatch.setattr(upgrade, "is_editable_install", lambda: False)
-    monkeypatch.setattr(upgrade, "detect_upgrade_command", lambda: ["uv", "tool", "upgrade", "zhihu-cli"])
+    monkeypatch.setattr(upgrade, "detect_upgrade_command", lambda: ["uv", "tool", "upgrade", upgrade.DIST_NAME])
     ran = {}
 
     def fake_run(cmd, **kwargs):
@@ -110,4 +110,4 @@ def test_upgrade_runs_detected_command(monkeypatch):
 
     monkeypatch.setattr(upgrade.subprocess, "run", fake_run)
     assert upgrade.upgrade(assume_yes=True) == 0
-    assert ran["cmd"] == ["uv", "tool", "upgrade", "zhihu-cli"]
+    assert ran["cmd"] == ["uv", "tool", "upgrade", upgrade.DIST_NAME]
