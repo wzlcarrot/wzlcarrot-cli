@@ -78,10 +78,11 @@ def _word_art(word: str, start: str = GREEN, end: str = ACCENT) -> str:
 
 def _welcome_text(platform: str = "") -> str:
     """Pixel wordmark + hints, in the spirit of Claude Code's start screen."""
-    tool = f"  [{ACCENT}]· {platform}[/]" if platform else ""
+    tool = f"[{ACCENT}]· {platform}[/]\n" if platform else ""
     return (
         f"{_word_art('WZLCARROT')}\n"
-        f"[bold {MUTED}]多平台 AI CLI[/]{tool}\n"
+        f"[bold {MUTED}]多平台 AI CLI[/]\n"
+        f"{tool}"
         f"[{MUTED}]用中文对话，自动调用平台接口取真实数据[/]\n\n"
         f"[{MUTED}]试着说：[/]\n"
         f"[{MUTED}]  › 看看今天热榜前5[/]\n"
