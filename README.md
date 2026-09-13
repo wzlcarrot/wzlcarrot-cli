@@ -374,8 +374,8 @@ api.hook(POST_EXECUTE, annotate, matcher="hot")
 `skill/SKILL.md` 是一份供**其他 Agent**（opencode / Claude Code / OpenClaw 等）读取的技能说明，让它们知道如何调用 `zhihu` 命令。装到 opencode：
 
 ```bash
-mkdir -p ~/.opencode/skill/wzlcarrot-cli
-cp skill/SKILL.md ~/.opencode/skill/wzlcarrot-cli/SKILL.md
+mkdir -p ~/.opencode/skill/zhihu-cli
+cp skill/SKILL.md ~/.opencode/skill/zhihu-cli/SKILL.md
 ```
 
 之后 opencode 会把它作为可用技能加载，Agent 即可代你执行知乎读写。

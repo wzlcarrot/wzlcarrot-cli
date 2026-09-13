@@ -11,6 +11,7 @@
 ### Fixed
 - 更新检查此前查询的是 PyPI 上**同名但非本项目**的 `zhihu-cli`，导致误报新版本；现改为按真实发行名查询，并在缓存中记录包名（旧缓存自动失效）。
 ### Changed
+- 命名约定：知乎专属的命令 / 文件 / 目录一律沿用 `zhihu`（如 `zhihu` 命令、`platforms/zhihu_tools.py`、skill `zhihu-cli`）；只有**通用（App 级）**的东西才用 `wzlcarrot`（发行包名、配置文件目录、环境变量、通用命令、记忆文件）。
 - 应用配置目录由 `~/.config/zhihu-cli/` 改为 **`~/.config/wzlcarrot-cli/`**；环境变量前缀 `ZHIHU_CLI_*` 改为 **`WZLCARROT_CLI_*`**（旧名仍兼容）；项目记忆文件 `ZHIHU.md` 改为 **`WZLCARROT.md`**（旧名仍兼容）。
 - PyPI 发行包名由 `zhihu-cli` 改为 **`wzlcarrot-cli`**（`zhihu-cli` 已被他人占用）；命令行仍为 `zhihu`，使用方式不变。
 

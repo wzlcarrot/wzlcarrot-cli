@@ -1,9 +1,9 @@
 ---
-name: wzlcarrot-cli
+name: zhihu-cli
 description: 知乎 CLI 技能。用户想在知乎搜索、看热榜/推荐/话题、读问题/回答/文章/评论、查用户/关注/粉丝/收藏/通知、导出 Markdown、点赞/关注/收藏/评论/发布/删除，或用自然语言对话操作知乎时使用。通过执行本机的 `zhihu` 命令完成，登录态仅存本地，访问频率已强制限制为低频。
 ---
 
-# wzlcarrot-cli 技能
+# zhihu-cli 技能
 
 ## 前提
 
