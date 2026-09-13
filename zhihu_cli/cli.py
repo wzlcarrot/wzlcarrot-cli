@@ -95,7 +95,7 @@ app.command("version")(show_version)
 def upgrade(
     yes: bool = typer.Option(False, "--yes", "-y", help="跳过确认"),
 ) -> None:
-    """升级 wzlcarrot-zhihu-cli（自动识别 uv tool / pipx / pip 安装方式）。"""
+    """升级 wzlcarrot-cli（自动识别 uv tool / pipx / pip 安装方式）。"""
     from .upgrade import upgrade as run_upgrade
 
     code = run_upgrade(assume_yes=yes)

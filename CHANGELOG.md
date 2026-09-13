@@ -10,7 +10,7 @@
 ### Fixed
 - 更新检查此前查询的是 PyPI 上**同名但非本项目**的 `zhihu-cli`，导致误报新版本；现改为按真实发行名查询，并在缓存中记录包名（旧缓存自动失效）。
 ### Changed
-- PyPI 发行包名由 `zhihu-cli` 改为 **`wzlcarrot-zhihu-cli`**（`zhihu-cli` 已被他人占用）；命令行仍为 `zhihu`，使用方式不变。
+- PyPI 发行包名由 `zhihu-cli` 改为 **`wzlcarrot-cli`**（`zhihu-cli` 已被他人占用）；命令行仍为 `zhihu`，使用方式不变。
 
 ## [0.18.0] - 2026-09-13
 ### Added

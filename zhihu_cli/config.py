@@ -8,7 +8,7 @@ from pathlib import Path
 
 APP_NAME = "zhihu-cli"
 # Distribution (PyPI) name; the ``zhihu-cli`` name is taken by another project.
-DIST_NAME = "wzlcarrot-zhihu-cli"
+DIST_NAME = "wzlcarrot-cli"
 BASE_URL = "https://www.zhihu.com"
 API_BASE = "https://www.zhihu.com"
 
