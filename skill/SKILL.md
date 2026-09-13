@@ -15,6 +15,27 @@ description: 知乎 CLI 技能。用户想在知乎搜索、看热榜/推荐/话
 - **登录方式**：`zhihu login` —— 自动打开一个 Edge 窗口登录知乎并抓取 Cookie（独立配置，不影响你日常的 Edge；登录一次后秒登）。
 - **安全**：Cookie 仅存本地，**不得上传、转发或写入对话/日志**。
 
+## MCP（优先：Agent 直接调用，无需 shell）
+
+本工具提供 **MCP (stdio) 服务**，把平台能力暴露为标准工具（当前 26 个 `zhihu_*`）。若所在 Agent 支持 MCP，优先用 MCP 而不是执行命令：
+
+- 只读：`wzlcarrot mcp`
+- 含写操作（赞同/关注/评论/发布…）：`wzlcarrot mcp --allow-writes`
+
+Claude Code 配置：
+
+```json
+{ "mcpServers": { "wzlcarrot": { "command": "wzlcarrot", "args": ["mcp"] } } }
+```
+
+opencode `opencode.json`：
+
+```json
+{ "mcp": { "wzlcarrot": { "type": "local", "command": ["wzlcarrot", "mcp"] } } }
+```
+
+工具名形如 `zhihu_hot` / `zhihu_search` / `zhihu_answer` / `zhihu_vote`。登录仍走 `zhihu login`；未登录时 MCP 调用会返回明确提示。
+
 ## Agent 规则（务必遵守）
 
 1. **低频访问**：本工具默认已限速（读 1.5–3.5s、写 ≥8s、跨进程最小间隔 3s）。**不要**用脚本批量调用；连续多条命令也会被强制间隔。若需更慢，把全局参数放在子命令之前：
