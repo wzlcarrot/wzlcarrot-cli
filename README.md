@@ -39,6 +39,14 @@ uv tool install wzlcarrot-cli
 # 或 pip install wzlcarrot-cli
 ```
 
+一键安装脚本（自动选 uv / pipx / pip）：
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/your-org/wzlcarrot-cli/main/scripts/install.sh | bash
+```
+
+或下载**单文件二进制**（无需 Python），见 `packaging/` 与 `.github/workflows/binaries.yml`：
+
 从源码：
 
 ```bash

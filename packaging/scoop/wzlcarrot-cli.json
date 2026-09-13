@@ -1,0 +1,24 @@
+{
+  "version": "0.18.0",
+  "description": "Multi-platform CLI (Zhihu built in): browse, publish, export, AI agent",
+  "homepage": "https://github.com/your-org/wzlcarrot-cli",
+  "license": "MIT",
+  "architecture": {
+    "64bit": {
+      "url": "https://github.com/your-org/wzlcarrot-cli/releases/download/v0.18.0/wzlcarrot-windows.zip",
+      "hash": "REPLACE_WITH_SHA256"
+    }
+  },
+  "bin": ["wzlcarrot.exe", "zhihu.exe"],
+  "checkver": {
+    "url": "https://pypi.org/pypi/wzlcarrot-cli/json",
+    "jsonpath": "$.info.version"
+  },
+  "autoupdate": {
+    "architecture": {
+      "64bit": {
+        "url": "https://github.com/your-org/wzlcarrot-cli/releases/download/v$version/wzlcarrot-windows.zip"
+      }
+    }
+  }
+}
