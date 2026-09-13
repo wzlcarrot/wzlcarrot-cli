@@ -388,3 +388,12 @@ UPDATE_SNAPSHOTS=1 uv run pytest tests/test_snapshots.py   # 刷新提示词/工
 `tests/snapshots/` 用 keyless 快照固定**模型可见的契约**（基础系统提示词、内置工具 schema），改坏立刻红。
 
 签名算法位于 `wzlcarrot_cli/signing.py`，移植自 `zly2006/zhihu-plus-plus`。若知乎更新反爬导致 403/签名失败，通常只需更新该模块。
+
+## 许可与法律
+
+- 源码许可：[LICENSE](LICENSE)（MIT）
+- 使用条款：[EULA.md](EULA.md)
+- 隐私政策：[PRIVACY.md](PRIVACY.md)（**数据全在本地、零遥测**）
+- 合规声明：[COMPLIANCE.md](COMPLIANCE.md)（PIPL / GDPR）
+
+> 本软件使用第三方平台非官方接口，仅限个人对自有账号数据的浏览与归档；请勿大规模抓取或用于侵权用途。
