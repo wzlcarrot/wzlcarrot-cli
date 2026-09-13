@@ -31,5 +31,7 @@ def build_platform() -> Platform:
         name="weibo",
         title="微博（规划中）",
         builder=_weibo_app,
+        accent="#e6162d",
+        tagline="微博平台尚在规划中，暂未实现",
         source="planned",
     )

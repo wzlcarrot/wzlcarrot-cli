@@ -31,5 +31,7 @@ def build_platform() -> Platform:
         name="xiaohongshu",
         title="小红书（规划中）",
         builder=_xiaohongshu_app,
+        accent="#ff2442",
+        tagline="小红书平台尚在规划中，暂未实现",
         source="planned",
     )

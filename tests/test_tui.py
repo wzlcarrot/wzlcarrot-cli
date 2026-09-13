@@ -41,9 +41,76 @@ def test_welcome_collapses_after_first_message():
     asyncio.run(main())
 
 
+def test_platform_picker_lists_registered_platforms():
+    from textual.widgets import OptionList
+
+    from wzlcarrot_cli import cli  # noqa: F401 - populates the platform registry
+
+    async def main():
+        app = ChatTUI(FakeAgent(), platform="知乎", platform_name="zhihu")
+        async with app.run_test(size=(100, 30)) as pilot:
+            await pilot.pause(0.1)
+            app._open_platform()
+            await pilot.pause(0.1)
+            ids = {option.id for option in app.screen.query_one("#platform-list", OptionList).options}
+            assert {"zhihu", "weibo", "xiaohongshu"} <= ids
+
+    asyncio.run(main())
+
+
+def test_platform_switch_updates_theme_and_agent():
+    made = {}
+
+    def make(name):
+        agent = FakeAgent()
+        made[name] = agent
+        return agent, "微博", "#e6162d", "微博 tagline", "me"
+
+    async def main():
+        app = ChatTUI(
+            FakeAgent(),
+            subtitle="m",
+            platform="知乎",
+            platform_name="zhihu",
+            switch=make,
+        )
+        async with app.run_test(size=(100, 30)) as pilot:
+            await pilot.pause(0.1)
+            app._apply_platform("weibo")
+            await pilot.pause(0.1)
+            assert app._platform == "微博"
+            assert app._accent == "#e6162d"
+            assert app._agent is made["weibo"]
+            assert "微博" in app.title
+
+    asyncio.run(main())
+
+
+def test_platform_switch_ignores_same_platform():
+    calls = []
+
+    def make(name):
+        calls.append(name)
+        return FakeAgent(), "微博", "#e6162d", "", ""
+
+    async def main():
+        app = ChatTUI(FakeAgent(), platform="知乎", platform_name="zhihu", switch=make)
+        async with app.run_test(size=(100, 30)) as pilot:
+            await pilot.pause(0.1)
+            app._apply_platform("zhihu")
+            assert calls == []
+
+    asyncio.run(main())
+
+
 class FakeAgent:
     def __init__(self) -> None:
         self._confirm_fn = None
+        self.messages = [{"role": "system", "content": "sys"}]
+        self.session_id = "s1"
+        self.todos = []
+        self.tool_calls = 0
+        self.compactions = 0
 
     def stats(self) -> dict:
         return {

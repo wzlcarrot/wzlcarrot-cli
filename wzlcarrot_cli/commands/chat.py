@@ -28,14 +28,14 @@ from ..composer import (
     markdown_to_html,
     split_title,
 )
-from ..exceptions import ZhihuError
+from ..exceptions import NotLoggedInError, ZhihuError
 from ..hooks import HookRegistry, load_hooks
 from ..llm import LLMClient, resolve_llm_config
 from ..output import console, error_console
 from ..plugins import ToolDef, load_plugins
 from ..prompt import build_prompt_sections, load_memory
 from ..tools import Tool
-from ._common import require_client
+from ._common import get_settings, require_client
 
 MAX_TEXT = 3000
 DEFAULT_MAX_INLINE_CHARS = 6000
@@ -464,15 +464,50 @@ def _platform_tools_for(client) -> list[Tool]:
     return []
 
 
-def _active_platform_label() -> str:
-    """Short human label for the active platform, e.g. ``知乎``."""
-    from ..platforms import active
-
-    platform = active()
+def _platform_label(platform) -> str:
+    """Short human label for a platform, e.g. ``知乎`` (empty if none)."""
     if platform is None:
         return ""
     title = platform.title or platform.name
     return title.split("：", 1)[0].split(":", 1)[0].strip()
+
+
+def _fetch_user(platform, client) -> str:
+    """Best-effort display name for the logged-in user (empty on failure)."""
+    try:
+        me = getattr(client, "me", None)
+        data = me() if callable(me) else client.get("/api/v4/me")
+    except Exception:  # noqa: BLE001 - display-only
+        return ""
+    if isinstance(data, dict):
+        return str(data.get("name") or data.get("nickname") or "")
+    return ""
+
+
+def _build_agent_for(platform, llm, plugins, hooks, memory, assume_yes, settings):
+    """Build a ChatAgent (client + platform tools + prompt) for one platform."""
+    credentials = platform.credentials_factory() if platform.credentials_factory else None
+    client = platform.client_factory(credentials, settings)
+    tools = list(platform.build_tools(client)) if platform.build_tools else []
+    sections = list(plugins.prompts)
+    if platform.prompt_section is not None:
+        try:
+            section = (platform.prompt_section() or "").strip()
+        except Exception:  # noqa: BLE001 - a bad section can't break chat
+            section = ""
+        if section:
+            sections.append((50, section))
+    agent = ChatAgent(
+        client,
+        llm,
+        assume_yes=assume_yes,
+        plugin_tools=plugins.tools,
+        tools=tools,
+        memory=memory,
+        prompt_sections=sections,
+        hooks=hooks,
+    )
+    return agent, client
 
 
 def _make_agent(ctx: typer.Context, api_key, base_url, model, assume_yes: bool) -> ChatAgent:
@@ -610,37 +645,67 @@ def run_tui(
 ) -> None:
     """Launch the full-screen TUI (also the default when running bare `wzlcarrot`)."""
     try:
-        from ..tui import ChatTUI
+        from ..tui import ACCENT, ChatTUI
     except ImportError as exc:
         error_console.print("需要 textual：uv pip install textual")
         raise typer.Exit(code=1) from exc
 
+    from ..platforms import active, discover, get
+
     config = resolve_llm_config(api_key, base_url, model)
-    client = require_client(ctx)
-    try:
-        user = client.get("/api/v4/me").get("name", "")
-    except ZhihuError:
-        user = ""
+    settings = get_settings(ctx)
     llm = LLMClient(config)
     plugins = load_plugins()
-    agent = ChatAgent(
-        client,
-        llm,
-        assume_yes=yes,
-        plugin_tools=plugins.tools,
-        tools=_platform_tools_for(client),
-        memory=load_memory(),
-        prompt_sections=plugins.prompts,
-        hooks=load_hooks(plugins.hooks),
-    )
+    hooks = load_hooks(plugins.hooks)
+    memory = load_memory()
+
+    platform = active()
+    if platform is None or not platform.implemented():
+        error_console.print("[bold red]没有可用平台[/bold red]（先运行 wzlcarrot platforms 查看）")
+        raise typer.Exit(code=2)
+    try:
+        agent, client = _build_agent_for(platform, llm, plugins, hooks, memory, yes, settings)
+    except NotLoggedInError as exc:
+        error_console.print(f"[bold red]未登录[/bold red] {exc}")
+        raise typer.Exit(code=2) from exc
+
+    def switch(name: str):
+        """Rebuild the agent for another platform (used by the /platform command)."""
+        target = get(name)
+        if target is None:
+            raise ZhihuError(f"未知平台：{name}")
+        if not target.implemented():
+            raise ZhihuError(f"{target.title} 尚未实现")
+        new_agent, new_client = _build_agent_for(
+            target, llm, plugins, hooks, memory, yes, settings
+        )
+        return (
+            new_agent,
+            _platform_label(target),
+            target.accent or ACCENT,
+            target.tagline,
+            _fetch_user(target, new_client),
+        )
+
     _restore_agent(agent, resume, session_id)
     app = ChatTUI(
-        agent, subtitle=config.model, user=user, platform=_active_platform_label()
+        agent,
+        subtitle=config.model,
+        user=_fetch_user(platform, client),
+        platform=_platform_label(platform),
+        platform_name=platform.name,
+        accent=platform.accent or ACCENT,
+        tagline=platform.tagline,
+        switch=switch,
+        platforms=discover(),
     )
     try:
         app.run()
     finally:
-        agent.client.close()
+        # The user may have switched platforms, so close whichever agent is live.
+        for candidate in {agent, app._agent}:
+            with contextlib.suppress(Exception):
+                candidate.client.close()
         agent.llm.close()
 
 

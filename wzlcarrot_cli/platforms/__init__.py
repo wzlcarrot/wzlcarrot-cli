@@ -35,7 +35,13 @@ class Platform:
     build_tools: Callable[[Any], list[Any]] | None = None
     agent_tools: Callable[[], list[Any]] | None = None
     prompt_section: Callable[[], str] | None = None
+    accent: str = ""
+    tagline: str = ""
     source: str = field(default="builtin")
+
+    def implemented(self) -> bool:
+        """True once the platform has a real client and tool set."""
+        return self.client_factory is not None and self.build_tools is not None
 
 
 _REGISTRY: dict[str, Platform] = {}

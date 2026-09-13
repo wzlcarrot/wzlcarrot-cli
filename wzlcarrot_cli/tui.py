@@ -23,6 +23,7 @@ from .providers import PROVIDERS, get_provider
 
 COMMANDS: list[tuple[str, str]] = [
     ("/connect", "配置模型供应商与 API Key"),
+    ("/platform", "切换平台（知乎 / 微博 / 小红书…）"),
     ("/model", "查看当前模型"),
     ("/stats", "本次会话 token 用量与统计"),
     ("/todos", "查看任务清单"),
@@ -76,20 +77,21 @@ def _word_art(word: str, start: str = GREEN, end: str = ACCENT) -> str:
     return "\n".join(lines)
 
 
-def _compact_welcome(platform: str = "") -> str:
+def _compact_welcome(platform: str = "", accent: str = ACCENT) -> str:
     """One-line header used on narrow terminals and after the first message."""
     tool = f" [{MUTED}]· {platform}[/]" if platform else ""
-    return f"[bold {ACCENT}]WZLCARROT[/]{tool}  [{MUTED}]多平台 AI CLI · 输入 / 查看命令[/]"
+    return f"[bold {accent}]WZLCARROT[/]{tool}  [{MUTED}]多平台 AI CLI · 输入 / 查看命令[/]"
 
 
-def _welcome_text(platform: str = "") -> str:
+def _welcome_text(platform: str = "", accent: str = ACCENT, tagline: str = "") -> str:
     """Pixel wordmark + hints, in the spirit of Claude Code's start screen."""
-    tool = f"[{ACCENT}]· {platform}[/]\n" if platform else ""
+    tool = f"[{accent}]· {platform}[/]\n" if platform else ""
+    text = tagline or "用中文对话，自动调用平台接口取真实数据"
     return (
-        f"{_word_art('WZLCARROT')}\n"
+        f"{_word_art('WZLCARROT', end=accent)}\n"
         f"[bold {MUTED}]多平台 AI CLI[/]\n"
         f"{tool}"
-        f"[{MUTED}]用中文对话，自动调用平台接口取真实数据[/]\n"
+        f"[{MUTED}]{text}[/]\n"
         f"[{MUTED}]输入 / 查看命令 · 例：看看今天热榜前5[/]"
     )
 
@@ -101,7 +103,7 @@ Screen {{ background: {BG}; color: {TEXT}; }}
 #chat {{ height: 1fr; padding: 1 2 0 2; scrollbar-size-vertical: 1; }}
 
 #welcome {{
-    border: round {ACCENT};
+    border: round $wz_accent;
     background: {BG_PANEL};
     padding: 1 2;
     margin: 1 0 0 0;
@@ -117,7 +119,7 @@ Screen {{ background: {BG}; color: {TEXT}; }}
 .user {{
     color: {TEXT};
     background: {BG_PANEL};
-    border-left: thick {ACCENT};
+    border-left: thick $wz_accent;
     padding: 0 1;
     margin: 1 0 0 0;
 }}
@@ -130,17 +132,17 @@ Screen {{ background: {BG}; color: {TEXT}; }}
 
 #input-area {{ height: auto; padding: 0 2; }}
 #todos {{ height: auto; max-height: 6; color: {MUTED}; padding: 0 2 0 3; display: none; }}
-#commands {{ height: auto; max-height: 12; border: round {ACCENT_SOFT}; background: {BG_PANEL}; padding: 0 1; margin: 0 2; display: none; }}
+#commands {{ height: auto; max-height: 12; border: round $wz_accent_soft; background: {BG_PANEL}; padding: 0 1; margin: 0 2; display: none; }}
 #input-row {{
     height: 3;
-    border: round {ACCENT_SOFT};
+    border: round $wz_accent_soft;
     background: {BG_INPUT};
 }}
-#input-row:focus-within {{ border: round {ACCENT}; }}
+#input-row:focus-within {{ border: round $wz_accent; }}
 #prompt-mark {{
     width: 3;
     content-align: center middle;
-    color: {ACCENT};
+    color: $wz_accent;
     text-style: bold;
 }}
 #prompt {{ border: none; background: {BG_INPUT}; padding: 0 0; height: 1; }}
@@ -151,11 +153,11 @@ Screen {{ background: {BG}; color: {TEXT}; }}
 ConfirmScreen {{ align: center middle; background: {BG} 60%; }}
 #confirm-box {{
     width: 72;
-    border: round {ACCENT};
+    border: round $wz_accent;
     background: {BG_PANEL};
     padding: 1 2;
 }}
-#confirm-title {{ color: {ACCENT}; text-style: bold; }}
+#confirm-title {{ color: $wz_accent; text-style: bold; }}
 #confirm-body {{ color: {TEXT}; margin: 1 0; }}
 #confirm-buttons {{ height: auto; align: center middle; }}
 Button {{ margin: 0 1; }}
@@ -164,14 +166,27 @@ ConnectScreen {{ align: center middle; background: {BG} 60%; }}
 #connect-box {{
     width: 84;
     max-height: 90%;
-    border: round {ACCENT};
+    border: round $wz_accent;
     background: {BG_PANEL};
     padding: 1 2;
 }}
 #connect-step1, #connect-step2 {{ height: auto; }}
 #provider-list {{ height: auto; max-height: 10; margin: 1 0; background: {BG_PANEL}; }}
-#provider-list > .option-list--option-highlighted {{ background: {ACCENT}; color: {BG}; text-style: bold; }}
-#connect-box Input {{ border: round {ACCENT_SOFT}; background: {BG_INPUT}; margin: 0 0 1 0; }}
+#provider-list > .option-list--option-highlighted {{ background: $wz_accent; color: {BG}; text-style: bold; }}
+#connect-box Input {{ border: round $wz_accent_soft; background: {BG_INPUT}; margin: 0 0 1 0; }}
+
+PlatformScreen {{ align: center middle; background: {BG} 60%; }}
+#platform-box {{
+    width: 72;
+    height: auto;
+    max-height: 90%;
+    border: round $wz_accent;
+    background: {BG_PANEL};
+    padding: 1 2;
+}}
+#platform-list {{ height: auto; max-height: 12; margin: 1 0; background: {BG_PANEL}; }}
+#platform-list > .option-list--option-highlighted {{ background: $wz_accent; color: {BG}; text-style: bold; }}
+
 ToastRack {{ dock: top; align: right top; margin: 0 1 0 0; }}
 Toast {{ width: auto; max-width: 60%; padding: 0 1; }}
 """
@@ -192,8 +207,9 @@ class Thinking(Static):
 
     FRAMES = ("·  ", "·· ", "···")
 
-    def __init__(self) -> None:
+    def __init__(self, accent: str = ACCENT) -> None:
         super().__init__(classes="thinking")
+        self._accent = accent
         self._index = 0
 
     def on_mount(self) -> None:
@@ -202,7 +218,7 @@ class Thinking(Static):
 
     def _tick(self) -> None:
         dots = self.FRAMES[self._index % len(self.FRAMES)]
-        self.update(f"[{ACCENT}]✻[/] [{MUTED}]思考中 {dots.strip() or '.'}[/]")
+        self.update(f"[{self._accent}]✻[/] [{MUTED}]思考中 {dots.strip() or '.'}[/]")
         self._index += 1
 
 
@@ -211,10 +227,11 @@ class ToolLine(Static):
 
     SPINNER = "⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏"
 
-    def __init__(self, name: str, args: str) -> None:
+    def __init__(self, name: str, args: str, accent: str = ACCENT) -> None:
         super().__init__(classes="tool")
         self._name = name
         self._args = args
+        self._accent = accent
         self._index = 0
         self._done = False
 
@@ -231,7 +248,7 @@ class ToolLine(Static):
     def _tick(self) -> None:
         if self._done:
             return
-        self._paint(self.SPINNER[self._index % len(self.SPINNER)], ACCENT)
+        self._paint(self.SPINNER[self._index % len(self.SPINNER)], self._accent)
         self._index += 1
 
     def finish(self, ok: bool = True, note: str = "") -> None:
@@ -381,14 +398,61 @@ class ConnectScreen(ModalScreen[tuple[str, str, str] | None]):
         self.dismiss((api_key, base_url, model))
 
 
+class PlatformScreen(ModalScreen[str | None]):
+    """Picker for switching the active platform (implemented ones are enabled)."""
+
+    def __init__(self, platforms=None) -> None:
+        super().__init__()
+        self._platforms = platforms
+
+    def compose(self) -> ComposeResult:
+        with Vertical(id="platform-box"):
+            yield Static("切换平台", id="confirm-title")
+            yield Static(f"[{MUTED}]↑↓ 选择 · 回车切换 · Esc 关闭[/]", id="confirm-body")
+            yield OptionList(id="platform-list")
+
+    def on_mount(self) -> None:
+        platforms = self._platforms
+        if platforms is None:
+            from .platforms import all_platforms
+
+            platforms = all_platforms()
+        option_list = self.query_one("#platform-list", OptionList)
+        options = []
+        for platform in platforms:
+            options.append(Option(f"{platform.name}  —  {platform.title}", id=platform.name))
+        option_list.add_options(options)
+        if options:
+            option_list.highlighted = 0
+        option_list.focus()
+
+    def on_option_list_option_selected(self, event: OptionList.OptionSelected) -> None:
+        self.dismiss(str(event.option.id))
+
+    def on_key(self, event) -> None:
+        if event.key == "escape":
+            self.dismiss(None)
+            event.stop()
+            event.prevent_default()
+
+
 class ChatTUI(App):
     CSS = CSS
+    # Class-level defaults so get_css_variables() works during App.__init__.
+    _accent = ACCENT
+    _accent_soft = ACCENT_SOFT
     BINDINGS: ClassVar = [
         Binding("ctrl+c", "interrupt", "退出", show=False, priority=True),
         Binding("shift+tab", "toggle_mode", "模式", show=False, priority=True),
         Binding("ctrl+l", "clear", "清屏"),
         Binding("escape", "smart_escape", "取消/输入", show=False),
     ]
+
+    def get_css_variables(self) -> dict[str, str]:
+        variables = super().get_css_variables()
+        variables["wz_accent"] = self._accent
+        variables["wz_accent_soft"] = self._accent_soft
+        return variables
 
     def on_key(self, event) -> None:
         # Command-menu navigation only while typing in the prompt; otherwise
@@ -407,12 +471,29 @@ class ChatTUI(App):
         event.stop()
         event.prevent_default()
 
-    def __init__(self, agent, subtitle: str = "", user: str = "", platform: str = "") -> None:
+    def __init__(
+        self,
+        agent,
+        subtitle: str = "",
+        user: str = "",
+        platform: str = "",
+        platform_name: str = "",
+        accent: str = ACCENT,
+        tagline: str = "",
+        switch=None,
+        platforms=None,
+    ) -> None:
+        self._accent = accent or ACCENT
+        self._accent_soft = _mix(self._accent, BG, 0.45)
         super().__init__()
         self._agent = agent
         self._subtitle = subtitle
         self._user = user
         self._platform = platform
+        self._platform_name = platform_name or platform
+        self._tagline = tagline
+        self._switch = switch
+        self._platforms = platforms
         self._assistant: Markdown | None = None
         self._assistant_text = ""
         self._thinking: Thinking | None = None
@@ -429,7 +510,9 @@ class ChatTUI(App):
 
     def compose(self) -> ComposeResult:
         with VerticalScroll(id="chat"):
-            yield Static(_welcome_text(self._platform), id="welcome")
+            yield Static(
+                _welcome_text(self._platform, self._accent, self._tagline), id="welcome"
+            )
         yield Static("", id="todos")
         yield Static("", id="commands")
         with Vertical(id="input-area"), Horizontal(id="input-row"):
@@ -446,7 +529,7 @@ class ChatTUI(App):
         return f"{self._subtitle}{who} · {tokens} tokens"
 
     def _mode_text(self) -> str:
-        mode = "[#7fb069]● build[/]" if self._mode == "build" else f"[{ACCENT}]● plan[/]"
+        mode = "[#7fb069]● build[/]" if self._mode == "build" else f"[{self._accent}]● plan[/]"
         who = f"  [{MUTED}]· {self._platform}[/]" if self._platform else ""
         return mode + who
 
@@ -474,7 +557,7 @@ class ChatTUI(App):
             welcome = self.query_one("#welcome", Static)
         except Exception:  # noqa: BLE001 - welcome may already be gone
             return
-        welcome.update(_compact_welcome(self._platform))
+        welcome.update(_compact_welcome(self._platform, self._accent))
         welcome.add_class("compact")
 
     def action_focus_input(self) -> None:
@@ -528,7 +611,7 @@ class ChatTUI(App):
             if index == self._command_index:
                 lines.append(f"[reverse] ▶ {command}  {desc} [/reverse]")
             else:
-                lines.append(f"   [bold {ACCENT}]{command}[/]  [{MUTED}]{desc}[/]")
+                lines.append(f"   [bold {self._accent}]{command}[/]  [{MUTED}]{desc}[/]")
         panel.update("\n".join(lines))
         panel.display = True
 
@@ -578,6 +661,48 @@ class ChatTUI(App):
                 self._apply_connect(*result)
 
         self.push_screen(ConnectScreen(), handle)
+
+    def _open_platform(self) -> None:
+        self.push_screen(PlatformScreen(self._platforms), self._apply_platform)
+
+    def _apply_platform(self, name: str | None) -> None:
+        if not name or name == self._platform_name:
+            return
+        if self._switch is None:
+            self.notify("当前无法切换平台", severity="warning")
+            return
+        try:
+            agent, label, accent, tagline, user = self._switch(name)
+        except Exception as exc:  # noqa: BLE001 - surface the failure in the UI
+            self.notify(f"切换失败：{exc}", severity="error", timeout=6)
+            return
+        old = self._agent
+        self._agent = agent
+        agent._confirm_fn = self._confirm
+        agent._compose_fn = self._compose
+        try:
+            old.client.close()
+        except Exception:  # noqa: BLE001, S110 - best effort cleanup
+            pass
+        self._platform_name = name
+        self._platform = label
+        self._tagline = tagline
+        self._user = user
+        self._accent = accent or ACCENT
+        self._accent_soft = _mix(self._accent, BG, 0.45)
+        self.title = f"WZLCARROT · {label}" if label else "WZLCARROT"
+        self.refresh_css(animate=False)
+        # Fresh conversation: tool sets and prompts differ per platform.
+        self._agent.messages = [self._agent.messages[0]]
+        self._agent.session_id = sessions_mod.new_session_id()
+        self._agent.todos = []
+        self._agent.tool_calls = 0
+        self._agent.compactions = 0
+        self.action_clear()
+        self.query_one("#todos", Static).display = False
+        self.query_one("#mode", Static).update(self._mode_text())
+        self.query_one("#status", Static).update(self._status_text())
+        self._add_message("tool", f"✓ 已切换到 {label}（{name}），开始新会话")
 
     def _apply_connect(self, api_key: str, base_url: str, model: str) -> None:
         save_llm_config(api_key, base_url, model)
@@ -650,6 +775,9 @@ class ChatTUI(App):
         if text == "/connect":
             self._open_connect()
             return
+        if text == "/platform":
+            self._open_platform()
+            return
         self._add_message("user", f"› {text}")
         self._start(text)
 
@@ -667,7 +795,7 @@ class ChatTUI(App):
 
     def _show_thinking(self) -> None:
         if self._thinking is None:
-            self._thinking = Thinking()
+            self._thinking = Thinking(self._accent)
             self._chat().mount(self._thinking)
             self._scroll_end()
 
@@ -770,7 +898,7 @@ class ChatTUI(App):
             self._hide_thinking()
             if event[1] == "todo_write":
                 self._update_todos(event[2])
-            line = ToolLine(event[1], _format_args(event[2]))
+            line = ToolLine(event[1], _format_args(event[2]), self._accent)
             self._tools.append(line)
             self._chat().mount(line)
             self._scroll_end()

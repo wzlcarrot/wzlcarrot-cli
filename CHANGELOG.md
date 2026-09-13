@@ -8,6 +8,7 @@
 - **规划中平台**：注册 `weibo`（微博）与 `xiaohongshu`（小红书）占位平台，命令已就位，实现待补。
 - **TUI 像素 banner**：对话 TUI 顶部加入像素 `WZLCARROT` 字标（绿→橙渐变，Claude Code 风格），标题与状态栏显示当前平台。
 - **TUI 更省空间**：欢迎卡去掉平台相关示例，发送首条消息后自动收起为一行；窄终端（<66 列）自动改用单行字标；当前平台显示在左下状态栏。
+- **TUI `/platform` 切换平台**：列出全部平台，选中后重建客户端、工具集与系统提示，并切换强调色 / 欢迎语等对话样式（`Platform.accent` / `tagline`）；未实现的平台会明确提示。
 - **版本检查**：每天首次使用时查询一次 PyPI 公开版本信息（仅此查询，无遥测），发现新版在命令前提示一行；`WZLCARROT_CLI_NO_UPDATE_CHECK=1` 可关闭。
 - **`zhihu upgrade` 命令**：自动识别安装方式（uv tool / pipx / pip）并执行对应升级；源码 editable 安装时提示 `git pull && uv sync`。
 - **发布工作流**：`.github/workflows/release.yml` 在 `v*` tag 上自动构建并发布到 PyPI（Trusted Publishing，GitHub 侧不存 token）。

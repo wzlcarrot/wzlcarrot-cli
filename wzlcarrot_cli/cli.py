@@ -267,6 +267,8 @@ register(
         credentials_factory=Credentials.load,
         client_factory=_zhihu_client_factory,
         build_tools=_zhihu_tools,
+        accent="#d97757",
+        tagline="用中文对话，自动调用知乎接口取真实数据",
     )
 )
 set_active("zhihu")

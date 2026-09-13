@@ -36,6 +36,8 @@
 
 *截图由 `uv run python scripts/screenshot.py` 自动生成（无需登录）。*
 
+TUI 内用 `/platform` 切换平台：每个平台有各自的**强调色、欢迎语和工具集**（当前知乎可用；微博、小红书为规划中）。切换后会重建客户端与对话。
+
 ## 安装
 
 从 PyPI（发行包名 `wzlcarrot-cli`，命令仍是 `zhihu`）：
