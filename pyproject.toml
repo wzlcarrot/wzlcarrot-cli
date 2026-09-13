@@ -63,3 +63,15 @@ markers = [
     "integration: requires a valid login session and hits the real Zhihu API",
 ]
 addopts = "-m 'not integration'"
+
+[tool.coverage.run]
+source = ["wzlcarrot_cli"]
+omit = ["wzlcarrot_cli/__main__.py"]
+
+[tool.coverage.report]
+show_missing = true
+fail_under = 55
+exclude_lines = [
+    "pragma: no cover",
+    "if TYPE_CHECKING:",
+]

@@ -381,6 +381,7 @@ uv sync --extra dev
 uv run ruff check .
 uv run pytest                      # 单元 + 快照；集成测试默认跳过
 uv run pytest -m integration       # 需已登录，跑真实接口
+uv run pytest --cov=wzlcarrot_cli --cov-report=term-missing   # 覆盖率（门禁 55%）
 UPDATE_SNAPSHOTS=1 uv run pytest tests/test_snapshots.py   # 刷新提示词/工具 schema 快照
 ```
 
