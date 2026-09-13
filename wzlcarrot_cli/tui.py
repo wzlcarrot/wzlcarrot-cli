@@ -423,7 +423,8 @@ class PlatformScreen(ModalScreen[str | None]):
         option_list = self.query_one("#platform-list", OptionList)
         options = []
         for platform in platforms:
-            options.append(Option(f"{platform.name}  —  {platform.title}", id=platform.name))
+            short = (platform.title or platform.name).split("：", 1)[0].split(":", 1)[0].strip()
+            options.append(Option(short, id=platform.name))
         option_list.add_options(options)
         if options:
             option_list.highlighted = 0
