@@ -91,8 +91,11 @@ def _welcome_text(platform: str = "", accent: str = ACCENT, tagline: str = "") -
         f"{_word_art('WZLCARROT', end=accent)}\n"
         f"[bold {MUTED}]多平台 AI CLI[/]\n"
         f"{tool}"
-        f"[{MUTED}]{text}[/]\n"
-        f"[{MUTED}]输入 / 查看命令 · 例：看看今天热榜前5[/]"
+        f"[{MUTED}]{text}[/]\n\n"
+        f"[{MUTED}]试着说：[/]\n"
+        f"[{MUTED}]  › 看看今天热榜前5[/]\n"
+        f"[{MUTED}]  › 搜一下 transformers 有哪些高赞回答[/]\n"
+        f"[{MUTED}]  › 把第2条问题的回答导出成 markdown[/]"
     )
 
 
