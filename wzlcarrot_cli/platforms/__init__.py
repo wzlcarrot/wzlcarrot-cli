@@ -39,6 +39,7 @@ class Platform:
 
 
 _REGISTRY: dict[str, Platform] = {}
+_ACTIVE: str | None = None
 
 
 def register(platform: Platform) -> None:
@@ -47,6 +48,26 @@ def register(platform: Platform) -> None:
 
 def get(name: str) -> Platform | None:
     return _REGISTRY.get(name)
+
+
+def set_active(name: str | None) -> None:
+    """Choose which platform the generic commands (chat / TUI) operate on."""
+    global _ACTIVE
+    _ACTIVE = name
+
+
+def active() -> Platform | None:
+    """Return the platform the generic commands operate on.
+
+    Defaults to the first registered platform that contributes agent tools, so
+    a single-platform install works with no explicit selection.
+    """
+    if _ACTIVE is not None:
+        return _REGISTRY.get(_ACTIVE)
+    for platform in _REGISTRY.values():
+        if platform.build_tools is not None:
+            return platform
+    return None
 
 
 def all_platforms() -> list[Platform]:

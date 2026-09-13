@@ -50,3 +50,31 @@ def test_root_app_does_not_nest_platforms():
 def test_zhihu_app_exposes_platform_commands():
     help_text = runner.invoke(cli.app, ["--help"]).output
     assert "hot" in help_text and "login" in help_text
+
+
+def test_active_platform_is_zhihu_by_default():
+    platform = platforms.active()
+    assert platform is not None
+    assert platform.name == "zhihu"
+
+
+def test_active_falls_back_to_first_tool_platform():
+    saved_registry = dict(platforms._REGISTRY)
+    platforms._REGISTRY.clear()
+    platforms.set_active(None)
+    try:
+        assert platforms.active() is None
+        register(Platform("demo", "Demo", lambda: typer.Typer(), build_tools=lambda client: []))
+        active = platforms.active()
+        assert active is not None and active.name == "demo"
+    finally:
+        platforms._REGISTRY.clear()
+        platforms._REGISTRY.update(saved_registry)
+        platforms.set_active("zhihu")
+
+
+def test_platform_tools_for_uses_active_platform():
+    from wzlcarrot_cli.commands.chat import _platform_tools_for
+
+    names = {tool.name for tool in _platform_tools_for(object())}
+    assert {"hot", "search", "vote"} <= names

@@ -24,7 +24,7 @@ from .commands._common import Settings
 from .config import DIST_NAME
 from .exceptions import ZhihuError
 from .output import error_console
-from .platforms import Platform, discover, register
+from .platforms import Platform, discover, register, set_active
 from .plugins import load_plugins, plugins_dir
 from .session import Credentials
 
@@ -267,6 +267,7 @@ register(
         build_tools=_zhihu_tools,
     )
 )
+set_active("zhihu")
 
 
 def root_version() -> None:
