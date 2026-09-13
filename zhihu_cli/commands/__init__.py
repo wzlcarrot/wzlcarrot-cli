@@ -1,1 +1,1 @@
-"""Command modules for zhihu-cli."""
+"""Command modules for wzlcarrot-cli."""

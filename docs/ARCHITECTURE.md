@@ -1,13 +1,14 @@
-# zhihu-cli 架构文档
+# wzlcarrot-cli 架构文档
 
-zhihu-cli 是一个纯 Python 的知乎命令行客户端：不依赖浏览器或 JS 运行时，
+wzlcarrot-cli 是一个纯 Python 的多平台命令行客户端（当前内置知乎）：不依赖浏览器或 JS 运行时，
 请求签名在本地实现；同时提供浏览/采集、创作发布、自然语言 Agent 三类能力。
+顶层命令为 `wzlcarrot`，平台作为子命令（`wzlcarrot zhihu ...`，`zhihu ...` 为别名）。
 
 ## 总体分层
 
 ```
 ┌─────────────────────────────────────────────────────────┐
-│  入口层   cli.py (Typer app) ── 命令注册 / 全局回调 / 版本  │
+│  入口层   cli.py (Typer) ── root_app(wzlcarrot) / app(zhihu)│
 ├─────────────────────────────────────────────────────────┤
 │  命令层   commands/ ── 每个功能域一个模块，只做参数解析和编排 │
 ├──────────────┬──────────────────────┬───────────────────┤
@@ -17,8 +18,9 @@ zhihu-cli 是一个纯 Python 的知乎命令行客户端：不依赖浏览器�
 │  qrlogin.py  │                      │  compaction.py    │
 │              │                      │  spill.py / tui.py│
 ├──────────────┴──────────────────────┴───────────────────┤
-│  基础设施  models.py · output.py · config.py · plugins.py │
-│           hooks.py · exceptions.py · doctor.py           │
+│  基础设施  output.py · config.py · plugins.py · hooks.py  │
+│           todo.py · prompt.py · exceptions.py · doctor.py │
+│           updates.py · upgrade.py                         │
 └─────────────────────────────────────────────────────────┘
 ```
 
@@ -26,8 +28,8 @@ zhihu-cli 是一个纯 Python 的知乎命令行客户端：不依赖浏览器�
 
 ### 入口与命令层
 
-- **`cli.py`** —— Typer 应用入口（`zhihu = zhihu_cli.cli:main`）。集中注册所有命令，
-  全局回调处理无子命令时的默认行为。
+- **`cli.py`** —— Typer 应用入口。`root_app`（`wzlcarrot = zhihu_cli.cli:root_main`）承载通用命令，
+  并把 `app`（`zhihu = zhihu_cli.cli:main`）作为 `zhihu` 平台子命令挂载；全局回调处理无子命令时的默认行为。
 - **`commands/`** —— 按功能域拆分，每个模块只负责参数解析、调用核心层、格式化展示：
   - `login.py`：登录/登出/状态
   - `feed.py`：热榜、推荐流、话题

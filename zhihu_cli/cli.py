@@ -47,7 +47,7 @@ def _notify_update() -> None:
         from .output import console
 
         console.print(
-            f"[yellow]有新版本：zhihu-cli {latest}（当前 {__version__}）,"
+            f"[yellow]有新版本：{DIST_NAME} {latest}（当前 {__version__}）,"
             "运行 zhihu upgrade 升级；设置 ZHIHU_CLI_NO_UPDATE_CHECK=1 可关闭检查[/yellow]"
         )
 
@@ -86,7 +86,7 @@ app.command("connect")(connect.connect)
 
 def show_version() -> None:
     """显示版本号。"""
-    typer.echo(f"zhihu-cli {__version__}")
+    typer.echo(f"zhihu（{DIST_NAME}）{__version__}")
 
 
 app.command("version")(show_version)

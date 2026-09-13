@@ -1,4 +1,4 @@
-"""Self-upgrade: detect how zhihu-cli was installed and run the matching command."""
+"""Self-upgrade: detect how wzlcarrot-cli was installed and run the matching command."""
 
 from __future__ import annotations
 

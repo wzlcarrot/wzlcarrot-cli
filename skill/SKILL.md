@@ -7,7 +7,7 @@ description: 知乎 CLI 技能。用户想在知乎搜索、看热榜/推荐/话
 
 ## 前提
 
-- **已安装**：`zhihu` 在 PATH 中（`uv tool install --editable ~/zhihu-cli` 或 `pip install zhihu-cli`）。
+- **已安装**：`zhihu`（或 `wzlcarrot zhihu`）在 PATH 中（`uv tool install wzlcarrot-cli` 或 `pip install wzlcarrot-cli`）。
 - **配置目录**：`~/.config/zhihu-cli/`（可用环境变量 `ZHIHU_CLI_HOME` 覆盖）
   - 登录态：`credentials.json`（权限 0600）
   - 扫码登录二维码：`qrcode.png`

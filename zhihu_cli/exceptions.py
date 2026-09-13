@@ -31,5 +31,5 @@ class SignatureError(ZhihuError):
     """Raised when Zhihu rejects the request signature (HTTP 403, code 100).
 
     Distinct from login problems: it usually means Zhihu changed the
-    x-zse-96 algorithm and this build of zhihu-cli is outdated.
+    x-zse-96 algorithm and this build of wzlcarrot-cli is outdated.
     """

@@ -1,6 +1,6 @@
 # 贡献指南
 
-感谢参与 zhihu-cli 开发。开始之前请先阅读 [README](README.md) 与
+感谢参与 wzlcarrot-cli 开发。开始之前请先阅读 [README](README.md) 与
 [架构文档](docs/ARCHITECTURE.md)。
 
 ## 开发环境

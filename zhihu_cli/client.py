@@ -200,7 +200,7 @@ class ZhihuClient:
                 if code == 100 and resp.status_code == 403:
                     raise SignatureError(
                         f"{message}：签名可能已失效（知乎或已更新 x-zse-96 算法），"
-                        "请运行 zhihu doctor 检查，或升级 zhihu-cli"
+                        "请运行 zhihu doctor 检查，或升级 wzlcarrot-cli"
                     )
                 if code == 100:
                     raise NotLoggedInError(f"not logged in: {message}")

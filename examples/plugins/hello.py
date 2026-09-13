@@ -1,4 +1,4 @@
-"""Example zhihu-cli plugin.
+"""Example wzlcarrot-cli plugin.
 
 Enable it by copying this file into ``~/.config/zhihu-cli/plugins/``, or ship a
 distribution that exposes the ``zhihu_cli.plugins`` entry point.
