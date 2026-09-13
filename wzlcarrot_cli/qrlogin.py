@@ -104,8 +104,9 @@ def _check_api_error(info: object) -> None:
     code = error.get("code")
     if error.get("need_login") or code in (40352, 100, "ZERR_NOT_LOGIN"):
         raise ZhihuError(
-            f"扫码接口被人机验证拦截（code={code}）。请稍后再试，"
-            "或改用 `zhihu login --cookie \"...\"` 手动登录。"
+            f"扫码接口被人机验证拦截（code={code}），通常是短时间请求过多所致。"
+            "稍后再试；或改用更稳的方式：`zhihu login --browser`（在浏览器里登录，"
+            "可过人机验证）或 `zhihu login --cookie \"...\"`。"
         )
 
 
