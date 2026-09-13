@@ -31,25 +31,22 @@ def test_register_and_get_with_cleanup():
         platforms._REGISTRY.pop("tmpdemo", None)
 
 
-def test_root_app_wires_discovered_platforms(monkeypatch):
-    def build():
-        sub = typer.Typer()
-
-        @sub.command("ping")
-        def ping() -> None:
-            typer.echo("pong")
-
-        return sub
-
+def test_platforms_command_lists_registered(monkeypatch):
     monkeypatch.setattr(
-        cli, "discover", lambda: [Platform("demo", "Demo", build, source="test")]
+        cli, "discover", lambda: [Platform("demo", "Demo", lambda: typer.Typer(), source="test")]
     )
-    root = cli.build_root_app()
-    result = runner.invoke(root, ["demo", "ping"])
+    result = runner.invoke(cli.build_root_app(), ["platforms"])
     assert result.exit_code == 0
-    assert "pong" in result.output
+    assert "demo" in result.output
 
 
-def test_root_app_includes_zhihu():
-    help_text = runner.invoke(cli.build_root_app(), ["--help"]).output
-    assert "zhihu" in help_text
+def test_root_app_does_not_nest_platforms():
+    # Platform commands live under their own entry (e.g. `zhihu hot`), not
+    # `wzlcarrot zhihu hot`.
+    root = cli.build_root_app()
+    assert runner.invoke(root, ["zhihu"]).exit_code != 0
+
+
+def test_zhihu_app_exposes_platform_commands():
+    help_text = runner.invoke(cli.app, ["--help"]).output
+    assert "hot" in help_text and "login" in help_text

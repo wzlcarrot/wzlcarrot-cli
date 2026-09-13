@@ -11,7 +11,7 @@ import pytest
 from typer.testing import CliRunner
 
 from wzlcarrot_cli import commands
-from wzlcarrot_cli.cli import root_app
+from wzlcarrot_cli.cli import app, root_app
 
 runner = CliRunner()
 
@@ -41,7 +41,7 @@ def test_e2e_doctor_offline():
 
 
 def test_e2e_zhihu_group_exposes_platform_commands():
-    result = runner.invoke(root_app, ["zhihu", "--help"])
+    result = runner.invoke(app, ["--help"])
     assert result.exit_code == 0
     for command in ("hot", "search", "question", "answer", "article", "action", "publish", "download"):
         assert command in result.output
@@ -69,6 +69,6 @@ def test_e2e_hot_with_mocked_client(monkeypatch):
             }
 
     monkeypatch.setattr(commands.feed, "require_client", lambda ctx: FakeClient())
-    result = runner.invoke(root_app, ["zhihu", "hot", "-n", "1"])
+    result = runner.invoke(app, ["hot", "-n", "1"])
     assert result.exit_code == 0, result.output
     assert "端到端标题" in result.output

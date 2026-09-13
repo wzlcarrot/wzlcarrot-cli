@@ -244,8 +244,18 @@ def root_version() -> None:
     typer.echo(f"wzlcarrot {__version__}（发行名 {DIST_NAME}）")
 
 
+def show_platforms() -> None:
+    """列出已注册的平台（每个平台有自己的命令，如 zhihu）。"""
+    rows = discover()
+    if not rows:
+        typer.echo("未注册任何平台。")
+        return
+    for platform in rows:
+        typer.echo(f"● {platform.name}  {platform.title}  ({platform.source})")
+
+
 # Generic, platform-agnostic commands live at the top level. Platform-specific
-# operations (hot/search/comment/publish/login/...) stay under `wzlcarrot zhihu`.
+# commands live under their own entry (e.g. `zhihu hot`), not `wzlcarrot zhihu`.
 _GENERIC_COMMANDS = {
     "connect": connect.connect,
     "doctor": doctor,
@@ -255,6 +265,7 @@ _GENERIC_COMMANDS = {
     "prompt": show_prompt,
     "upgrade": upgrade,
     "sessions": show_sessions,
+    "platforms": show_platforms,
     "tui": chat.tui,
     "chat": chat.chat,
     "ask": chat.ask,
@@ -286,8 +297,6 @@ def build_root_app() -> typer.Typer:
             else:
                 typer.echo(ctx.get_help())
 
-    for platform in discover():
-        root.add_typer(platform.builder(), name=platform.name, help=platform.title)
     root.add_typer(license_cmd.license_app, name="license")
     for plugin_name, plugin_fn in _PLUGINS.commands.items():
         root.command(plugin_name)(plugin_fn)

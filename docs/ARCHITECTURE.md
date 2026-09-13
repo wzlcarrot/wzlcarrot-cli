@@ -2,7 +2,7 @@
 
 wzlcarrot-cli 是一个纯 Python 的多平台命令行客户端（当前内置知乎）：不依赖浏览器或 JS 运行时，
 请求签名在本地实现；同时提供浏览/采集、创作发布、自然语言 Agent 三类能力。
-顶层命令为 `wzlcarrot`，平台作为子命令（`wzlcarrot zhihu ...`，`zhihu ...` 为别名）。
+顶层命令为 `wzlcarrot`（通用命令）；平台命令是各自独立的入口（`zhihu ...`，不带 `wzlcarrot` 前缀），共享同一套核心。
 
 ## 总体分层
 
@@ -28,8 +28,9 @@ wzlcarrot-cli 是一个纯 Python 的多平台命令行客户端（当前内置�
 
 ### 入口与命令层
 
-- **`cli.py`** —— Typer 应用入口。`root_app`（`wzlcarrot = wzlcarrot_cli.cli:root_main`）承载通用命令，
-  并把 `app`（`zhihu = wzlcarrot_cli.cli:main`）作为 `zhihu` 平台子命令挂载；全局回调处理无子命令时的默认行为。
+- **`cli.py`** —— Typer 应用入口。`root_app`（`wzlcarrot = wzlcarrot_cli.cli:root_main`）承载**通用命令**
+  （connect/doctor/tui/chat/ask/plugins/...）；平台命令是各自独立的入口 `app`
+  （`zhihu = wzlcarrot_cli.cli:main`），**不带 `wzlcarrot` 前缀**。全局回调处理无子命令时的默认行为。
 - **`commands/`** —— 按功能域拆分，每个模块只负责参数解析、调用核心层、格式化展示：
   - `login.py`：登录/登出/状态
   - `feed.py`：热榜、推荐流、话题

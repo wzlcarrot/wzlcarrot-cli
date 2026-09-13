@@ -76,16 +76,27 @@ wzlcarrot chat / ask   # 文本对话
 wzlcarrot sessions / plugins / hooks / spill / prompt / upgrade / version
 ```
 
-**平台特定——挂在 `wzlcarrot <平台>` 下（当前只有知乎）：**
+**通用（跨平台）——`wzlcarrot`：**
 
 ```bash
-wzlcarrot zhihu hot            # 知乎热榜
-wzlcarrot zhihu search 关键词
-wzlcarrot zhihu login --qr
-wzlcarrot zhihu comment --answer <id> -m "..."
+wzlcarrot connect      # 配置模型供应商与 API Key
+wzlcarrot doctor       # 自检
+wzlcarrot platforms    # 列出已注册平台
+wzlcarrot tui          # 对话 TUI
+wzlcarrot chat / ask   # 文本对话
+wzlcarrot sessions / plugins / hooks / spill / prompt / upgrade / version
 ```
 
-`zhihu ...` 作为**别名仍可用**（等价于 `wzlcarrot zhihu ...`）。后续会以同样方式加入 `weibo`、`xiaohongshu` 等平台（每个平台是独立的适配实现）。
+**平台特定——各自的命令（当前只有知乎，命令是 `zhihu`）：**
+
+```bash
+zhihu hot              # 知乎热榜
+zhihu search 关键词
+zhihu login --qr
+zhihu comment --answer <id> -m "..."
+```
+
+> 平台命令**不带 `wzlcarrot` 前缀**：`zhihu ...` 就是知乎入口。后续会以同样方式加入 `weibo`、`xiaohongshu` 等平台（每个平台一个独立命令，共享同一套核心）。
 
 ## 升级与版本检查
 

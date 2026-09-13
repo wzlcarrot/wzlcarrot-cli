@@ -19,21 +19,21 @@ def test_root_version():
     assert "wzlcarrot" in result.output
 
 
-def test_zhihu_platform_under_wzlcarrot():
-    result = runner.invoke(root_app, ["zhihu", "--help"])
-    assert result.exit_code == 0
-    assert "hot" in result.output
+def test_root_does_not_nest_zhihu():
+    # Platform commands are not under wzlcarrot; they are their own entry.
+    assert runner.invoke(root_app, ["zhihu"]).exit_code != 0
 
 
-def test_zhihu_alias_still_works():
-    result = runner.invoke(app, ["hot", "--help"])
+def test_zhihu_app_has_platform_commands():
+    result = runner.invoke(app, ["--help"])
     assert result.exit_code == 0
+    assert "hot" in result.output and "comment" in result.output
 
 
 def test_generic_commands_not_under_zhihu():
     # strict layering: generic commands live at the umbrella level only
-    for args in (["zhihu", "version"], ["zhihu", "connect"], ["zhihu", "doctor"]):
-        assert runner.invoke(root_app, args).exit_code != 0
+    for args in (["version"], ["connect"], ["doctor"]):
+        assert runner.invoke(app, args).exit_code != 0
 
 
 def test_generic_commands_available_at_root():
@@ -42,9 +42,6 @@ def test_generic_commands_available_at_root():
         assert result.exit_code == 0, (args, result.output)
 
 
-def test_platform_commands_live_under_zhihu():
-    # `hot` is not a root command; it lives under the `zhihu` group.
+def test_platform_only_command_not_at_root():
     assert runner.invoke(root_app, ["hot"]).exit_code != 0
-    zhihu_help = runner.invoke(root_app, ["zhihu", "--help"]).output
-    assert "hot" in zhihu_help and "comment" in zhihu_help
 
