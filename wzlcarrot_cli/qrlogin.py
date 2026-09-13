@@ -63,9 +63,17 @@ def _set_xsrf(session: httpx.Client) -> None:
 def _is_logged_in(session: httpx.Client, info: dict) -> bool:
     if session.cookies.get("z_c0"):
         return True
+    if not isinstance(info, dict):
+        return False
     status = info.get("status")
     if status in (0, 1):  # 0 = not scanned, 1 = scanned not confirmed
         return False
+    if status in (3, 4):  # expired / cancelled
+        return False
+    if status == 2:  # confirmed on the phone
+        return True
+    if isinstance(status, int) and status > 2:
+        return True
     if info.get("access_token") or info.get("user_id") is not None:
         return True
     login_status = str(info.get("login_status") or "").upper()
@@ -84,6 +92,21 @@ def _fetch_missing_cookies(session: httpx.Client, cookies: dict[str, str]) -> di
             if cookie.name in ("_xsrf", "d_c0"):
                 cookies[cookie.name] = cookie.value
     return cookies
+
+
+def _check_api_error(info: object) -> None:
+    """Raise a clear error when Zhihu returns an error envelope (e.g. captcha)."""
+    if not isinstance(info, dict):
+        return
+    error = info.get("error")
+    if not isinstance(error, dict) or not error:
+        return
+    code = error.get("code")
+    if error.get("need_login") or code in (40352, 100, "ZERR_NOT_LOGIN"):
+        raise ZhihuError(
+            f"扫码接口被人机验证拦截（code={code}）。请稍后再试，"
+            "或改用 `zhihu login --cookie \"...\"` 手动登录。"
+        )
 
 
 def _open_image(path: Path) -> None:
@@ -129,6 +152,7 @@ def qr_login(
                 data = session.post(QRCODE_API, json={}).json()
             except (httpx.HTTPError, ValueError) as exc:
                 raise ZhihuError(f"获取登录二维码失败：{exc}") from exc
+            _check_api_error(data)
 
             token = data.get("token") or data.get("qrcode_token")
             link = (data.get("link") or "").strip()
@@ -165,6 +189,7 @@ def qr_login(
 
             scan_url = f"{QRCODE_API}/{token}/scan_info"
             session.headers["referer"] = f"{BASE_URL}/signin?next=%2F"
+            last_status: object = None
             while time.time() < min(expires_at, deadline):
                 time.sleep(poll_interval)
                 _set_xsrf(session)
@@ -172,12 +197,27 @@ def qr_login(
                     info = session.get(scan_url).json()
                 except (httpx.HTTPError, ValueError):
                     info = {}
+                _check_api_error(info)
+                status = info.get("status") if isinstance(info, dict) else None
+                if status != last_status:
+                    if status == 1:
+                        console.print("已扫描，请在手机上点击「确认登录」…")
+                    elif status == 2 or (isinstance(status, int) and status > 2):
+                        console.print("已确认，正在完成登录…")
+                    elif status in (3, 4):
+                        console.print("二维码已失效或被取消")
+                    last_status = status
                 if _is_logged_in(session, info):
                     cookies = {c.name: c.value for c in session.cookies.jar}
-                    cookies = _fetch_missing_cookies(session, cookies)
                     if "z_c0" not in cookies:
-                        raise ZhihuError("已确认但未获取到 z_c0，请重试")
-                    return Credentials(cookies=cookies)
+                        with contextlib.suppress(Exception):
+                            session.get(f"{BASE_URL}/")
+                        cookies = {c.name: c.value for c in session.cookies.jar}
+                    cookies = _fetch_missing_cookies(session, cookies)
+                    if "z_c0" in cookies:
+                        return Credentials(cookies=cookies)
+                if status in (3, 4):
+                    break
 
             if not refresh:
                 break
