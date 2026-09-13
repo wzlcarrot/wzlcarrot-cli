@@ -104,7 +104,7 @@ def test_upgrade_runs_detected_command(monkeypatch):
     monkeypatch.setattr(upgrade, "detect_upgrade_command", lambda: ["uv", "tool", "upgrade", "zhihu-cli"])
     ran = {}
 
-    def fake_run(cmd):
+    def fake_run(cmd, **kwargs):
         ran["cmd"] = cmd
         return _Proc("", returncode=0)
 
