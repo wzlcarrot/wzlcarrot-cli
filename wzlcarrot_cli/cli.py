@@ -7,7 +7,18 @@ import sys
 import typer
 
 from . import __version__
-from .commands import actions, chat, connect, content, download, feed, login, publish, search
+from .commands import (
+    actions,
+    chat,
+    connect,
+    content,
+    download,
+    feed,
+    license_cmd,
+    login,
+    publish,
+    search,
+)
 from .commands import user as user_cmd
 from .commands._common import Settings
 from .config import DIST_NAME
@@ -26,6 +37,7 @@ _GROUPS = {
     "download": download.download_app,
     "action": actions.actions_app,
     "publish": publish.publish_app,
+    "license": license_cmd.license_app,
 }
 
 
@@ -302,6 +314,7 @@ def build_root_app() -> typer.Typer:
 
     for platform in discover():
         root.add_typer(platform.builder(), name=platform.name, help=platform.title)
+    root.add_typer(license_cmd.license_app, name="license")
     return root
 
 

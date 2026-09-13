@@ -11,6 +11,7 @@ import typer
 from ..config import default_download_dir
 from ..exceptions import ZhihuError
 from ..imagestore import localize_images
+from ..license import is_pro
 from ..output import console, html_to_markdown, normalize_url
 from ._common import require_client
 
@@ -180,3 +181,45 @@ def _render_comments(client, path: str, limit: int = 20) -> str:
         content = html_to_markdown(item.get("content", ""))
         lines.append(f"- **{author}**：{content}")
     return "\n".join(lines)
+
+
+@download_app.command("collection")
+def download_collection(
+    ctx: typer.Context,
+    collection_id: int = typer.Argument(..., help="收藏夹 ID"),
+    output_dir: Path = typer.Option(None, "--output", "-o", help="输出目录"),
+    images: bool = _IMAGES_OPTION,
+    limit: int = typer.Option(0, "--limit", "-n", min=0, help="导出条数，0 = 全部（Pro）"),
+) -> None:
+    """导出收藏夹全部内容（免费版最多 5 条，Pro 不限）。"""
+    client = require_client(ctx)
+    out = output_dir or default_download_dir()
+    pro = is_pro()
+    free_cap = 5
+    exported = 0
+    with client:
+        params: dict = {}
+        for item in client.paginate(
+            f"/api/v4/collections/{collection_id}/contents", params, limit=20
+        ):
+            if limit and exported >= limit:
+                break
+            if not pro and exported >= free_cap:
+                console.print(
+                    "[yellow]免费版最多导出 5 条；激活 Pro 解锁全部："
+                    "wzlcarrot license activate <key>[/yellow]"
+                )
+                break
+            content = item.get("content") or {}
+            content_id = content.get("id")
+            content_type = content.get("type")
+            if not content_id:
+                continue
+            if content_type == "answer":
+                download_answer_impl(client, int(content_id), out, False, images)
+            elif content_type == "article":
+                download_article_impl(client, int(content_id), out, False, images)
+            else:
+                continue
+            exported += 1
+    console.print(f"[green]已导出 {exported} 条[/green]")
