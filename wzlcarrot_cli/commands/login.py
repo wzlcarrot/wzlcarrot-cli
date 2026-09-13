@@ -37,11 +37,12 @@ def _validate(credentials: Credentials, *, verbose: bool = True) -> dict:
 def login(
     cookie: str = typer.Option(None, "--cookie", "-c", help="改用浏览器 Cookie 字符串登录"),
     cookie_file: Path = typer.Option(None, "--cookie-file", help="从文件读取 Cookie 字符串"),
-    edge: bool = typer.Option(False, "--edge", help="复用 Edge 已登录会话（需先关闭 Edge）"),
     browser: bool = typer.Option(False, "--browser", "-b", help="打开真实浏览器登录"),
-    qr: bool = typer.Option(False, "--qr", help="改为显示二维码（默认只给登录链接）"),
+    edge: bool = typer.Option(False, "--edge", help="复用 Edge 已登录会话（需先关闭 Edge）"),
+    link: bool = typer.Option(False, "--link", help="只给登录链接，不显示二维码"),
+    qr: bool = typer.Option(False, "--qr", help="显示二维码（默认行为）"),
 ) -> None:
-    """登录知乎。`--edge` 复用 Edge 登录态；`--browser` 开浏览器登录；默认给登录链接。"""
+    """登录知乎。默认弹出二维码（含有效期）；也可 --browser / --edge / --cookie。"""
     raw = _load_cookie_input(cookie, cookie_file)
     if raw:
         try:
@@ -57,8 +58,10 @@ def login(
         from ..browserlogin import browser_login
 
         credentials = browser_login()
+    elif link:
+        credentials = qr_login(show_qr=False, open_image=False)
     else:
-        credentials = qr_login(show_qr=qr)
+        credentials = qr_login(show_qr=True, open_image=True)
 
     if not credentials.is_logged_in():
         error_console.print(

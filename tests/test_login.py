@@ -21,19 +21,30 @@ def _home(tmp_path, monkeypatch):
 
 
 def _fake_qr_login(captured):
-    def fake(*, show_qr: bool = False, **_kwargs):
+    def fake(*, show_qr: bool = False, open_image: bool = False, **_kwargs):
         captured["show_qr"] = show_qr
+        captured["open_image"] = open_image
         return Credentials(cookies={"d_c0": "a", "z_c0": "b"})
 
     return fake
 
 
-def test_login_defaults_to_link_flow(monkeypatch):
+def test_login_defaults_to_qr_with_popup(monkeypatch):
     captured: dict = {}
     monkeypatch.setattr(commands.login, "qr_login", _fake_qr_login(captured))
     result = runner.invoke(app, ["login"])
     assert result.exit_code == 0, result.output
-    assert captured["show_qr"] is False  # default: link, no QR
+    assert captured["show_qr"] is True  # default: QR
+    assert captured["open_image"] is True  # and pop it open
+
+
+def test_login_link_flag_gives_link_only(monkeypatch):
+    captured: dict = {}
+    monkeypatch.setattr(commands.login, "qr_login", _fake_qr_login(captured))
+    result = runner.invoke(app, ["login", "--link"])
+    assert result.exit_code == 0, result.output
+    assert captured["show_qr"] is False
+    assert captured["open_image"] is False
 
 
 def test_login_qr_flag_requests_qr(monkeypatch):

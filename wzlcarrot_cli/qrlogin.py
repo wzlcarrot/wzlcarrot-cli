@@ -11,6 +11,7 @@ Flow:
 from __future__ import annotations
 
 import contextlib
+import subprocess
 import time
 from pathlib import Path
 
@@ -85,18 +86,30 @@ def _fetch_missing_cookies(session: httpx.Client, cookies: dict[str, str]) -> di
     return cookies
 
 
+def _open_image(path: Path) -> None:
+    """Pop the QR PNG open in the OS image viewer (Windows via WSL)."""
+    win = ""
+    with contextlib.suppress(Exception):
+        win = subprocess.run(
+            ["wslpath", "-w", str(path)], capture_output=True, text=True, check=False, timeout=10
+        ).stdout.strip()
+    with contextlib.suppress(OSError):
+        subprocess.Popen(["explorer.exe", win or str(path)])
+
+
 def qr_login(
     *,
-    timeout: int = 180,
+    timeout: int = 300,
     poll_interval: float = 1.5,
     show: bool = True,
-    show_qr: bool = False,
+    show_qr: bool = True,
+    open_image: bool = True,
+    refresh: bool = True,
 ) -> Credentials:
-    """Run the QR/link login flow and return saved-able credentials.
+    """Scan-to-login: show a QR (and pop it open), with an expiry and auto-refresh.
 
-    By default the raw login **link** is printed (open it in a browser that is
-    already logged in, or on your phone).  Set ``show_qr`` to also render a
-    terminal QR code.
+    The QR is valid for a limited time; when it expires it is automatically
+    refreshed, until the overall ``timeout`` is reached.
     """
     headers = browser_headers()
     headers["x-requested-with"] = "fetch"
@@ -106,64 +119,68 @@ def qr_login(
             lambda: session.post(f"{BASE_URL}/udid", json={}),
             lambda: session.get(CAPTCHA_API),
         ):
-            try:
+            with contextlib.suppress(httpx.HTTPError):
                 step()
-            except httpx.HTTPError:
-                pass
 
-        _set_xsrf(session)
-        try:
-            resp = session.post(QRCODE_API, json={})
-            data = resp.json()
-        except (httpx.HTTPError, ValueError) as exc:
-            raise ZhihuError(f"获取登录链接失败：{exc}") from exc
-
-        token = data.get("token") or data.get("qrcode_token")
-        link = (data.get("link") or "").strip()
-        # The API sometimes appends a path-like artifact (e.g. "?/api/login/qrcode");
-        # strip it so the link opens cleanly.
-        if link and "?" in link and link.split("?", 1)[1].startswith("/"):
-            link = link.split("?", 1)[0]
-        if not link and token:
-            link = f"{BASE_URL}/account/scan/login/{token}"
-        if not token or not link:
-            raise ZhihuError(f"登录接口未返回 token/link：{data}")
-
-        if show_qr:
-            png_path = qrcode_file()
-            try:
-                save_qr_png(link, png_path)
-            except Exception:  # noqa: BLE001 - QR image is a convenience only
-                png_path = None  # type: ignore[assignment]
-            with contextlib.suppress(Exception):  # QR rendering is best-effort
-                console.print(render_terminal_qr(link))
-            if png_path:
-                console.print(f"二维码图片：{png_path}")
-
-        if show:
-            console.print(f"登录链接：[bold]{link}[/bold]")
-            console.print("在已登录知乎的浏览器打开上面的链接（或用手机知乎 App 打开），确认登录即可。")
-        console.print("等待确认中…")
-
-        scan_url = f"{QRCODE_API}/{token}/scan_info"
-        session.headers["referer"] = f"{BASE_URL}/signin?next=%2F"
         deadline = time.time() + timeout
         while time.time() < deadline:
-            time.sleep(poll_interval)
             _set_xsrf(session)
             try:
-                resp = session.get(scan_url)
-            except httpx.HTTPError:
-                continue
-            try:
-                info = resp.json()
-            except ValueError:
-                info = {}
-            if _is_logged_in(session, info):
-                break
+                data = session.post(QRCODE_API, json={}).json()
+            except (httpx.HTTPError, ValueError) as exc:
+                raise ZhihuError(f"获取登录二维码失败：{exc}") from exc
 
-        cookies = {c.name: c.value for c in session.cookies.jar}
-        cookies = _fetch_missing_cookies(session, cookies)
-        if "z_c0" not in cookies:
-            raise ZhihuError("扫码超时或未完成确认（未获取到 z_c0）")
-        return Credentials(cookies=cookies)
+            token = data.get("token") or data.get("qrcode_token")
+            link = (data.get("link") or "").strip()
+            # The API sometimes appends a path-like artifact (e.g. "?/api/login/qrcode").
+            if link and "?" in link and link.split("?", 1)[1].startswith("/"):
+                link = link.split("?", 1)[0]
+            if not link and token:
+                link = f"{BASE_URL}/account/scan/login/{token}"
+            if not token or not link:
+                raise ZhihuError(f"登录接口未返回 token/link：{data}")
+
+            expires_at = float(data.get("expires_at") or 0) or (time.time() + 120)
+
+            if show_qr:
+                png_path = qrcode_file()
+                saved = False
+                with contextlib.suppress(Exception):
+                    save_qr_png(link, png_path)
+                    saved = True
+                with contextlib.suppress(Exception):
+                    console.print(render_terminal_qr(link))
+                if saved:
+                    if open_image:
+                        _open_image(png_path)
+                    console.print(f"二维码图片：{png_path}")
+
+            if show:
+                remaining = max(0, int(expires_at - time.time()))
+                until = time.strftime("%H:%M:%S", time.localtime(expires_at))
+                console.print(
+                    f"请用[bold]知乎 App[/bold]扫码确认；二维码有效期至 [bold]{until}[/bold]"
+                    f"（约 {remaining} 秒）"
+                )
+
+            scan_url = f"{QRCODE_API}/{token}/scan_info"
+            session.headers["referer"] = f"{BASE_URL}/signin?next=%2F"
+            while time.time() < min(expires_at, deadline):
+                time.sleep(poll_interval)
+                _set_xsrf(session)
+                try:
+                    info = session.get(scan_url).json()
+                except (httpx.HTTPError, ValueError):
+                    info = {}
+                if _is_logged_in(session, info):
+                    cookies = {c.name: c.value for c in session.cookies.jar}
+                    cookies = _fetch_missing_cookies(session, cookies)
+                    if "z_c0" not in cookies:
+                        raise ZhihuError("已确认但未获取到 z_c0，请重试")
+                    return Credentials(cookies=cookies)
+
+            if not refresh:
+                break
+            console.print("二维码已过期，正在刷新…")
+
+    raise ZhihuError("登录超时，请重试")
