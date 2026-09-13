@@ -41,14 +41,6 @@ def test_client_sets_csrf_and_browser_headers():
         client.close()
 
 
-def test_terminal_qr_renders_blocks():
-    from wzlcarrot_cli.qrlogin import render_terminal_qr
-
-    art = render_terminal_qr("https://www.zhihu.com/account/scan/login/abc")
-    assert any(ch in art for ch in "█▀▄")
-    assert "\n" in art
-
-
 def test_anti_abuse_response_is_detected(tmp_path, monkeypatch):
     import httpx
 

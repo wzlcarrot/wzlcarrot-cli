@@ -3,7 +3,7 @@ from __future__ import annotations
 import pytest
 from typer.testing import CliRunner
 
-from wzlcarrot_cli import commands
+from wzlcarrot_cli import commands, edgelogin
 from wzlcarrot_cli.cli import app
 from wzlcarrot_cli.session import Credentials
 
@@ -20,95 +20,26 @@ def _home(tmp_path, monkeypatch):
     return tmp_path
 
 
-def _fake_qr_login(captured):
-    def fake(*, show_qr: bool = False, open_image: bool = False, **_kwargs):
-        captured["show_qr"] = show_qr
-        captured["open_image"] = open_image
-        return Credentials(cookies={"d_c0": "a", "z_c0": "b"})
-
-    return fake
-
-
-def test_login_defaults_to_qr_with_popup(monkeypatch):
-    captured: dict = {}
-    monkeypatch.setattr(commands.login, "qr_login", _fake_qr_login(captured))
-    result = runner.invoke(app, ["login"])
-    assert result.exit_code == 0, result.output
-    assert captured["show_qr"] is True  # default: QR
-    assert captured["open_image"] is True  # and pop it open
-
-
-def test_login_link_flag_gives_link_only(monkeypatch):
-    captured: dict = {}
-    monkeypatch.setattr(commands.login, "qr_login", _fake_qr_login(captured))
-    result = runner.invoke(app, ["login", "--link"])
-    assert result.exit_code == 0, result.output
-    assert captured["show_qr"] is False
-    assert captured["open_image"] is False
-
-
-def test_login_qr_flag_requests_qr(monkeypatch):
-    captured: dict = {}
-    monkeypatch.setattr(commands.login, "qr_login", _fake_qr_login(captured))
-    result = runner.invoke(app, ["login", "--qr"])
-    assert result.exit_code == 0, result.output
-    assert captured["show_qr"] is True
-
-
-def test_login_with_cookie_skips_link_flow(monkeypatch):
-    def boom(**_kwargs):
-        raise AssertionError("cookie login must not call the link flow")
-
-    monkeypatch.setattr(commands.login, "qr_login", boom)
-    result = runner.invoke(app, ["login", "--cookie", "d_c0=a; z_c0=b"])
-    assert result.exit_code == 0, result.output
-
-
-def test_login_browser_flag_uses_browser_login(monkeypatch):
-    from wzlcarrot_cli import browserlogin
-
-    called = {}
-
-    def fake_browser_login(**_kwargs):
-        called["yes"] = True
-        return Credentials(cookies={"d_c0": "a", "z_c0": "b"})
-
-    # ensure the link flow is not used when --browser is set
-    monkeypatch.setattr(
-        commands.login, "qr_login", lambda **_kw: (_ for _ in ()).throw(AssertionError("no link flow"))
-    )
-    monkeypatch.setattr(browserlogin, "browser_login", fake_browser_login)
-    result = runner.invoke(app, ["login", "--browser"])
-    assert result.exit_code == 0, result.output
-    assert called.get("yes") is True
-
-
-def test_login_edge_flag_uses_edge_login(monkeypatch):
-    from wzlcarrot_cli import edgelogin
-
+def test_login_uses_edge(monkeypatch, _home):
     called = {}
 
     def fake_edge_login(**_kwargs):
         called["yes"] = True
         return Credentials(cookies={"d_c0": "a", "z_c0": "b"})
 
-    monkeypatch.setattr(edgelogin, "edge_login", fake_edge_login)
-    result = runner.invoke(app, ["login", "--edge"])
+    monkeypatch.setattr(commands.login, "edge_login", fake_edge_login)
+    result = runner.invoke(app, ["login"])
     assert result.exit_code == 0, result.output
     assert called.get("yes") is True
+    assert (_home / "credentials.json").exists()
 
 
-def test_edge_login_reports_edge_running(monkeypatch):
-    from wzlcarrot_cli import edgelogin
-
-    monkeypatch.setattr(edgelogin, "_run_powershell", lambda *a, **k: "ERR:edge-running")
-    with pytest.raises(Exception, match="关闭 Edge"):
-        edgelogin.edge_login()
+def test_login_only_has_edge_no_other_methods():
+    for flag in ("--qr", "--link", "--edge", "--reuse", "--browser"):
+        assert runner.invoke(app, ["login", flag]).exit_code != 0, flag
 
 
 def test_edge_login_filters_zhihu_cookies(monkeypatch):
-    from wzlcarrot_cli import edgelogin
-
     payload = (
         '{"result": {"cookies": ['
         '{"name": "z_c0", "value": "Z", "domain": ".zhihu.com"},'
@@ -119,3 +50,9 @@ def test_edge_login_filters_zhihu_cookies(monkeypatch):
     creds = edgelogin.edge_login()
     assert creds.z_c0 == "Z"
     assert "other" not in creds.cookies
+
+
+def test_edge_login_reports_timeout(monkeypatch):
+    monkeypatch.setattr(edgelogin, "_run_powershell", lambda *a, **k: "ERR:timeout")
+    with pytest.raises(Exception, match="超时"):
+        edgelogin.edge_login()

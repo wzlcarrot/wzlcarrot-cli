@@ -3,7 +3,7 @@
 These are skipped by default (see ``addopts = -m 'not integration'`` in
 ``pyproject.toml``).  To run them you need a saved login:
 
-    zhihu login --qr
+    zhihu login
     uv run pytest -m integration
 
 They deliberately use generous delays to stay low-frequency.

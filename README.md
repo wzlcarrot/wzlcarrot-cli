@@ -108,25 +108,15 @@ zhihu comment --answer <id> -m "..."
 
 ## 登录
 
-直接 `zhihu login`：**弹出二维码**（Windows 图片查看器打开 PNG，终端也画一份），并显示**有效期**；二维码过期会自动刷新，直到你扫码确认。
+`zhihu login` 会**自动打开一个 Edge 窗口**到知乎登录页；你在窗口里登录（扫码/密码/短信均可），登录成功后自动抓取 Cookie 并关窗。
 
 ```bash
-zhihu login                 # 默认：弹出二维码（含有效期，过期自动刷新）
+zhihu login
 ```
 
-其他方式：
-
-```bash
-zhihu login --edge          # 打开一个 Edge 窗口登录并抓 Cookie（独立配置，不碰你的 Edge；下次自动复用）
-zhihu login --edge --reuse  # 复用你现有 Edge 配置读取 Cookie（需先完全关闭 Edge）
-zhihu login --link          # 只给登录链接（在已登录知乎的浏览器打开确认）
-zhihu login --browser       # 打开真实 Chromium 登录（需 pip install 'wzlcarrot-cli[browser]'）
-zhihu login --cookie "d_c0=...; z_c0=...; _xsrf=..."   # 手动粘贴 Cookie
-```
-
-> `--edge` 会用一个**独立 Edge 配置**打开知乎登录页（扫码/密码/短信都能用），登录成功后自动抓取 Cookie 并关窗；该配置会保留，**以后 `--edge` 秒登**。它不会读取或影响你日常使用的 Edge。
-
-手动 Cookie 获取：登录 `https://www.zhihu.com` → DevTools → Network → 任意请求 → Request Headers → 复制整行 `Cookie`。
+- 使用**独立的 Edge 配置**（不读取、不影响你日常的 Edge）。
+- 该配置会保留 → **以后再登录直接秒完成**。
+- 登录页若有人机验证，在浏览器里完成即可（这正是比纯 API 扫码更稳的地方）。
 
 ```bash
 zhihu status
