@@ -257,3 +257,53 @@ def test_tui_ctrl_c_copies_selection_without_exiting():
             assert app._exit is False  # copying must not exit
 
     asyncio.run(main())
+
+
+def test_tui_smart_escape_logic():
+    async def main():
+        app = ChatTUI(FakeAgent(), subtitle="test-model")
+        async with app.run_test():
+            prompt = app.query_one("#prompt")
+            app.action_smart_escape()  # idle -> focus input
+            assert prompt.has_focus
+            assert app._cancel_event.is_set() is False
+
+            app._busy = True
+            app.action_smart_escape()  # busy -> request cancel
+            assert app._cancel_event.is_set() is True
+
+    asyncio.run(main())
+
+
+def test_tui_escape_cancels_in_flight_turn():
+    import time
+
+    class BlockingAgent(FakeAgent):
+        def send_stream(self, text, cancel_event=None):
+            yield ("delta", "部分输出")
+            for _ in range(500):
+                if cancel_event is not None and cancel_event.is_set():
+                    return
+                time.sleep(0.005)
+            yield ("done", "完整输出")
+
+    async def main():
+        app = ChatTUI(BlockingAgent(), subtitle="test-model")
+        async with app.run_test() as pilot:
+            prompt = app.query_one("#prompt")
+            prompt.value = "开始一个长任务"
+            await pilot.press("enter")
+            for _ in range(100):
+                await pilot.pause(0.01)
+                if app._busy:
+                    break
+            assert app._busy is True
+
+            await pilot.press("escape")
+            for _ in range(200):
+                await pilot.pause(0.01)
+                if not app._busy:
+                    break
+            assert app._busy is False  # cancelled and finished
+
+    asyncio.run(main())

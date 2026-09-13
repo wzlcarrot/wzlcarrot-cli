@@ -1,6 +1,6 @@
 [project]
 name = "zhihu-cli"
-version = "0.17.3"
+version = "0.18.0"
 description = "知乎命令行客户端：纯 Python 签名、扫码登录、读写与 Markdown 编辑器创作、自然语言 Agent 与 TUI。"
 readme = "README.md"
 requires-python = ">=3.10"
