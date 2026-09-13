@@ -40,6 +40,11 @@ class Credentials:
         path = credentials_file()
         if not path.exists():
             return cls()
+        # Defense in depth: re-tighten permissions in case something loosened them.
+        try:
+            path.chmod(0o600)
+        except OSError:
+            pass
         data = json.loads(path.read_text(encoding="utf-8"))
         return cls(cookies=data.get("cookies", {}), saved_at=data.get("saved_at", 0.0))
 
