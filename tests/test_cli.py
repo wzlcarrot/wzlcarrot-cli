@@ -20,15 +20,20 @@ def test_root_version():
 
 
 def test_zhihu_platform_under_wzlcarrot():
-    result = runner.invoke(root_app, ["zhihu", "version"])
+    result = runner.invoke(root_app, ["zhihu", "--help"])
     assert result.exit_code == 0
-    assert "0.18" in result.output
+    assert "hot" in result.output
 
 
 def test_zhihu_alias_still_works():
-    result = runner.invoke(app, ["version"])
+    result = runner.invoke(app, ["hot", "--help"])
     assert result.exit_code == 0
-    assert "0.18" in result.output
+
+
+def test_generic_commands_not_under_zhihu():
+    # strict layering: generic commands live at the umbrella level only
+    for args in (["zhihu", "version"], ["zhihu", "connect"], ["zhihu", "doctor"]):
+        assert runner.invoke(root_app, args).exit_code != 0
 
 
 def test_generic_commands_available_at_root():

@@ -4,7 +4,7 @@ import json
 
 from typer.testing import CliRunner
 
-from wzlcarrot_cli.cli import app
+from wzlcarrot_cli.cli import root_app
 from wzlcarrot_cli.llm import resolve_llm_config, save_llm_config
 from wzlcarrot_cli.providers import PROVIDERS, get_provider
 
@@ -32,7 +32,7 @@ def test_save_llm_config_roundtrip(tmp_path, monkeypatch):
 def test_connect_noninteractive_writes_config(tmp_path, monkeypatch):
     monkeypatch.setenv("ZHIHU_CLI_HOME", str(tmp_path))
     result = runner.invoke(
-        app,
+        root_app,
         ["connect", "--provider", "deepseek", "--api-key", "sk-x", "--model", "deepseek-chat"],
     )
     assert result.exit_code == 0, result.output
@@ -42,7 +42,7 @@ def test_connect_noninteractive_writes_config(tmp_path, monkeypatch):
 
 
 def test_connect_list():
-    result = runner.invoke(app, ["connect", "--list"])
+    result = runner.invoke(root_app, ["connect", "--list"])
     assert result.exit_code == 0
     assert "deepseek" in result.output
     assert "openai" in result.output

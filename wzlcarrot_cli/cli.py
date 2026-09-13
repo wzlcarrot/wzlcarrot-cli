@@ -37,7 +37,6 @@ _GROUPS = {
     "download": download.download_app,
     "action": actions.actions_app,
     "publish": publish.publish_app,
-    "license": license_cmd.license_app,
 }
 
 
@@ -90,19 +89,10 @@ def configure(
             typer.echo(ctx.get_help())
 
 
-# account
+# account (platform-specific: login to this platform)
 app.command("login")(login.login)
 app.command("logout")(login.logout)
 app.command("status")(login.status)
-app.command("connect")(connect.connect)
-
-
-def show_version() -> None:
-    """显示版本号。"""
-    typer.echo(f"zhihu（{DIST_NAME}）{__version__}")
-
-
-app.command("version")(show_version)
 
 
 def upgrade(
@@ -115,9 +105,7 @@ def upgrade(
     raise SystemExit(code)
 
 
-app.command("upgrade")(upgrade)
-
-# read
+# read (platform-specific)
 app.command("hot")(feed.hot)
 app.command("feed")(feed.feed)
 app.command("topic")(feed.topic)
@@ -133,11 +121,6 @@ app.command("followers")(user_cmd.followers)
 app.command("collections")(user_cmd.collections)
 app.command("notifications")(user_cmd.notifications)
 
-# natural language
-app.command("tui")(chat.tui)
-app.command("chat")(chat.chat)
-app.command("ask")(chat.ask)
-
 
 def show_sessions() -> None:
     """列出已保存的对话会话（最近的在前）。"""
@@ -152,16 +135,12 @@ def show_sessions() -> None:
         typer.echo(f"{mark} {info.id}  {info.messages:>3} 条  {info.model}  {info.title}")
 
 
-app.command("sessions")(show_sessions)
-
-# groups
+# groups (platform-specific)
 for name, sub in _GROUPS.items():
     app.add_typer(sub, name=name)
 
-# plugins: contribution surface ("everything is a plugin")
+# Plugins contribute generic commands/tools/prompts/hooks at the umbrella level.
 _PLUGINS = load_plugins()
-for plugin_command_name, plugin_command_fn in _PLUGINS.commands.items():
-    app.command(plugin_command_name)(plugin_command_fn)
 
 
 def show_plugins() -> None:
@@ -178,7 +157,6 @@ def show_plugins() -> None:
         typer.echo(f"● {info.name}  " + "  ".join(parts))
 
 
-app.command("plugins")(show_plugins)
 
 
 def show_spill(
@@ -198,7 +176,6 @@ def show_spill(
         typer.echo(f"  {path.name}  {path.stat().st_size} B")
 
 
-app.command("spill")(show_spill)
 
 
 def show_prompt() -> None:
@@ -210,7 +187,6 @@ def show_prompt() -> None:
     typer.echo(build_prompt_sections(base_system_prompt(), load_memory(), api.prompts))
 
 
-app.command("prompt")(show_prompt)
 
 
 def show_hooks() -> None:
@@ -227,7 +203,6 @@ def show_hooks() -> None:
         typer.echo(f"● [{event}] {matcher}  ({source}:{name})")
 
 
-app.command("hooks")(show_hooks)
 
 
 def doctor(
@@ -242,7 +217,6 @@ def doctor(
         console.print(f"{mark} {label}：{detail}")
 
 
-app.command("doctor")(doctor)
 
 
 def main() -> None:
@@ -315,6 +289,8 @@ def build_root_app() -> typer.Typer:
     for platform in discover():
         root.add_typer(platform.builder(), name=platform.name, help=platform.title)
     root.add_typer(license_cmd.license_app, name="license")
+    for plugin_name, plugin_fn in _PLUGINS.commands.items():
+        root.command(plugin_name)(plugin_fn)
     return root
 
 

@@ -797,7 +797,7 @@ def chat(
                     console.print("当前无任务清单。")
                 continue
             if text == "/connect":
-                console.print("模型配置请在终端运行：zhihu connect（--list 查看内置供应商）")
+                console.print("模型配置请在终端运行：wzlcarrot connect（--list 查看内置供应商）")
                 continue
             if text == "/copy":
                 console.print("复制请在 TUI 中操作：Ctrl+C 复制选区，/copy 复制上一条回答。")
@@ -827,7 +827,7 @@ def ask(
     model: str = typer.Option(None, "--model", help="模型名"),
     yes: bool = typer.Option(False, "--yes", "-y", help="写操作不再逐次确认"),
 ) -> None:
-    """单次自然语言提问，例如 `zhihu ask 帮我看看今天热榜`。"""
+    """单次自然语言提问，例如 `wzlcarrot ask 帮我看看今天热榜`。"""
     agent = _make_agent(ctx, api_key, base_url, model, yes)
     try:
         reply = agent.send(" ".join(prompt))
@@ -846,7 +846,7 @@ def run_tui(
     resume: bool = False,
     session_id: str | None = None,
 ) -> None:
-    """Launch the full-screen TUI (also the default when running bare `zhihu`)."""
+    """Launch the full-screen TUI (also the default when running bare `wzlcarrot`)."""
     try:
         from ..tui import ChatTUI
     except ImportError as exc:

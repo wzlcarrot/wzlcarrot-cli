@@ -50,7 +50,7 @@ description: 知乎 CLI 技能。用户想在知乎搜索、看热榜/推荐/话
 | 发布提问 / 想法 / 文章 | `zhihu publish ask "标题？" -d "描述" -y` / `zhihu publish pin "标题" -c "正文" -y` / `zhihu publish article "标题" "正文" -y` |
 | 删除自己的内容 | `zhihu publish delete-question\|delete-pin\|delete-article <id> -y` |
 | Markdown 编辑器创作 | 上述发布命令加 `--edit`（弹本地 MarkText） |
-| 自然语言对话 / 续聊 / 列出会话 | `zhihu tui` / `zhihu chat` / `zhihu chat --continue` / `zhihu sessions` |
+| 自然语言对话 / 续聊 / 列出会话 | `wzlcarrot tui` / `wzlcarrot chat` / `wzlcarrot chat --continue` / `wzlcarrot sessions` |
 
 ## 执行流程
 
@@ -76,7 +76,7 @@ zhihu download article 12345678 --images -o ./downloads
 zhihu action vote --answer 87654321 -y
 zhihu publish pin "今天天气真好" -c "<p>正文</p>" -y
 zhihu publish article --edit
-zhihu chat --continue
+wzlcarrot chat --continue
 ```
 
 ## 错误处理

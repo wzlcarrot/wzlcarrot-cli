@@ -16,13 +16,13 @@
 - 对话上下文自动压缩（旧工具结果截断 + 超阈值 LLM 摘要，支持 `/compact`）
 - 插件可贡献 CLI 命令、Agent 工具、系统提示词段，以及工具管线钩子（`api.hook`）
 - 守卫式工具管线：pre/post 钩子可拒绝/询问/改写参数/注解结果；支持声明式规则文件
-- 系统提示词分段组装（基础段 + 记忆 + 插件段）；记忆来自 `~/.config/zhihu-cli/AGENTS.md` 与当前目录 `ZHIHU.md`，`zhihu prompt` 可预览
+- 系统提示词分段组装（基础段 + 记忆 + 插件段）；记忆来自 `~/.config/zhihu-cli/AGENTS.md` 与当前目录 `ZHIHU.md`，`wzlcarrot prompt` 可预览
 - 超大工具结果自动落盘（私有 0600 文件），模型可用 `read_spill` 分段回读，不再被截断丢失
-- 环境自检 `zhihu doctor`：登录/模型/插件/钩子/溢出/会话/连通性一屏看清
+- 环境自检 `wzlcarrot doctor`：登录/模型/插件/钩子/溢出/会话/连通性一屏看清
 - 多步任务：`todo_write` 工具 + TUI 实时任务面板 + `/todos` 查看
 - 真实 token 用量统计（非流式/流式都采集 provider usage），TUI 状态栏显示、`/stats` 查看
-- 对话会话本地保存，支持 `--continue` 续聊、`zhihu sessions` 查看
-- 自然语言 Agent（`zhihu` / `zhihu ask`）由 LLM 调用以上能力
+- 对话会话本地保存，支持 `--continue` 续聊、`wzlcarrot sessions` 查看
+- 自然语言 Agent（`zhihu` / `wzlcarrot ask`）由 LLM 调用以上能力
 
 ## TUI 一览
 
@@ -60,7 +60,7 @@ uv sync                 # 或： pip install -e .
 uv tool install --editable ~/zhihu-cli
 ```
 
-之后直接运行 `zhihu` 即进入全屏 TUI。
+之后直接运行 `wzlcarrot` 即进入全屏 TUI。
 
 ## 多平台 CLI（`wzlcarrot`）
 
@@ -92,7 +92,7 @@ wzlcarrot zhihu comment --answer <id> -m "..."
 - 每天首次使用时检查一次 PyPI 是否有新版本：仅查询 PyPI 公开的版本信息，
   **无任何遥测**；发现新版会在命令前提示一行。设置 `ZHIHU_CLI_NO_UPDATE_CHECK=1`
   可关闭检查。
-- `zhihu upgrade`：自动识别安装方式（uv tool / pipx / pip）并执行对应的升级命令；
+- `wzlcarrot upgrade`：自动识别安装方式（uv tool / pipx / pip）并执行对应的升级命令；
   源码（editable）安装时提示用 `git pull && uv sync` 升级。
 
 ## 登录
@@ -112,7 +112,7 @@ zhihu login --qr
 ```bash
 zhihu status
 zhihu logout
-zhihu doctor       # 自检：登录、模型、插件、钩子、溢出、会话、连通性
+wzlcarrot doctor       # 自检：登录、模型、插件、钩子、溢出、会话、连通性
 ```
 
 ## 凭据存储与安全
@@ -124,7 +124,7 @@ zhihu doctor       # 自检：登录、模型、插件、钩子、溢出、会�
   能读你 home 目录的攻击者两者都防不住。请勿在不可信或多用户的机器上使用；
   担心落盘可 `zhihu logout` 及时清除，或不保存。
 - 本工具**不含任何遥测或数据上报**。全部网络请求只有两类：知乎 API，
-  以及你自己配置的 LLM API 端点（`zhihu connect` / `llm.json`）。
+  以及你自己配置的 LLM API 端点（`wzlcarrot connect` / `llm.json`）。
 
 ## 用法
 
@@ -226,7 +226,7 @@ zhihu --min-delay 4 --max-delay 8 --min-gap 10 --write-delay 30 hot
 全屏 TUI（推荐，类似 Claude Code 的界面）：
 
 ```bash
-zhihu tui
+wzlcarrot tui
 ```
 
 在 TUI 里直接用中文说，例如：
@@ -263,12 +263,12 @@ zhihu tui
 纯文本模式：
 
 ```bash
-zhihu ask "帮我看看今天热榜前5"
-zhihu chat                 # 进对话，输入 exit 退出
-zhihu chat --continue      # 恢复最近一次会话继续聊
-zhihu chat --session 20260101-120000
-zhihu sessions             # 列出已保存的会话
-zhihu chat --yes           # 写操作不再逐次确认
+wzlcarrot ask "帮我看看今天热榜前5"
+wzlcarrot chat                 # 进对话，输入 exit 退出
+wzlcarrot chat --continue      # 恢复最近一次会话继续聊
+wzlcarrot chat --session 20260101-120000
+wzlcarrot sessions             # 列出已保存的会话
+wzlcarrot chat --yes           # 写操作不再逐次确认
 ```
 
 会话保存在 `~/.config/zhihu-cli/sessions/`（权限 0600）。
@@ -276,9 +276,9 @@ zhihu chat --yes           # 写操作不再逐次确认
 需要配置一个 **OpenAI 兼容**的模型接口。最简单：交互式配置（内置常见供应商）
 
 ```bash
-zhihu connect              # 选择供应商 → 填 API Key → 选模型
-zhihu connect --list       # 查看内置供应商与模型
-zhihu connect -p deepseek -k sk-xxx -m deepseek-chat --test
+wzlcarrot connect              # 选择供应商 → 填 API Key → 选模型
+wzlcarrot connect --list       # 查看内置供应商与模型
+wzlcarrot connect -p deepseek -k sk-xxx -m deepseek-chat --test
 ```
 
 内置：DeepSeek、OpenAI、智谱 GLM、月之暗面 Kimi、通义千问、MiniMax、硅基流动、OpenRouter、Agnes，以及自定义（任意 OpenAI 兼容地址）。
@@ -295,7 +295,7 @@ export ZHIHU_CLI_LLM_MODEL=deepseek-chat                    # 可选
 { "api_key": "sk-xxx", "base_url": "https://api.deepseek.com/v1", "model": "deepseek-chat" }
 
 # 或运行时
-zhihu ask "热榜前3" --api-key sk-xxx --model deepseek-chat
+wzlcarrot ask "热榜前3" --api-key sk-xxx --model deepseek-chat
 ```
 
 模型必须支持 function calling（工具调用）。写操作在对话中会再次请求确认。
@@ -332,7 +332,7 @@ def register(api):
     api.prompt_section("style", "回答保持简短。", priority=10)  # 注入系统提示词段
 ```
 
-- 查看已加载：`zhihu plugins`
+- 查看已加载：`wzlcarrot plugins`
 - 单个插件加载失败不会影响其他插件，也不会中断启动
 - 禁用全部插件：`ZHIHU_CLI_NO_PLUGINS=1`
 - 完整示例见 `examples/plugins/hello.py`
@@ -367,7 +367,7 @@ api.hook(POST_EXECUTE, annotate, matcher="hot")
 - `pre_execute` 返回 `HookResult(decision="deny"/"ask", reason=...)` 或 `args={...}` 改写参数
 - `post_execute` 返回 `HookResult(result=..., context=...)` 改写/注解结果
 - 钩子抛异常会被隔离，不影响管线
-- 查看已加载：`zhihu hooks`
+- 查看已加载：`wzlcarrot hooks`
 
 ## AI Agent Skill
 
