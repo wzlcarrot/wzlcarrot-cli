@@ -27,6 +27,23 @@ _GROUPS = {
 }
 
 
+def _notify_update() -> None:
+    """One-line notice when PyPI has a newer release; never raises, never blocks."""
+    try:
+        from .updates import check_for_update
+
+        latest = check_for_update(__version__)
+    except Exception:  # noqa: BLE001 - cosmetic path, must never fail a command
+        return
+    if latest:
+        from .output import console
+
+        console.print(
+            f"[yellow]有新版本：zhihu-cli {latest}（当前 {__version__}）,"
+            "运行 zhihu upgrade 升级；设置 ZHIHU_CLI_NO_UPDATE_CHECK=1 可关闭检查[/yellow]"
+        )
+
+
 @app.callback(invoke_without_command=True)
 def configure(
     ctx: typer.Context,
@@ -44,6 +61,7 @@ def configure(
         min_gap=min_gap,
         as_json=json_output,
     )
+    _notify_update()
     if ctx.invoked_subcommand is None:
         if sys.stdin.isatty():
             chat.run_tui(ctx)
@@ -64,6 +82,19 @@ def show_version() -> None:
 
 
 app.command("version")(show_version)
+
+
+def upgrade(
+    yes: bool = typer.Option(False, "--yes", "-y", help="跳过确认"),
+) -> None:
+    """升级 zhihu-cli（自动识别 uv tool / pipx / pip 安装方式）。"""
+    from .upgrade import upgrade as run_upgrade
+
+    code = run_upgrade(assume_yes=yes)
+    raise SystemExit(code)
+
+
+app.command("upgrade")(upgrade)
 
 # read
 app.command("hot")(feed.hot)

@@ -43,7 +43,10 @@ uv build
 4. **提交信息**：使用祈使句、一行说明变更内容，例如
    `Add topic filter to search command`；一次提交聚焦一件事。
 5. **版本发布**：由维护者执行 —— 更新 `pyproject.toml` 版本号、
-   把 `[Unreleased]` 改为版本号并注明日期、打 `vX.Y.Z` tag。
+   把 `[Unreleased]` 改为版本号并注明日期、提交后打 `vX.Y.Z` tag 并推送。
+   `.github/workflows/release.yml` 会在 tag 上自动构建并发布到 PyPI
+   （Trusted Publishing：需在 PyPI 项目设置里为该仓库和工作流配置一次
+   pending publisher，GitHub 侧不保存任何 token）。
 
 ## 代码约定
 

@@ -45,6 +45,14 @@ uv tool install --editable ~/zhihu-cli
 
 之后直接运行 `zhihu` 即进入全屏 TUI。
 
+## 升级与版本检查
+
+- 每天首次使用时检查一次 PyPI 是否有新版本：仅查询 PyPI 公开的版本信息，
+  **无任何遥测**；发现新版会在命令前提示一行。设置 `ZHIHU_CLI_NO_UPDATE_CHECK=1`
+  可关闭检查。
+- `zhihu upgrade`：自动识别安装方式（uv tool / pipx / pip）并执行对应的升级命令；
+  源码（editable）安装时提示用 `git pull && uv sync` 升级。
+
 ## 登录
 
 推荐扫码登录（纯 API，无需浏览器；二维码会渲染在终端并保存为 `~/.config/zhihu-cli/qrcode.png`）：

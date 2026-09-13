@@ -3,6 +3,10 @@
 本项目遵循 [Semantic Versioning](https://semver.org/)；版本号一路快进，功能分组如下。
 
 ## [Unreleased]
+### Added
+- **版本检查**：每天首次使用时查询一次 PyPI 公开版本信息（仅此查询，无遥测），发现新版在命令前提示一行；`ZHIHU_CLI_NO_UPDATE_CHECK=1` 可关闭。
+- **`zhihu upgrade` 命令**：自动识别安装方式（uv tool / pipx / pip）并执行对应升级；源码 editable 安装时提示 `git pull && uv sync`。
+- **发布工作流**：`.github/workflows/release.yml` 在 `v*` tag 上自动构建并发布到 PyPI（Trusted Publishing，GitHub 侧不存 token）。
 
 ## [0.18.0] - 2026-09-13
 ### Added
