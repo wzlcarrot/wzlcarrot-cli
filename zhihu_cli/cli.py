@@ -95,7 +95,7 @@ app.command("version")(show_version)
 def upgrade(
     yes: bool = typer.Option(False, "--yes", "-y", help="跳过确认"),
 ) -> None:
-    """升级 zhihu-cli（自动识别 uv tool / pipx / pip 安装方式）。"""
+    """升级 wzlcarrot-zhihu-cli（自动识别 uv tool / pipx / pip 安装方式）。"""
     from .upgrade import upgrade as run_upgrade
 
     code = run_upgrade(assume_yes=yes)
@@ -256,6 +256,24 @@ def root_version() -> None:
 
 
 root_app.command("version")(root_version)
+
+# Generic, platform-agnostic commands live at the top level. Platform-specific
+# operations (hot/search/comment/publish/login/...) stay under `wzlcarrot zhihu`.
+_GENERIC_COMMANDS = {
+    "connect": connect.connect,
+    "doctor": doctor,
+    "plugins": show_plugins,
+    "hooks": show_hooks,
+    "spill": show_spill,
+    "prompt": show_prompt,
+    "upgrade": upgrade,
+    "sessions": show_sessions,
+    "tui": chat.tui,
+    "chat": chat.chat,
+    "ask": chat.ask,
+}
+for _generic_name, _generic_fn in _GENERIC_COMMANDS.items():
+    root_app.command(_generic_name)(_generic_fn)
 
 
 @root_app.callback(invoke_without_command=True)

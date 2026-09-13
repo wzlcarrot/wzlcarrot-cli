@@ -56,17 +56,28 @@ uv tool install --editable ~/zhihu-cli
 
 ## 多平台 CLI（`wzlcarrot`）
 
-顶层命令是 **`wzlcarrot`**，平台作为子命令（当前内置知乎）：
+顶层命令是 **`wzlcarrot`**，命令分两类：
+
+**通用（跨平台）——挂在 `wzlcarrot` 下：**
+
+```bash
+wzlcarrot connect      # 配置模型供应商与 API Key
+wzlcarrot doctor       # 自检
+wzlcarrot tui          # 对话 TUI
+wzlcarrot chat / ask   # 文本对话
+wzlcarrot sessions / plugins / hooks / spill / prompt / upgrade / version
+```
+
+**平台特定——挂在 `wzlcarrot <平台>` 下（当前只有知乎）：**
 
 ```bash
 wzlcarrot zhihu hot            # 知乎热榜
 wzlcarrot zhihu search 关键词
 wzlcarrot zhihu login --qr
-wzlcarrot zhihu tui
-wzlcarrot                      # 不带子命令直接进 TUI
+wzlcarrot zhihu comment --answer <id> -m "..."
 ```
 
-`zhihu ...` 作为**别名仍然可用**（等价于 `wzlcarrot zhihu ...`）。后续会以同样方式加入 `weibo`、`xiaohongshu` 等平台（每个平台是独立的适配实现）。
+`zhihu ...` 作为**别名仍可用**（等价于 `wzlcarrot zhihu ...`）。后续会以同样方式加入 `weibo`、`xiaohongshu` 等平台（每个平台是独立的适配实现）。
 
 ## 升级与版本检查
 
