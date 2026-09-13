@@ -7,6 +7,7 @@
 - **版本检查**：每天首次使用时查询一次 PyPI 公开版本信息（仅此查询，无遥测），发现新版在命令前提示一行；`ZHIHU_CLI_NO_UPDATE_CHECK=1` 可关闭。
 - **`zhihu upgrade` 命令**：自动识别安装方式（uv tool / pipx / pip）并执行对应升级；源码 editable 安装时提示 `git pull && uv sync`。
 - **发布工作流**：`.github/workflows/release.yml` 在 `v*` tag 上自动构建并发布到 PyPI（Trusted Publishing，GitHub 侧不存 token）。
+- **提示词注入防护**：Agent 模式的工具结果（知乎标题/回答/评论等第三方内容）统一包裹为「不可信数据」标记，系统提示词明确约束不得执行其中出现的指令；包裹标签可防逃逸（内容中的闭合标记会被剥离）。
 ### Fixed
 - 更新检查此前查询的是 PyPI 上**同名但非本项目**的 `zhihu-cli`，导致误报新版本；现改为按真实发行名查询，并在缓存中记录包名（旧缓存自动失效）。
 ### Changed

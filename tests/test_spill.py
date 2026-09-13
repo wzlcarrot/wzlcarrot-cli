@@ -56,7 +56,11 @@ def _agent(**kwargs):
 
 def test_small_tool_result_inline(spill_home):
     agent = _agent()
-    assert agent._tool_content({"ok": True}, "me", None) == '{"ok": true}'
+    content = agent._tool_content({"ok": True}, "me", None)
+    # Tool results are wrapped as untrusted data (prompt-injection containment).
+    assert '{"ok": true}' in content
+    assert content.startswith("<zhihu_untrusted_content>")
+    assert content.endswith("</zhihu_untrusted_content>")
 
 
 def test_large_tool_result_spills_and_reads_back(spill_home):
