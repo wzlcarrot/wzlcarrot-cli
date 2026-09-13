@@ -32,7 +32,11 @@ class Credentials:
     def save(self) -> None:
         self.saved_at = time.time()
         path = credentials_file()
-        path.write_text(json.dumps(asdict(self), ensure_ascii=False, indent=2), encoding="utf-8")
+        plaintext = json.dumps(asdict(self), ensure_ascii=False)
+        from .crypto import encrypt_text
+
+        payload = {"version": 2, "encrypted": encrypt_text(plaintext)}
+        path.write_text(json.dumps(payload, ensure_ascii=False), encoding="utf-8")
         path.chmod(0o600)
 
     @classmethod
@@ -46,6 +50,17 @@ class Credentials:
         except OSError:
             pass
         data = json.loads(path.read_text(encoding="utf-8"))
+        if "encrypted" in data:  # v2 encrypted format
+            from .crypto import decrypt_text
+
+            try:
+                data = json.loads(decrypt_text(str(data["encrypted"])))
+            except Exception as exc:
+                from .exceptions import ZhihuError
+
+                raise ZhihuError(
+                    "凭证解密失败（密钥丢失或文件损坏）：请重新运行 `zhihu login`"
+                ) from exc
         return cls(cookies=data.get("cookies", {}), saved_at=data.get("saved_at", 0.0))
 
     @classmethod

@@ -1,5 +1,6 @@
 # Credentials & sessions - never commit
 credentials.json
+.credentials.key
 *.session
 .zhihu-cli/
 
