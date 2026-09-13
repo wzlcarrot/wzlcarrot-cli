@@ -119,7 +119,13 @@ def qr_login(
             raise ZhihuError(f"获取登录链接失败：{exc}") from exc
 
         token = data.get("token") or data.get("qrcode_token")
-        link = data.get("link") or ""
+        link = (data.get("link") or "").strip()
+        # The API sometimes appends a path-like artifact (e.g. "?/api/login/qrcode");
+        # strip it so the link opens cleanly.
+        if link and "?" in link and link.split("?", 1)[1].startswith("/"):
+            link = link.split("?", 1)[0]
+        if not link and token:
+            link = f"{BASE_URL}/account/scan/login/{token}"
         if not token or not link:
             raise ZhihuError(f"登录接口未返回 token/link：{data}")
 
