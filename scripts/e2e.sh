@@ -3,7 +3,7 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
-export ZHIHU_CLI_NO_UPDATE_CHECK=1
+export WZLCARROT_CLI_NO_UPDATE_CHECK=1
 
 if command -v wzlcarrot >/dev/null 2>&1; then
   WC="wzlcarrot"; ZH="zhihu"
@@ -19,6 +19,7 @@ $WC connect --list >/dev/null
 $WC license status >/dev/null
 $WC doctor --offline >/dev/null
 $WC zhihu --help >/dev/null
-$ZH version >/dev/null
+$ZH --help >/dev/null
+$ZH hot --help >/dev/null
 
 echo "e2e: all CLI smoke checks passed"
