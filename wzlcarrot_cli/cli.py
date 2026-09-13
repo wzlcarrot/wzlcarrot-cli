@@ -13,6 +13,7 @@ from .commands._common import Settings
 from .config import DIST_NAME
 from .exceptions import ZhihuError
 from .output import error_console
+from .platforms import Platform, discover, register
 from .plugins import load_plugins, plugins_dir
 
 app = typer.Typer(
@@ -242,20 +243,20 @@ def main() -> None:
 
 # ---- umbrella CLI: ``wzlcarrot [platform] <command>`` ----------------------
 
-root_app = typer.Typer(
-    add_completion=False,
-    no_args_is_help=False,
-    help="wzlcarrot 多平台 CLI（当前内置：知乎）。",
+# The built-in Zhihu platform contributes its sub-app to the umbrella CLI.
+register(
+    Platform(
+        name="zhihu",
+        title="知乎：热榜 / 搜索 / 问答 / 评论 / 发布 / 导出 / Agent",
+        builder=lambda: app,
+    )
 )
-root_app.add_typer(app, name="zhihu", help="知乎：热榜 / 搜索 / 问答 / 评论 / 发布 / 导出 / Agent")
 
 
 def root_version() -> None:
     """显示版本号。"""
     typer.echo(f"wzlcarrot {__version__}（发行名 {DIST_NAME}）")
 
-
-root_app.command("version")(root_version)
 
 # Generic, platform-agnostic commands live at the top level. Platform-specific
 # operations (hot/search/comment/publish/login/...) stay under `wzlcarrot zhihu`.
@@ -272,24 +273,39 @@ _GENERIC_COMMANDS = {
     "chat": chat.chat,
     "ask": chat.ask,
 }
-for _generic_name, _generic_fn in _GENERIC_COMMANDS.items():
-    root_app.command(_generic_name)(_generic_fn)
 
 
-@root_app.callback(invoke_without_command=True)
-def _root(
-    ctx: typer.Context,
-    min_delay: float = typer.Option(1.5, "--min-delay", help="请求最小间隔（秒）"),
-    max_delay: float = typer.Option(3.5, "--max-delay", help="请求最大间隔（秒）"),
-) -> None:
-    """wzlcarrot 入口；不带子命令时进入 TUI（当前为知乎）。"""
-    ctx.obj = Settings(min_delay=min_delay, max_delay=max_delay)
-    _notify_update()
-    if ctx.invoked_subcommand is None:
-        if sys.stdin.isatty():
-            chat.run_tui(ctx)
-        else:
-            typer.echo(ctx.get_help())
+def build_root_app() -> typer.Typer:
+    root = typer.Typer(
+        add_completion=False,
+        no_args_is_help=False,
+        help="wzlcarrot 多平台 CLI。",
+    )
+    root.command("version")(root_version)
+    for name, fn in _GENERIC_COMMANDS.items():
+        root.command(name)(fn)
+
+    @root.callback(invoke_without_command=True)
+    def _root(
+        ctx: typer.Context,
+        min_delay: float = typer.Option(1.5, "--min-delay", help="请求最小间隔（秒）"),
+        max_delay: float = typer.Option(3.5, "--max-delay", help="请求最大间隔（秒）"),
+    ) -> None:
+        """wzlcarrot 入口；不带子命令时进入 TUI（当前为知乎）。"""
+        ctx.obj = Settings(min_delay=min_delay, max_delay=max_delay)
+        _notify_update()
+        if ctx.invoked_subcommand is None:
+            if sys.stdin.isatty():
+                chat.run_tui(ctx)
+            else:
+                typer.echo(ctx.get_help())
+
+    for platform in discover():
+        root.add_typer(platform.builder(), name=platform.name, help=platform.title)
+    return root
+
+
+root_app = build_root_app()
 
 
 def root_main() -> None:
