@@ -41,8 +41,7 @@ class FakeAgent:
         ))
 
 
-async def main() -> None:
-    app = ChatTUI(FakeAgent(), subtitle="deepseek-chat", platform="知乎")
+async def _capture(app: ChatTUI, out: Path) -> None:
     async with app.run_test(size=(100, 32)) as pilot:
         prompt = app.query_one("#prompt")
         prompt.value = "帮我看看今天热榜前3"
@@ -53,10 +52,24 @@ async def main() -> None:
                 break
         await pilot.pause(0.2)
         svg = app.export_screenshot()
-    out = Path(__file__).resolve().parent.parent / "docs" / "img" / "tui.svg"
-    out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(svg, encoding="utf-8")
     print(f"saved {out}")
+
+
+async def _capture_welcome(out: Path) -> None:
+    app = ChatTUI(FakeAgent(), subtitle="deepseek-chat", platform="知乎")
+    async with app.run_test(size=(100, 32)) as pilot:
+        await pilot.pause(0.3)
+        svg = app.export_screenshot()
+    out.write_text(svg, encoding="utf-8")
+    print(f"saved {out}")
+
+
+async def main() -> None:
+    img = Path(__file__).resolve().parent.parent / "docs" / "img"
+    img.mkdir(parents=True, exist_ok=True)
+    await _capture(ChatTUI(FakeAgent(), subtitle="deepseek-chat", platform="知乎"), img / "tui.svg")
+    await _capture_welcome(img / "tui-welcome.svg")
 
 
 if __name__ == "__main__":

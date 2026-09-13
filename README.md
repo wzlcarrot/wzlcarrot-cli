@@ -26,7 +26,13 @@
 
 ## TUI 一览
 
-![wzlcarrot TUI 截图](docs/img/tui.svg)
+启动页（像素 `WZLCARROT` 字标 + 当前平台）：
+
+![wzlcarrot TUI 启动页](docs/img/tui-welcome.svg)
+
+对话中（顶部 banner 自动收起为一行，平台显示在左下状态栏）：
+
+![wzlcarrot TUI 对话截图](docs/img/tui.svg)
 
 *截图由 `uv run python scripts/screenshot.py` 自动生成（无需登录）。*
 

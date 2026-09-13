@@ -76,6 +76,12 @@ def _word_art(word: str, start: str = GREEN, end: str = ACCENT) -> str:
     return "\n".join(lines)
 
 
+def _compact_welcome(platform: str = "") -> str:
+    """One-line header used on narrow terminals and after the first message."""
+    tool = f" [{MUTED}]· {platform}[/]" if platform else ""
+    return f"[bold {ACCENT}]WZLCARROT[/]{tool}  [{MUTED}]多平台 AI CLI · 输入 / 查看命令[/]"
+
+
 def _welcome_text(platform: str = "") -> str:
     """Pixel wordmark + hints, in the spirit of Claude Code's start screen."""
     tool = f"[{ACCENT}]· {platform}[/]\n" if platform else ""
@@ -83,11 +89,8 @@ def _welcome_text(platform: str = "") -> str:
         f"{_word_art('WZLCARROT')}\n"
         f"[bold {MUTED}]多平台 AI CLI[/]\n"
         f"{tool}"
-        f"[{MUTED}]用中文对话，自动调用平台接口取真实数据[/]\n\n"
-        f"[{MUTED}]试着说：[/]\n"
-        f"[{MUTED}]  › 看看今天热榜前5[/]\n"
-        f"[{MUTED}]  › 搜一下 transformers 有哪些高赞回答[/]\n"
-        f"[{MUTED}]  › 把第2条问题的回答导出成 markdown[/]"
+        f"[{MUTED}]用中文对话，自动调用平台接口取真实数据[/]\n"
+        f"[{MUTED}]输入 / 查看命令 · 例：看看今天热榜前5[/]"
     )
 
 
@@ -101,6 +104,13 @@ Screen {{ background: {BG}; color: {TEXT}; }}
     border: round {ACCENT};
     background: {BG_PANEL};
     padding: 1 2;
+    margin: 1 0 0 0;
+}}
+
+#welcome.compact {{
+    border: none;
+    background: transparent;
+    padding: 0;
     margin: 1 0 0 0;
 }}
 
@@ -436,9 +446,9 @@ class ChatTUI(App):
         return f"{self._subtitle}{who} · {tokens} tokens"
 
     def _mode_text(self) -> str:
-        if self._mode == "build":
-            return "[#7fb069]● build[/]"
-        return f"[{ACCENT}]● plan[/]"
+        mode = "[#7fb069]● build[/]" if self._mode == "build" else f"[{ACCENT}]● plan[/]"
+        who = f"  [{MUTED}]· {self._platform}[/]" if self._platform else ""
+        return mode + who
 
     def action_toggle_mode(self) -> None:
         if len(self.screen_stack) > 1:  # ignore while a modal is open
@@ -454,7 +464,18 @@ class ChatTUI(App):
 
     def on_mount(self) -> None:
         self.title = f"WZLCARROT · {self._platform}" if self._platform else "WZLCARROT"
+        if self.size.width and self.size.width < 66:  # keep the art from wrapping
+            self._collapse_welcome()
         self.query_one("#prompt", Input).focus()
+
+    def _collapse_welcome(self) -> None:
+        """Shrink the start banner to one line (narrow screen or first message)."""
+        try:
+            welcome = self.query_one("#welcome", Static)
+        except Exception:  # noqa: BLE001 - welcome may already be gone
+            return
+        welcome.update(_compact_welcome(self._platform))
+        welcome.add_class("compact")
 
     def action_focus_input(self) -> None:
         self.query_one("#prompt", Input).focus()
@@ -656,6 +677,7 @@ class ChatTUI(App):
             self._thinking = None
 
     def _start(self, text: str) -> None:
+        self._collapse_welcome()
         self._busy = True
         self._cancel_event.clear()
         self._assistant = None

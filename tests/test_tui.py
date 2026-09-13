@@ -1,5 +1,7 @@
 import asyncio
 
+from textual.widgets import Static
+
 from wzlcarrot_cli.tui import ChatTUI, _welcome_text
 
 
@@ -13,6 +15,30 @@ def test_welcome_banner_renders_with_pixel_art():
     assert "█" in out
     assert "多平台 AI CLI" in out
     assert "知乎" in out
+
+
+def test_welcome_collapses_on_narrow_screen():
+    async def main():
+        app = ChatTUI(FakeAgent(), subtitle="test-model", platform="知乎")
+        async with app.run_test(size=(50, 20)) as pilot:
+            await pilot.pause(0.1)
+            assert app.query_one("#welcome", Static).has_class("compact")
+
+    asyncio.run(main())
+
+
+def test_welcome_collapses_after_first_message():
+    async def main():
+        app = ChatTUI(FakeAgent(), subtitle="test-model", platform="知乎")
+        async with app.run_test(size=(100, 30)) as pilot:
+            await pilot.pause(0.1)
+            assert not app.query_one("#welcome", Static).has_class("compact")
+            app.query_one("#prompt").value = "你好"
+            await pilot.press("enter")
+            await pilot.pause(0.3)
+            assert app.query_one("#welcome", Static).has_class("compact")
+
+    asyncio.run(main())
 
 
 class FakeAgent:
