@@ -38,11 +38,12 @@ def login(
     cookie: str = typer.Option(None, "--cookie", "-c", help="改用浏览器 Cookie 字符串登录"),
     cookie_file: Path = typer.Option(None, "--cookie-file", help="从文件读取 Cookie 字符串"),
     browser: bool = typer.Option(False, "--browser", "-b", help="打开真实浏览器登录"),
-    edge: bool = typer.Option(False, "--edge", help="复用 Edge 已登录会话（需先关闭 Edge）"),
+    edge: bool = typer.Option(False, "--edge", help="打开 Edge 窗口登录并抓取 Cookie（无需关闭 Edge）"),
+    reuse: bool = typer.Option(False, "--reuse", help="配合 --edge：复用你现有的 Edge 配置（需先关闭 Edge）"),
     link: bool = typer.Option(False, "--link", help="只给登录链接，不显示二维码"),
     qr: bool = typer.Option(False, "--qr", help="显示二维码（默认行为）"),
 ) -> None:
-    """登录知乎。默认弹出二维码（含有效期）；也可 --browser / --edge / --cookie。"""
+    """登录知乎。默认弹出二维码（含有效期）；也可 --edge / --browser / --cookie。"""
     raw = _load_cookie_input(cookie, cookie_file)
     if raw:
         try:
@@ -53,7 +54,7 @@ def login(
     elif edge:
         from ..edgelogin import edge_login
 
-        credentials = edge_login()
+        credentials = edge_login(reuse_profile=reuse)
     elif browser:
         from ..browserlogin import browser_login
 
