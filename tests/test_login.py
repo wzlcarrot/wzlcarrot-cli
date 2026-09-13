@@ -51,3 +51,22 @@ def test_login_with_cookie_skips_link_flow(monkeypatch):
     monkeypatch.setattr(commands.login, "qr_login", boom)
     result = runner.invoke(app, ["login", "--cookie", "d_c0=a; z_c0=b"])
     assert result.exit_code == 0, result.output
+
+
+def test_login_browser_flag_uses_browser_login(monkeypatch):
+    from wzlcarrot_cli import browserlogin
+
+    called = {}
+
+    def fake_browser_login(**_kwargs):
+        called["yes"] = True
+        return Credentials(cookies={"d_c0": "a", "z_c0": "b"})
+
+    # ensure the link flow is not used when --browser is set
+    monkeypatch.setattr(
+        commands.login, "qr_login", lambda **_kw: (_ for _ in ()).throw(AssertionError("no link flow"))
+    )
+    monkeypatch.setattr(browserlogin, "browser_login", fake_browser_login)
+    result = runner.invoke(app, ["login", "--browser"])
+    assert result.exit_code == 0, result.output
+    assert called.get("yes") is True

@@ -108,18 +108,21 @@ zhihu comment --answer <id> -m "..."
 
 ## 登录
 
-默认走**登录链接**（纯 API，无需浏览器）：命令会打印一条登录链接，在已登录知乎的浏览器打开它、确认登录即可；也可用手机知乎 App 打开。
+**推荐：打开真实浏览器登录**（不会跳手机端/要求下载 App）——弹出 Chromium 窗口，在里面用扫码/密码/短信任一方式登录，登录后自动抓取 Cookie：
 
 ```bash
-zhihu login            # 默认：给出登录链接
-zhihu login --qr       # 可选：改为在终端显示二维码
+zhihu login --browser     # 需先装可选依赖：pip install 'wzlcarrot-cli[browser]'
 ```
 
-也可以手动从浏览器复制 Cookie（最低需要 `d_c0`、`z_c0`、`_xsrf`）：
+其他方式：
 
-1. 登录 `https://www.zhihu.com`
-2. DevTools → Network → 任意请求 → Request Headers → 复制整行 `Cookie`
-3. `zhihu login --cookie "粘贴"`，或 `zhihu login --cookie-file cookie.txt`
+```bash
+zhihu login               # 打印登录链接（在已登录知乎的浏览器打开确认）
+zhihu login --qr          # 在终端显示二维码
+zhihu login --cookie "d_c0=...; z_c0=...; _xsrf=..."   # 手动粘贴 Cookie
+```
+
+手动 Cookie 获取：登录 `https://www.zhihu.com` → DevTools → Network → 任意请求 → Request Headers → 复制整行 `Cookie`。
 
 ```bash
 zhihu status
