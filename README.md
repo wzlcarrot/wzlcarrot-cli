@@ -24,6 +24,12 @@
 - 对话会话本地保存，支持 `--continue` 续聊、`zhihu sessions` 查看
 - 自然语言 Agent（`zhihu` / `zhihu ask`）由 LLM 调用以上能力
 
+## TUI 一览
+
+![zhihu-cli TUI 截图](docs/img/tui.svg)
+
+*截图由 `uv run python scripts/screenshot.py` 自动生成（无需登录）。*
+
 ## 安装
 
 ```bash

@@ -1,0 +1,190 @@
+<svg class="rich-terminal" viewBox="0 0 1238 830.8" xmlns="http://www.w3.org/2000/svg">
+    <!-- Generated with Rich https://www.textualize.io -->
+    <style>
+
+    @font-face {
+        font-family: "Fira Code";
+        src: local("FiraCode-Regular"),
+                url("https://cdnjs.cloudflare.com/ajax/libs/firacode/6.2.0/woff2/FiraCode-Regular.woff2") format("woff2"),
+                url("https://cdnjs.cloudflare.com/ajax/libs/firacode/6.2.0/woff/FiraCode-Regular.woff") format("woff");
+        font-style: normal;
+        font-weight: 400;
+    }
+    @font-face {
+        font-family: "Fira Code";
+        src: local("FiraCode-Bold"),
+                url("https://cdnjs.cloudflare.com/ajax/libs/firacode/6.2.0/woff2/FiraCode-Bold.woff2") format("woff2"),
+                url("https://cdnjs.cloudflare.com/ajax/libs/firacode/6.2.0/woff/FiraCode-Bold.woff") format("woff");
+        font-style: bold;
+        font-weight: 700;
+    }
+
+    .terminal-2674492120-matrix {
+        font-family: Fira Code, monospace;
+        font-size: 20px;
+        line-height: 24.4px;
+        font-variant-east-asian: full-width;
+    }
+
+    .terminal-2674492120-title {
+        font-size: 18px;
+        font-weight: bold;
+        font-family: arial;
+    }
+
+    .terminal-2674492120-r1 { fill: #c5c8c6 }
+.terminal-2674492120-r2 { fill: #d97757 }
+.terminal-2674492120-r3 { fill: #d97757;font-weight: bold }
+.terminal-2674492120-r4 { fill: #8a877f }
+.terminal-2674492120-r5 { fill: #e8e6e3 }
+.terminal-2674492120-r6 { fill: #7fb069 }
+.terminal-2674492120-r7 { fill: #e0e0e0 }
+.terminal-2674492120-r8 { fill: #57a5e2 }
+.terminal-2674492120-r9 { fill: #121212 }
+.terminal-2674492120-r10 { fill: #807f7e }
+    </style>
+
+    <defs>
+    <clipPath id="terminal-2674492120-clip-terminal">
+      <rect x="0" y="0" width="1219.0" height="779.8" />
+    </clipPath>
+    <clipPath id="terminal-2674492120-line-0">
+    <rect x="0" y="1.5" width="1220" height="24.65"/>
+            </clipPath>
+<clipPath id="terminal-2674492120-line-1">
+    <rect x="0" y="25.9" width="1220" height="24.65"/>
+            </clipPath>
+<clipPath id="terminal-2674492120-line-2">
+    <rect x="0" y="50.3" width="1220" height="24.65"/>
+            </clipPath>
+<clipPath id="terminal-2674492120-line-3">
+    <rect x="0" y="74.7" width="1220" height="24.65"/>
+            </clipPath>
+<clipPath id="terminal-2674492120-line-4">
+    <rect x="0" y="99.1" width="1220" height="24.65"/>
+            </clipPath>
+<clipPath id="terminal-2674492120-line-5">
+    <rect x="0" y="123.5" width="1220" height="24.65"/>
+            </clipPath>
+<clipPath id="terminal-2674492120-line-6">
+    <rect x="0" y="147.9" width="1220" height="24.65"/>
+            </clipPath>
+<clipPath id="terminal-2674492120-line-7">
+    <rect x="0" y="172.3" width="1220" height="24.65"/>
+            </clipPath>
+<clipPath id="terminal-2674492120-line-8">
+    <rect x="0" y="196.7" width="1220" height="24.65"/>
+            </clipPath>
+<clipPath id="terminal-2674492120-line-9">
+    <rect x="0" y="221.1" width="1220" height="24.65"/>
+            </clipPath>
+<clipPath id="terminal-2674492120-line-10">
+    <rect x="0" y="245.5" width="1220" height="24.65"/>
+            </clipPath>
+<clipPath id="terminal-2674492120-line-11">
+    <rect x="0" y="269.9" width="1220" height="24.65"/>
+            </clipPath>
+<clipPath id="terminal-2674492120-line-12">
+    <rect x="0" y="294.3" width="1220" height="24.65"/>
+            </clipPath>
+<clipPath id="terminal-2674492120-line-13">
+    <rect x="0" y="318.7" width="1220" height="24.65"/>
+            </clipPath>
+<clipPath id="terminal-2674492120-line-14">
+    <rect x="0" y="343.1" width="1220" height="24.65"/>
+            </clipPath>
+<clipPath id="terminal-2674492120-line-15">
+    <rect x="0" y="367.5" width="1220" height="24.65"/>
+            </clipPath>
+<clipPath id="terminal-2674492120-line-16">
+    <rect x="0" y="391.9" width="1220" height="24.65"/>
+            </clipPath>
+<clipPath id="terminal-2674492120-line-17">
+    <rect x="0" y="416.3" width="1220" height="24.65"/>
+            </clipPath>
+<clipPath id="terminal-2674492120-line-18">
+    <rect x="0" y="440.7" width="1220" height="24.65"/>
+            </clipPath>
+<clipPath id="terminal-2674492120-line-19">
+    <rect x="0" y="465.1" width="1220" height="24.65"/>
+            </clipPath>
+<clipPath id="terminal-2674492120-line-20">
+    <rect x="0" y="489.5" width="1220" height="24.65"/>
+            </clipPath>
+<clipPath id="terminal-2674492120-line-21">
+    <rect x="0" y="513.9" width="1220" height="24.65"/>
+            </clipPath>
+<clipPath id="terminal-2674492120-line-22">
+    <rect x="0" y="538.3" width="1220" height="24.65"/>
+            </clipPath>
+<clipPath id="terminal-2674492120-line-23">
+    <rect x="0" y="562.7" width="1220" height="24.65"/>
+            </clipPath>
+<clipPath id="terminal-2674492120-line-24">
+    <rect x="0" y="587.1" width="1220" height="24.65"/>
+            </clipPath>
+<clipPath id="terminal-2674492120-line-25">
+    <rect x="0" y="611.5" width="1220" height="24.65"/>
+            </clipPath>
+<clipPath id="terminal-2674492120-line-26">
+    <rect x="0" y="635.9" width="1220" height="24.65"/>
+            </clipPath>
+<clipPath id="terminal-2674492120-line-27">
+    <rect x="0" y="660.3" width="1220" height="24.65"/>
+            </clipPath>
+<clipPath id="terminal-2674492120-line-28">
+    <rect x="0" y="684.7" width="1220" height="24.65"/>
+            </clipPath>
+<clipPath id="terminal-2674492120-line-29">
+    <rect x="0" y="709.1" width="1220" height="24.65"/>
+            </clipPath>
+<clipPath id="terminal-2674492120-line-30">
+    <rect x="0" y="733.5" width="1220" height="24.65"/>
+            </clipPath>
+    </defs>
+
+    <rect fill="#292929" stroke="rgba(255,255,255,0.35)" stroke-width="1" x="1" y="1" width="1236" height="828.8" rx="8"/><text class="terminal-2674492120-title" fill="#c5c8c6" text-anchor="middle" x="618" y="27">知乎&#160;CLI</text>
+            <g transform="translate(26,22)">
+            <circle cx="0" cy="0" r="7" fill="#ff5f57"/>
+            <circle cx="22" cy="0" r="7" fill="#febc2e"/>
+            <circle cx="44" cy="0" r="7" fill="#28c840"/>
+            </g>
+        
+    <g transform="translate(9, 41)" clip-path="url(#terminal-2674492120-clip-terminal)">
+    <rect fill="#1f1e1d" x="0" y="1.5" width="1220" height="24.65" shape-rendering="crispEdges"/><rect fill="#1f1e1d" x="0" y="25.9" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#1f1e1d" x="24.4" y="25.9" width="1171.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#1f1e1d" x="1195.6" y="25.9" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#1f1e1d" x="0" y="50.3" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#262624" x="24.4" y="50.3" width="12.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#262624" x="36.6" y="50.3" width="1146.8" height="24.65" shape-rendering="crispEdges"/><rect fill="#262624" x="1183.4" y="50.3" width="12.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#1f1e1d" x="1195.6" y="50.3" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#1f1e1d" x="0" y="74.7" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#262624" x="24.4" y="74.7" width="12.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#262624" x="36.6" y="74.7" width="1146.8" height="24.65" shape-rendering="crispEdges"/><rect fill="#262624" x="1183.4" y="74.7" width="12.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#1f1e1d" x="1195.6" y="74.7" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#1f1e1d" x="0" y="99.1" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#262624" x="24.4" y="99.1" width="12.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#262624" x="36.6" y="99.1" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#262624" x="61" y="99.1" width="122" height="24.65" shape-rendering="crispEdges"/><rect fill="#262624" x="183" y="99.1" width="976" height="24.65" shape-rendering="crispEdges"/><rect fill="#262624" x="1159" y="99.1" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#262624" x="1183.4" y="99.1" width="12.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#1f1e1d" x="1195.6" y="99.1" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#1f1e1d" x="0" y="123.5" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#262624" x="24.4" y="123.5" width="12.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#262624" x="36.6" y="123.5" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#262624" x="61" y="123.5" width="463.6" height="24.65" shape-rendering="crispEdges"/><rect fill="#262624" x="524.6" y="123.5" width="634.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#262624" x="1159" y="123.5" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#262624" x="1183.4" y="123.5" width="12.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#1f1e1d" x="1195.6" y="123.5" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#1f1e1d" x="0" y="147.9" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#262624" x="24.4" y="147.9" width="12.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#262624" x="36.6" y="147.9" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#262624" x="61" y="147.9" width="0" height="24.65" shape-rendering="crispEdges"/><rect fill="#262624" x="61" y="147.9" width="1098" height="24.65" shape-rendering="crispEdges"/><rect fill="#262624" x="1159" y="147.9" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#262624" x="1183.4" y="147.9" width="12.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#1f1e1d" x="1195.6" y="147.9" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#1f1e1d" x="0" y="172.3" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#262624" x="24.4" y="172.3" width="12.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#262624" x="36.6" y="172.3" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#262624" x="61" y="172.3" width="97.6" height="24.65" shape-rendering="crispEdges"/><rect fill="#262624" x="158.6" y="172.3" width="1000.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#262624" x="1159" y="172.3" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#262624" x="1183.4" y="172.3" width="12.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#1f1e1d" x="1195.6" y="172.3" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#1f1e1d" x="0" y="196.7" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#262624" x="24.4" y="196.7" width="12.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#262624" x="36.6" y="196.7" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#262624" x="61" y="196.7" width="231.8" height="24.65" shape-rendering="crispEdges"/><rect fill="#262624" x="292.8" y="196.7" width="866.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#262624" x="1159" y="196.7" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#262624" x="1183.4" y="196.7" width="12.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#1f1e1d" x="1195.6" y="196.7" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#1f1e1d" x="0" y="221.1" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#262624" x="24.4" y="221.1" width="12.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#262624" x="36.6" y="221.1" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#262624" x="61" y="221.1" width="463.6" height="24.65" shape-rendering="crispEdges"/><rect fill="#262624" x="524.6" y="221.1" width="634.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#262624" x="1159" y="221.1" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#262624" x="1183.4" y="221.1" width="12.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#1f1e1d" x="1195.6" y="221.1" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#1f1e1d" x="0" y="245.5" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#262624" x="24.4" y="245.5" width="12.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#262624" x="36.6" y="245.5" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#262624" x="61" y="245.5" width="439.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#262624" x="500.2" y="245.5" width="658.8" height="24.65" shape-rendering="crispEdges"/><rect fill="#262624" x="1159" y="245.5" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#262624" x="1183.4" y="245.5" width="12.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#1f1e1d" x="1195.6" y="245.5" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#1f1e1d" x="0" y="269.9" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#262624" x="24.4" y="269.9" width="12.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#262624" x="36.6" y="269.9" width="1146.8" height="24.65" shape-rendering="crispEdges"/><rect fill="#262624" x="1183.4" y="269.9" width="12.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#1f1e1d" x="1195.6" y="269.9" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#1f1e1d" x="0" y="294.3" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#262624" x="24.4" y="294.3" width="12.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#262624" x="36.6" y="294.3" width="1146.8" height="24.65" shape-rendering="crispEdges"/><rect fill="#262624" x="1183.4" y="294.3" width="12.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#1f1e1d" x="1195.6" y="294.3" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#1f1e1d" x="0" y="318.7" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#1f1e1d" x="24.4" y="318.7" width="1171.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#1f1e1d" x="1195.6" y="318.7" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#1f1e1d" x="0" y="343.1" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#262624" x="24.4" y="343.1" width="12.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#262624" x="36.6" y="343.1" width="12.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#262624" x="48.8" y="343.1" width="256.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#262624" x="305" y="343.1" width="878.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#262624" x="1183.4" y="343.1" width="12.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#1f1e1d" x="1195.6" y="343.1" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#1f1e1d" x="0" y="367.5" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#1f1e1d" x="24.4" y="367.5" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#1f1e1d" x="48.8" y="367.5" width="12.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#1f1e1d" x="61" y="367.5" width="12.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#1f1e1d" x="73.2" y="367.5" width="36.6" height="24.65" shape-rendering="crispEdges"/><rect fill="#1f1e1d" x="109.8" y="367.5" width="12.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#1f1e1d" x="122" y="367.5" width="109.8" height="24.65" shape-rendering="crispEdges"/><rect fill="#1f1e1d" x="231.8" y="367.5" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#1f1e1d" x="256.2" y="367.5" width="73.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#1f1e1d" x="329.4" y="367.5" width="866.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#1f1e1d" x="1195.6" y="367.5" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#1f1e1d" x="0" y="391.9" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#1f1e1d" x="24.4" y="391.9" width="1171.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#1f1e1d" x="1195.6" y="391.9" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#1f1e1d" x="0" y="416.3" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#1f1e1d" x="24.4" y="416.3" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#1f1e1d" x="48.8" y="416.3" width="280.6" height="24.65" shape-rendering="crispEdges"/><rect fill="#1f1e1d" x="329.4" y="416.3" width="841.8" height="24.65" shape-rendering="crispEdges"/><rect fill="#1f1e1d" x="1171.2" y="416.3" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#1f1e1d" x="1195.6" y="416.3" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#1f1e1d" x="0" y="440.7" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#1f1e1d" x="24.4" y="440.7" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#1f1e1d" x="48.8" y="440.7" width="1122.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#1f1e1d" x="1171.2" y="440.7" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#1f1e1d" x="1195.6" y="440.7" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#1f1e1d" x="0" y="465.1" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#1f1e1d" x="24.4" y="465.1" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#1f1e1d" x="48.8" y="465.1" width="48.8" height="24.65" shape-rendering="crispEdges"/><rect fill="#1f1e1d" x="97.6" y="465.1" width="378.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#1f1e1d" x="475.8" y="465.1" width="695.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#1f1e1d" x="1171.2" y="465.1" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#1f1e1d" x="1195.6" y="465.1" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#1f1e1d" x="0" y="489.5" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#1f1e1d" x="24.4" y="489.5" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#1f1e1d" x="48.8" y="489.5" width="48.8" height="24.65" shape-rendering="crispEdges"/><rect fill="#1f1e1d" x="97.6" y="489.5" width="414.8" height="24.65" shape-rendering="crispEdges"/><rect fill="#1f1e1d" x="512.4" y="489.5" width="658.8" height="24.65" shape-rendering="crispEdges"/><rect fill="#1f1e1d" x="1171.2" y="489.5" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#1f1e1d" x="1195.6" y="489.5" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#1f1e1d" x="0" y="513.9" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#1f1e1d" x="24.4" y="513.9" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#1f1e1d" x="48.8" y="513.9" width="48.8" height="24.65" shape-rendering="crispEdges"/><rect fill="#1f1e1d" x="97.6" y="513.9" width="292.8" height="24.65" shape-rendering="crispEdges"/><rect fill="#1f1e1d" x="390.4" y="513.9" width="780.8" height="24.65" shape-rendering="crispEdges"/><rect fill="#1f1e1d" x="1171.2" y="513.9" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#1f1e1d" x="1195.6" y="513.9" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#1f1e1d" x="0" y="538.3" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#1f1e1d" x="24.4" y="538.3" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#1f1e1d" x="48.8" y="538.3" width="1122.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#1f1e1d" x="1171.2" y="538.3" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#1f1e1d" x="1195.6" y="538.3" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#1f1e1d" x="0" y="562.7" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#1f1e1d" x="24.4" y="562.7" width="1171.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#1f1e1d" x="1195.6" y="562.7" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#1f1e1d" x="0" y="587.1" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#1f1e1d" x="24.4" y="587.1" width="1171.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#1f1e1d" x="1195.6" y="587.1" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#1f1e1d" x="0" y="611.5" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#1f1e1d" x="24.4" y="611.5" width="1171.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#1f1e1d" x="1195.6" y="611.5" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#1f1e1d" x="0" y="635.9" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#1f1e1d" x="24.4" y="635.9" width="1171.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#1f1e1d" x="1195.6" y="635.9" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#1f1e1d" x="0" y="660.3" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#1f1e1d" x="24.4" y="660.3" width="1171.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#1f1e1d" x="1195.6" y="660.3" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#1f1e1d" x="0" y="684.7" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#2a2927" x="24.4" y="684.7" width="12.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#2a2927" x="36.6" y="684.7" width="1146.8" height="24.65" shape-rendering="crispEdges"/><rect fill="#2a2927" x="1183.4" y="684.7" width="12.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#1f1e1d" x="1195.6" y="684.7" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#1f1e1d" x="0" y="709.1" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#2a2927" x="24.4" y="709.1" width="12.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#2a2927" x="36.6" y="709.1" width="12.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#2a2927" x="48.8" y="709.1" width="12.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#2a2927" x="61" y="709.1" width="12.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#e0e0e0" x="73.2" y="709.1" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#333230" x="97.6" y="709.1" width="451.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#333230" x="549" y="709.1" width="634.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#2a2927" x="1183.4" y="709.1" width="12.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#1f1e1d" x="1195.6" y="709.1" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#1f1e1d" x="0" y="733.5" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#2a2927" x="24.4" y="733.5" width="12.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#2a2927" x="36.6" y="733.5" width="1146.8" height="24.65" shape-rendering="crispEdges"/><rect fill="#2a2927" x="1183.4" y="733.5" width="12.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#1f1e1d" x="1195.6" y="733.5" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#1f1e1d" x="0" y="757.9" width="24.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#1f1e1d" x="24.4" y="757.9" width="85.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#1f1e1d" x="109.8" y="757.9" width="500.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#1f1e1d" x="610" y="757.9" width="256.2" height="24.65" shape-rendering="crispEdges"/><rect fill="#1f1e1d" x="866.2" y="757.9" width="329.4" height="24.65" shape-rendering="crispEdges"/><rect fill="#1f1e1d" x="1195.6" y="757.9" width="24.4" height="24.65" shape-rendering="crispEdges"/>
+    <g class="terminal-2674492120-matrix">
+    <text class="terminal-2674492120-r1" x="1220" y="20" textLength="12.2" clip-path="url(#terminal-2674492120-line-0)">
+</text><text class="terminal-2674492120-r1" x="1220" y="44.4" textLength="12.2" clip-path="url(#terminal-2674492120-line-1)">
+</text><text class="terminal-2674492120-r2" x="24.4" y="68.8" textLength="12.2" clip-path="url(#terminal-2674492120-line-2)">╭</text><text class="terminal-2674492120-r2" x="36.6" y="68.8" textLength="1146.8" clip-path="url(#terminal-2674492120-line-2)">──────────────────────────────────────────────────────────────────────────────────────────────</text><text class="terminal-2674492120-r2" x="1183.4" y="68.8" textLength="12.2" clip-path="url(#terminal-2674492120-line-2)">╮</text><text class="terminal-2674492120-r1" x="1220" y="68.8" textLength="12.2" clip-path="url(#terminal-2674492120-line-2)">
+</text><text class="terminal-2674492120-r2" x="24.4" y="93.2" textLength="12.2" clip-path="url(#terminal-2674492120-line-3)">│</text><text class="terminal-2674492120-r2" x="1183.4" y="93.2" textLength="12.2" clip-path="url(#terminal-2674492120-line-3)">│</text><text class="terminal-2674492120-r1" x="1220" y="93.2" textLength="12.2" clip-path="url(#terminal-2674492120-line-3)">
+</text><text class="terminal-2674492120-r2" x="24.4" y="117.6" textLength="12.2" clip-path="url(#terminal-2674492120-line-4)">│</text><text class="terminal-2674492120-r3" x="61" y="117.6" textLength="97.6" clip-path="url(#terminal-2674492120-line-4)">✻&#160;知乎&#160;CLI</text><text class="terminal-2674492120-r2" x="1183.4" y="117.6" textLength="12.2" clip-path="url(#terminal-2674492120-line-4)">│</text><text class="terminal-2674492120-r1" x="1220" y="117.6" textLength="12.2" clip-path="url(#terminal-2674492120-line-4)">
+</text><text class="terminal-2674492120-r2" x="24.4" y="142" textLength="12.2" clip-path="url(#terminal-2674492120-line-5)">│</text><text class="terminal-2674492120-r4" x="61" y="142" textLength="231.8" clip-path="url(#terminal-2674492120-line-5)">用中文对话，自动调用知乎接口取真实数据</text><text class="terminal-2674492120-r2" x="1183.4" y="142" textLength="12.2" clip-path="url(#terminal-2674492120-line-5)">│</text><text class="terminal-2674492120-r1" x="1220" y="142" textLength="12.2" clip-path="url(#terminal-2674492120-line-5)">
+</text><text class="terminal-2674492120-r2" x="24.4" y="166.4" textLength="12.2" clip-path="url(#terminal-2674492120-line-6)">│</text><text class="terminal-2674492120-r2" x="1183.4" y="166.4" textLength="12.2" clip-path="url(#terminal-2674492120-line-6)">│</text><text class="terminal-2674492120-r1" x="1220" y="166.4" textLength="12.2" clip-path="url(#terminal-2674492120-line-6)">
+</text><text class="terminal-2674492120-r2" x="24.4" y="190.8" textLength="12.2" clip-path="url(#terminal-2674492120-line-7)">│</text><text class="terminal-2674492120-r4" x="61" y="190.8" textLength="48.8" clip-path="url(#terminal-2674492120-line-7)">试着说：</text><text class="terminal-2674492120-r2" x="1183.4" y="190.8" textLength="12.2" clip-path="url(#terminal-2674492120-line-7)">│</text><text class="terminal-2674492120-r1" x="1220" y="190.8" textLength="12.2" clip-path="url(#terminal-2674492120-line-7)">
+</text><text class="terminal-2674492120-r2" x="24.4" y="215.2" textLength="12.2" clip-path="url(#terminal-2674492120-line-8)">│</text><text class="terminal-2674492120-r4" x="61" y="215.2" textLength="146.4" clip-path="url(#terminal-2674492120-line-8)">&#160;&#160;›&#160;看看今天热榜前5</text><text class="terminal-2674492120-r2" x="1183.4" y="215.2" textLength="12.2" clip-path="url(#terminal-2674492120-line-8)">│</text><text class="terminal-2674492120-r1" x="1220" y="215.2" textLength="12.2" clip-path="url(#terminal-2674492120-line-8)">
+</text><text class="terminal-2674492120-r2" x="24.4" y="239.6" textLength="12.2" clip-path="url(#terminal-2674492120-line-9)">│</text><text class="terminal-2674492120-r4" x="61" y="239.6" textLength="341.6" clip-path="url(#terminal-2674492120-line-9)">&#160;&#160;›&#160;搜一下&#160;transformers&#160;有哪些高赞回答</text><text class="terminal-2674492120-r2" x="1183.4" y="239.6" textLength="12.2" clip-path="url(#terminal-2674492120-line-9)">│</text><text class="terminal-2674492120-r1" x="1220" y="239.6" textLength="12.2" clip-path="url(#terminal-2674492120-line-9)">
+</text><text class="terminal-2674492120-r2" x="24.4" y="264" textLength="12.2" clip-path="url(#terminal-2674492120-line-10)">│</text><text class="terminal-2674492120-r4" x="61" y="264" textLength="305" clip-path="url(#terminal-2674492120-line-10)">&#160;&#160;›&#160;把第2条问题的回答导出成&#160;markdown</text><text class="terminal-2674492120-r2" x="1183.4" y="264" textLength="12.2" clip-path="url(#terminal-2674492120-line-10)">│</text><text class="terminal-2674492120-r1" x="1220" y="264" textLength="12.2" clip-path="url(#terminal-2674492120-line-10)">
+</text><text class="terminal-2674492120-r2" x="24.4" y="288.4" textLength="12.2" clip-path="url(#terminal-2674492120-line-11)">│</text><text class="terminal-2674492120-r2" x="1183.4" y="288.4" textLength="12.2" clip-path="url(#terminal-2674492120-line-11)">│</text><text class="terminal-2674492120-r1" x="1220" y="288.4" textLength="12.2" clip-path="url(#terminal-2674492120-line-11)">
+</text><text class="terminal-2674492120-r2" x="24.4" y="312.8" textLength="12.2" clip-path="url(#terminal-2674492120-line-12)">╰</text><text class="terminal-2674492120-r2" x="36.6" y="312.8" textLength="1146.8" clip-path="url(#terminal-2674492120-line-12)">──────────────────────────────────────────────────────────────────────────────────────────────</text><text class="terminal-2674492120-r2" x="1183.4" y="312.8" textLength="12.2" clip-path="url(#terminal-2674492120-line-12)">╯</text><text class="terminal-2674492120-r1" x="1220" y="312.8" textLength="12.2" clip-path="url(#terminal-2674492120-line-12)">
+</text><text class="terminal-2674492120-r1" x="1220" y="337.2" textLength="12.2" clip-path="url(#terminal-2674492120-line-13)">
+</text><text class="terminal-2674492120-r2" x="24.4" y="361.6" textLength="12.2" clip-path="url(#terminal-2674492120-line-14)">█</text><text class="terminal-2674492120-r5" x="48.8" y="361.6" textLength="146.4" clip-path="url(#terminal-2674492120-line-14)">›&#160;帮我看看今天热榜前3</text><text class="terminal-2674492120-r1" x="1220" y="361.6" textLength="12.2" clip-path="url(#terminal-2674492120-line-14)">
+</text><text class="terminal-2674492120-r6" x="48.8" y="386" textLength="12.2" clip-path="url(#terminal-2674492120-line-15)">✓</text><text class="terminal-2674492120-r5" x="73.2" y="386" textLength="36.6" clip-path="url(#terminal-2674492120-line-15)">hot</text><text class="terminal-2674492120-r4" x="122" y="386" textLength="109.8" clip-path="url(#terminal-2674492120-line-15)">(limit=3)</text><text class="terminal-2674492120-r4" x="256.2" y="386" textLength="61" clip-path="url(#terminal-2674492120-line-15)">·&#160;3&#160;条</text><text class="terminal-2674492120-r1" x="1220" y="386" textLength="12.2" clip-path="url(#terminal-2674492120-line-15)">
+</text><text class="terminal-2674492120-r1" x="1220" y="410.4" textLength="12.2" clip-path="url(#terminal-2674492120-line-16)">
+</text><text class="terminal-2674492120-r7" x="48.8" y="434.8" textLength="158.6" clip-path="url(#terminal-2674492120-line-17)">今天的知乎热榜前&#160;3&#160;名：</text><text class="terminal-2674492120-r1" x="1220" y="434.8" textLength="12.2" clip-path="url(#terminal-2674492120-line-17)">
+</text><text class="terminal-2674492120-r1" x="1220" y="459.2" textLength="12.2" clip-path="url(#terminal-2674492120-line-18)">
+</text><text class="terminal-2674492120-r8" x="48.8" y="483.6" textLength="48.8" clip-path="url(#terminal-2674492120-line-19)">&#160;1.&#160;</text><text class="terminal-2674492120-r7" x="97.6" y="483.6" textLength="207.4" clip-path="url(#terminal-2674492120-line-19)">如何评价&#160;9&#160;月新发布的开源模型？</text><text class="terminal-2674492120-r1" x="1220" y="483.6" textLength="12.2" clip-path="url(#terminal-2674492120-line-19)">
+</text><text class="terminal-2674492120-r8" x="48.8" y="508" textLength="48.8" clip-path="url(#terminal-2674492120-line-20)">&#160;2.&#160;</text><text class="terminal-2674492120-r7" x="97.6" y="508" textLength="207.4" clip-path="url(#terminal-2674492120-line-20)">长期使用命令行工具是种怎样的体验？</text><text class="terminal-2674492120-r1" x="1220" y="508" textLength="12.2" clip-path="url(#terminal-2674492120-line-20)">
+</text><text class="terminal-2674492120-r8" x="48.8" y="532.4" textLength="48.8" clip-path="url(#terminal-2674492120-line-21)">&#160;3.&#160;</text><text class="terminal-2674492120-r7" x="97.6" y="532.4" textLength="146.4" clip-path="url(#terminal-2674492120-line-21)">有哪些值得坚持的小习惯？</text><text class="terminal-2674492120-r1" x="1220" y="532.4" textLength="12.2" clip-path="url(#terminal-2674492120-line-21)">
+</text><text class="terminal-2674492120-r1" x="1220" y="556.8" textLength="12.2" clip-path="url(#terminal-2674492120-line-22)">
+</text><text class="terminal-2674492120-r1" x="1220" y="581.2" textLength="12.2" clip-path="url(#terminal-2674492120-line-23)">
+</text><text class="terminal-2674492120-r1" x="1220" y="605.6" textLength="12.2" clip-path="url(#terminal-2674492120-line-24)">
+</text><text class="terminal-2674492120-r1" x="1220" y="630" textLength="12.2" clip-path="url(#terminal-2674492120-line-25)">
+</text><text class="terminal-2674492120-r1" x="1220" y="654.4" textLength="12.2" clip-path="url(#terminal-2674492120-line-26)">
+</text><text class="terminal-2674492120-r1" x="1220" y="678.8" textLength="12.2" clip-path="url(#terminal-2674492120-line-27)">
+</text><text class="terminal-2674492120-r2" x="24.4" y="703.2" textLength="12.2" clip-path="url(#terminal-2674492120-line-28)">╭</text><text class="terminal-2674492120-r2" x="36.6" y="703.2" textLength="1146.8" clip-path="url(#terminal-2674492120-line-28)">──────────────────────────────────────────────────────────────────────────────────────────────</text><text class="terminal-2674492120-r2" x="1183.4" y="703.2" textLength="12.2" clip-path="url(#terminal-2674492120-line-28)">╮</text><text class="terminal-2674492120-r1" x="1220" y="703.2" textLength="12.2" clip-path="url(#terminal-2674492120-line-28)">
+</text><text class="terminal-2674492120-r2" x="24.4" y="727.6" textLength="12.2" clip-path="url(#terminal-2674492120-line-29)">│</text><text class="terminal-2674492120-r3" x="48.8" y="727.6" textLength="12.2" clip-path="url(#terminal-2674492120-line-29)">›</text><text class="terminal-2674492120-r9" x="73.2" y="727.6" textLength="12.2" clip-path="url(#terminal-2674492120-line-29)">给</text><text class="terminal-2674492120-r10" x="97.6" y="727.6" textLength="305" clip-path="url(#terminal-2674492120-line-29)">知乎&#160;CLI&#160;下达指令…&#160;&#160;(输入&#160;/&#160;查看命令)</text><text class="terminal-2674492120-r2" x="1183.4" y="727.6" textLength="12.2" clip-path="url(#terminal-2674492120-line-29)">│</text><text class="terminal-2674492120-r1" x="1220" y="727.6" textLength="12.2" clip-path="url(#terminal-2674492120-line-29)">
+</text><text class="terminal-2674492120-r2" x="24.4" y="752" textLength="12.2" clip-path="url(#terminal-2674492120-line-30)">╰</text><text class="terminal-2674492120-r2" x="36.6" y="752" textLength="1146.8" clip-path="url(#terminal-2674492120-line-30)">──────────────────────────────────────────────────────────────────────────────────────────────</text><text class="terminal-2674492120-r2" x="1183.4" y="752" textLength="12.2" clip-path="url(#terminal-2674492120-line-30)">╯</text><text class="terminal-2674492120-r1" x="1220" y="752" textLength="12.2" clip-path="url(#terminal-2674492120-line-30)">
+</text><text class="terminal-2674492120-r6" x="24.4" y="776.4" textLength="85.4" clip-path="url(#terminal-2674492120-line-31)">●&#160;build</text><text class="terminal-2674492120-r4" x="866.2" y="776.4" textLength="329.4" clip-path="url(#terminal-2674492120-line-31)">deepseek-chat&#160;·&#160;1015&#160;tokens</text>
+    </g>
+    </g>
+</svg>
