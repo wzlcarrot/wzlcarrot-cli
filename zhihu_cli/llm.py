@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import os
+import threading
 import time
 from dataclasses import dataclass
 from pathlib import Path
@@ -146,8 +147,17 @@ class LLMClient:
             raise ZhihuError(f"模型返回为空: {data}")
         return choices[0].get("message", {})
 
-    def chat_stream(self, messages: list[dict[str, Any]], tools: list[dict[str, Any]] | None = None):
-        """Yield ``{"type": "delta"|"done", ...}`` events from a streaming call."""
+    def chat_stream(
+        self,
+        messages: list[dict[str, Any]],
+        tools: list[dict[str, Any]] | None = None,
+        cancel_event: threading.Event | None = None,
+    ):
+        """Yield ``{"type": "delta"|"done"|"cancelled", ...}`` events from a streaming call.
+
+        When *cancel_event* is set, the stream stops at the next SSE line and
+        yields ``{"type": "cancelled"}`` without a ``done`` message.
+        """
         payload: dict[str, Any] = {
             "model": self.config.model,
             "messages": messages,
@@ -161,6 +171,7 @@ class LLMClient:
 
         content_parts: list[str] = []
         tool_buf: dict[int, dict[str, str]] = {}
+        cancelled = False
         with self._http.stream(
             "POST", self.config.endpoint(), headers=self._headers, json=payload
         ) as resp:
@@ -168,6 +179,9 @@ class LLMClient:
                 body = resp.read().decode("utf-8", "replace")
                 raise ZhihuError(f"模型接口错误 {resp.status_code}: {body[:500]}")
             for line in resp.iter_lines():
+                if cancel_event is not None and cancel_event.is_set():
+                    cancelled = True
+                    break
                 if not line:
                     continue
                 if line.startswith("data:"):
@@ -196,6 +210,10 @@ class LLMClient:
                     function = tool_call.get("function") or {}
                     slot["name"] += function.get("name") or ""
                     slot["arguments"] += function.get("arguments") or ""
+
+        if cancelled:
+            yield {"type": "cancelled"}
+            return
 
         message: dict[str, Any] = {"role": "assistant", "content": "".join(content_parts)}
         if tool_buf:

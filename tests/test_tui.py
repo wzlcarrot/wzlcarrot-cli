@@ -18,7 +18,7 @@ class FakeAgent:
             "context_tokens": 0,
         }
 
-    def send_stream(self, text):
+    def send_stream(self, text, cancel_event=None):
         yield ("tool", "hot", '{"limit": 3}')
         yield ("tool_done", "hot")
         yield ("delta", "热榜：")

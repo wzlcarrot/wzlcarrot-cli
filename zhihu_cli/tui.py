@@ -339,7 +339,7 @@ class ChatTUI(App):
         Binding("ctrl+c", "interrupt", "退出", show=False, priority=True),
         Binding("shift+tab", "toggle_mode", "模式", show=False, priority=True),
         Binding("ctrl+l", "clear", "清屏"),
-        Binding("escape", "focus_input", "输入", show=False),
+        Binding("escape", "smart_escape", "取消/输入", show=False),
     ]
 
     def on_key(self, event) -> None:
@@ -369,6 +369,7 @@ class ChatTUI(App):
         self._thinking: Thinking | None = None
         self._tools: list[ToolLine] = []
         self._busy = False
+        self._cancel_event = threading.Event()
         self._command_matches: list[tuple[str, str]] = []
         self._command_index = 0
         self._last_ctrl_c = 0.0
@@ -418,6 +419,14 @@ class ChatTUI(App):
 
     def action_focus_input(self) -> None:
         self.query_one("#prompt", Input).focus()
+
+    def action_smart_escape(self) -> None:
+        # Esc cancels an in-flight generation; otherwise it refocuses the input.
+        if self._busy and not self._cancel_event.is_set():
+            self._cancel_event.set()
+            self.notify("正在取消…（等待模型停止输出）", timeout=2, severity="warning")
+            return
+        self.action_focus_input()
 
     def action_interrupt(self) -> None:
         # Ctrl+C first copies a text selection; only with no selection does it
@@ -609,6 +618,7 @@ class ChatTUI(App):
 
     def _start(self, text: str) -> None:
         self._busy = True
+        self._cancel_event.clear()
         self._assistant = None
         self._assistant_text = ""
         self._tools = []
@@ -674,18 +684,27 @@ class ChatTUI(App):
     @work(thread=True, exclusive=True)
     def _run_agent(self, text: str) -> None:
         try:
-            for event in self._agent.send_stream(text):
+            for event in self._agent.send_stream(text, cancel_event=self._cancel_event):
+                if self._cancel_event.is_set():
+                    break
                 self.call_from_thread(self._on_event, event)
         except Exception as exc:  # noqa: BLE001 - show errors in the UI
             self.call_from_thread(self._on_event, ("error", str(exc)))
         finally:
+            if self._cancel_event.is_set():
+                self.call_from_thread(self._on_event, ("cancelled",))
             self.call_from_thread(self._finish)
 
     def _on_event(self, event: tuple) -> None:
         kind = event[0]
         if kind == "delta":
+            if self._cancel_event.is_set():
+                return
             self._hide_thinking()
             self._append_delta(event[1])
+        elif kind == "cancelled":
+            self._hide_thinking()
+            self.notify("已取消本次生成", timeout=2, severity="warning")
         elif kind == "tool":
             self._hide_thinking()
             if event[1] == "todo_write":

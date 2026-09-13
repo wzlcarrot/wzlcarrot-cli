@@ -30,7 +30,7 @@ from .config import (
     read_last_request,
     write_last_request,
 )
-from .exceptions import AntiAbuseError, ApiError, NotLoggedInError
+from .exceptions import AntiAbuseError, ApiError, NotLoggedInError, SignatureError
 from .session import Credentials
 from .signing import ZSE93, sign_zse96
 
@@ -191,7 +191,18 @@ class ZhihuClient:
             err = payload.get("error")
             if isinstance(err, dict) and err:
                 message = self._error_message(payload, f"HTTP {resp.status_code}")
-                if err.get("code") in (100, "ZERR_NOT_LOGIN"):
+                code = err.get("code")
+                if code == "ZERR_NOT_LOGIN":
+                    raise NotLoggedInError(f"not logged in: {message}")
+                # 403 + code 100 ("请求参数异常") is how Zhihu rejects a stale
+                # x-zse-96 signature; same code on other statuses stays a
+                # login/parameter problem as before.
+                if code == 100 and resp.status_code == 403:
+                    raise SignatureError(
+                        f"{message}：签名可能已失效（知乎或已更新 x-zse-96 算法），"
+                        "请运行 zhihu doctor 检查，或升级 zhihu-cli"
+                    )
+                if code == 100:
                     raise NotLoggedInError(f"not logged in: {message}")
                 raise ApiError(message, resp.status_code, payload)
 

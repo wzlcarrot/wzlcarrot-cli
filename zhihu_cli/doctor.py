@@ -35,15 +35,31 @@ def run_checks(*, check_network: bool = True) -> list[Check]:
 
     if check_network and logged_in:
         from .client import ZhihuClient
+        from .exceptions import (
+            AntiAbuseError,
+            NotLoggedInError,
+            SignatureError,
+        )
 
         try:
             client = ZhihuClient(credentials, min_delay=0, max_delay=0, min_gap=0)
             try:
                 me = client.me()
                 checks.append(("知乎连通", True, str(me.get("name", ""))))
+                checks.append(("签名自检", True, "x-zse-96 签名被服务端接受"))
             finally:
                 client.close()
+        except SignatureError as exc:
+            checks.append(("知乎连通", False, "请求被拒绝"))
+            checks.append(("签名自检", False, str(exc).splitlines()[0][:80]))
+        except NotLoggedInError as exc:
+            checks.append(("知乎连通", False, str(exc)[:60]))
+            checks.append(("签名自检", False, f"无法验证（{str(exc).splitlines()[0][:40]}）"))
+        except AntiAbuseError:
+            checks.append(("知乎连通", False, "触发反爬限制"))
+            checks.append(("签名自检", False, "无法验证（反爬冷却中，请稍后再试）"))
         except ZhihuError as exc:
             checks.append(("知乎连通", False, str(exc)[:60]))
+            checks.append(("签名自检", False, f"无法验证（{str(exc)[:40]}）"))
 
     return checks

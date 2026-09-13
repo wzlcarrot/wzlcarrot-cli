@@ -627,17 +627,27 @@ class ChatAgent:
         self._persist()
         return "（工具调用次数过多，已停止）"
 
-    def send_stream(self, user_input: str):
-        """Like :meth:`send` but yields ``(kind, *payload)`` events for live UIs."""
+    def send_stream(self, user_input: str, cancel_event=None):
+        """Like :meth:`send` but yields ``(kind, *payload)`` events for live UIs.
+
+        When *cancel_event* is set mid-generation, yields ``("cancelled",)``
+        and stops without appending the partial assistant message.
+        """
         info = self._maybe_compact()
         if info:
             yield ("compact", info)
         self.messages.append({"role": "user", "content": user_input})
         tools = self._all_tools()
         for _ in range(8):
+            if cancel_event is not None and cancel_event.is_set():
+                yield ("cancelled",)
+                return
             final_message: dict[str, Any] | None = None
-            for event in self.llm.chat_stream(self.messages, tools):
-                if event["type"] == "delta":
+            for event in self.llm.chat_stream(self.messages, tools, cancel_event=cancel_event):
+                if event["type"] == "cancelled":
+                    yield ("cancelled",)
+                    return
+                elif event["type"] == "delta":
                     yield ("delta", event["text"])
                 elif event["type"] == "done":
                     final_message = event["message"]
@@ -651,6 +661,9 @@ class ChatAgent:
                 yield ("done", final_message.get("content") or "")
                 return
             for call in tool_calls:
+                if cancel_event is not None and cancel_event.is_set():
+                    yield ("cancelled",)
+                    return
                 self.tool_calls += 1
                 function = call.get("function", {})
                 name = function.get("name", "")
@@ -763,6 +776,11 @@ def chat(
                 continue
             try:
                 reply = agent.send(text)
+            except KeyboardInterrupt:
+                # Ctrl+C during an in-flight LLM call cancels just this turn
+                # (the connection is closed as the request unwinds).
+                console.print("[yellow]（已取消本次生成，会话保留）[/yellow]")
+                continue
             except Exception as exc:  # noqa: BLE001 - keep the REPL alive
                 error_console.print(f"出错：{exc}")
                 continue
