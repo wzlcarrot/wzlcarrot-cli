@@ -18,3 +18,7 @@ dist/
 # Downloads
 downloads/
 *.md.out
+
+# Coverage
+.coverage
+htmlcov/
