@@ -6,12 +6,12 @@ from wzlcarrot_cli.tui import ChatTUI, _welcome_text
 def test_welcome_banner_renders_with_pixel_art():
     from rich.console import Console
 
-    console = Console(width=80)
+    console = Console(width=100)
     with console.capture() as capture:
         console.print(_welcome_text("知乎"))
     out = capture.get()
-    assert "WZLCARROT" in out
     assert "█" in out
+    assert "多平台 AI CLI" in out
     assert "知乎" in out
 
 

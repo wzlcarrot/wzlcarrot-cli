@@ -46,28 +46,42 @@ MUTED = "#8a877f"
 GREEN = "#7fb069"
 RED = "#e06c75"
 
-# Pixel-art carrot, green leaves over an orange body (carrot = "carrot").
-CARROT_ART: tuple[tuple[str, str], ...] = (
-    (GREEN, "      ██   ██"),
-    (GREEN, "      ███ ███"),
-    (GREEN, "       █████"),
-    (ACCENT, "   ███████████"),
-    (ACCENT, "   ███████████"),
-    (ACCENT, "    █████████"),
-    (ACCENT, "     ███████"),
-    (ACCENT, "      █████"),
-    (ACCENT, "       ███"),
-    (ACCENT, "        █"),
-)
+# 5x5 pixel glyphs used to draw the "WZLCARROT" wordmark.
+PIXEL_FONT: dict[str, tuple[str, ...]] = {
+    "W": ("█   █", "█   █", "█ █ █", "█ █ █", " █ █ "),
+    "Z": ("█████", "   █ ", "  █  ", " █   ", "█████"),
+    "L": ("█    ", "█    ", "█    ", "█    ", "█████"),
+    "C": (" ███ ", "█   █", "█    ", "█   █", " ███ "),
+    "A": (" ███ ", "█   █", "█████", "█   █", "█   █"),
+    "R": ("████ ", "█   █", "████ ", "█ █  ", "█  █ "),
+    "O": (" ███ ", "█   █", "█   █", "█   █", " ███ "),
+    "T": ("█████", "  █  ", "  █  ", "  █  ", "  █  "),
+}
+
+
+def _mix(c1: str, c2: str, t: float) -> str:
+    """Blend two ``#rrggbb`` colors by ``t`` in [0, 1]."""
+    a = tuple(int(c1[i : i + 2], 16) for i in (1, 3, 5))
+    b = tuple(int(c2[i : i + 2], 16) for i in (1, 3, 5))
+    return "#" + "".join(f"{round(x + (y - x) * t):02x}" for x, y in zip(a, b))
+
+
+def _word_art(word: str, start: str = GREEN, end: str = ACCENT) -> str:
+    """Draw ``word`` with the block pixel font, gradient from ``start`` to ``end``."""
+    shape = [PIXEL_FONT[ch.upper()] for ch in word]
+    colors = [_mix(start, end, i / max(len(shape) - 1, 1)) for i in range(len(shape))]
+    lines = []
+    for row in range(5):
+        lines.append(" ".join(f"[{color}]{glyph[row]}[/]" for glyph, color in zip(shape, colors)))
+    return "\n".join(lines)
 
 
 def _welcome_text(platform: str = "") -> str:
-    """Pixel banner + hints, in the spirit of Claude Code's start screen."""
-    art = "\n".join(f"[{color}]{line}[/]" for color, line in CARROT_ART)
-    tool = f"  [{MUTED}]· {platform}[/]" if platform else ""
+    """Pixel wordmark + hints, in the spirit of Claude Code's start screen."""
+    tool = f"  [{ACCENT}]· {platform}[/]" if platform else ""
     return (
-        f"{art}\n"
-        f"[bold {ACCENT}]WZLCARROT[/]{tool}  [{MUTED}]多平台 AI CLI[/]\n"
+        f"{_word_art('WZLCARROT')}\n"
+        f"[bold {MUTED}]多平台 AI CLI[/]{tool}\n"
         f"[{MUTED}]用中文对话，自动调用平台接口取真实数据[/]\n\n"
         f"[{MUTED}]试着说：[/]\n"
         f"[{MUTED}]  › 看看今天热榜前5[/]\n"

@@ -60,7 +60,7 @@ uv sync                 # 或： pip install -e .
 uv tool install --editable ~/wzlcarrot-cli
 ```
 
-之后直接运行 `wzlcarrot` 即进入全屏 TUI（Claude Code 风格，顶部有像素萝卜 banner；当前平台显示在标题与状态栏）。
+之后直接运行 `wzlcarrot` 即进入全屏 TUI（Claude Code 风格，顶部有像素 `WZLCARROT` 字标；当前平台显示在标题与状态栏）。
 
 ## 多平台 CLI（`wzlcarrot`）
 
