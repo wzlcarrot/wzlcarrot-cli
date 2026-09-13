@@ -12,7 +12,7 @@ description: 知乎 CLI 技能。用户想在知乎搜索、看热榜/推荐/话
   - 登录态：`credentials.json`（权限 0600）
   - 扫码登录二维码：`qrcode.png`
   - 会话：`sessions/`
-- **登录方式**：`zhihu login --browser`（打开真实浏览器，推荐）、`zhihu login`（默认给登录链接）、`zhihu login --qr`（显示二维码），或粘贴 Cookie `zhihu login --cookie "d_c0=...; z_c0=...; _xsrf=..."`。
+- **登录方式**：* `zhihu login --edge`（复用 Edge 登录态，需先关 Edge）、`zhihu login --browser`（打开真实浏览器）、`zhihu login`（默认给登录链接）、`zhihu login --qr`（显示二维码），或粘贴 Cookie `zhihu login --cookie "d_c0=...; z_c0=...; _xsrf=..."`。
 - **安全**：Cookie 仅存本地，**不得上传、转发或写入对话/日志**。
 
 ## Agent 规则（务必遵守）
@@ -29,7 +29,7 @@ description: 知乎 CLI 技能。用户想在知乎搜索、看热榜/推荐/话
 
 | 诉求 | 命令 |
 |------|------|
-| 登录（浏览器/链接/扫码 / Cookie） | `zhihu login --browser` / `zhihu login` / `zhihu login --qr` / `zhihu login --cookie "d_c0=...; z_c0=...; _xsrf=..."` |
+| 登录（Edge/浏览器/链接/扫码 / Cookie） | `zhihu login --edge` / `zhihu login --browser` / `zhihu login` / `zhihu login --qr` / `zhihu login --cookie "d_c0=...; z_c0=...; _xsrf=..."` |
 | 登录状态 / 我的资料 | `zhihu status` / `zhihu me` |
 | 热榜 | `zhihu --json hot -n 10` |
 | 推荐流 | `zhihu --json feed -n 10` |

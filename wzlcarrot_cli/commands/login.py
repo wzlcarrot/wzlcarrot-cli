@@ -37,10 +37,11 @@ def _validate(credentials: Credentials, *, verbose: bool = True) -> dict:
 def login(
     cookie: str = typer.Option(None, "--cookie", "-c", help="改用浏览器 Cookie 字符串登录"),
     cookie_file: Path = typer.Option(None, "--cookie-file", help="从文件读取 Cookie 字符串"),
-    browser: bool = typer.Option(False, "--browser", "-b", help="打开真实浏览器登录（推荐）"),
+    edge: bool = typer.Option(False, "--edge", help="复用 Edge 已登录会话（需先关闭 Edge）"),
+    browser: bool = typer.Option(False, "--browser", "-b", help="打开真实浏览器登录"),
     qr: bool = typer.Option(False, "--qr", help="改为显示二维码（默认只给登录链接）"),
 ) -> None:
-    """登录知乎。默认给出登录链接；`--browser` 打开真实浏览器登录；也可 `--cookie` 手动粘贴。"""
+    """登录知乎。`--edge` 复用 Edge 登录态；`--browser` 开浏览器登录；默认给登录链接。"""
     raw = _load_cookie_input(cookie, cookie_file)
     if raw:
         try:
@@ -48,6 +49,10 @@ def login(
         except ValueError as exc:
             error_console.print(f"Cookie 解析失败：{exc}")
             raise typer.Exit(code=1) from exc
+    elif edge:
+        from ..edgelogin import edge_login
+
+        credentials = edge_login()
     elif browser:
         from ..browserlogin import browser_login
 

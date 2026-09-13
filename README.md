@@ -117,10 +117,14 @@ zhihu login --browser     # 需先装可选依赖：pip install 'wzlcarrot-cli[b
 其他方式：
 
 ```bash
+zhihu login --edge        # 复用 Edge 已登录会话（需先完全关闭 Edge）
+zhihu login --browser     # 打开真实 Chromium 登录（扫码/密码/短信）
 zhihu login               # 打印登录链接（在已登录知乎的浏览器打开确认）
 zhihu login --qr          # 在终端显示二维码
 zhihu login --cookie "d_c0=...; z_c0=...; _xsrf=..."   # 手动粘贴 Cookie
 ```
+
+> `--edge` 会用**你真实的 Edge 配置**以调试模式启动（Edge 自己解密 Cookie），因此要先关掉 Edge；它不会新建浏览器，直接复用你的登录态。
 
 手动 Cookie 获取：登录 `https://www.zhihu.com` → DevTools → Network → 任意请求 → Request Headers → 复制整行 `Cookie`。
 

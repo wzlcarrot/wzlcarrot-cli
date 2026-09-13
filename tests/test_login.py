@@ -70,3 +70,41 @@ def test_login_browser_flag_uses_browser_login(monkeypatch):
     result = runner.invoke(app, ["login", "--browser"])
     assert result.exit_code == 0, result.output
     assert called.get("yes") is True
+
+
+def test_login_edge_flag_uses_edge_login(monkeypatch):
+    from wzlcarrot_cli import edgelogin
+
+    called = {}
+
+    def fake_edge_login(**_kwargs):
+        called["yes"] = True
+        return Credentials(cookies={"d_c0": "a", "z_c0": "b"})
+
+    monkeypatch.setattr(edgelogin, "edge_login", fake_edge_login)
+    result = runner.invoke(app, ["login", "--edge"])
+    assert result.exit_code == 0, result.output
+    assert called.get("yes") is True
+
+
+def test_edge_login_reports_edge_running(monkeypatch):
+    from wzlcarrot_cli import edgelogin
+
+    monkeypatch.setattr(edgelogin, "_run_powershell", lambda *a, **k: "ERR:edge-running")
+    with pytest.raises(Exception, match="关闭 Edge"):
+        edgelogin.edge_login()
+
+
+def test_edge_login_filters_zhihu_cookies(monkeypatch):
+    from wzlcarrot_cli import edgelogin
+
+    payload = (
+        '{"result": {"cookies": ['
+        '{"name": "z_c0", "value": "Z", "domain": ".zhihu.com"},'
+        '{"name": "other", "value": "x", "domain": ".example.com"}'
+        "]}}"
+    )
+    monkeypatch.setattr(edgelogin, "_run_powershell", lambda *a, **k: payload)
+    creds = edgelogin.edge_login()
+    assert creds.z_c0 == "Z"
+    assert "other" not in creds.cookies
