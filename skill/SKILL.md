@@ -12,7 +12,7 @@ description: 知乎 CLI 技能。用户想在知乎搜索、看热榜/推荐/话
   - 登录态：`credentials.json`（权限 0600）
   - 扫码登录二维码：`qrcode.png`
   - 会话：`sessions/`
-- **登录方式**：扫码 `zhihu login --qr`、粘贴 Cookie `zhihu login --cookie "d_c0=...; z_c0=...; _xsrf=..."`。
+- **登录方式**：`zhihu login`（默认给登录链接）、`zhihu login --qr`（显示二维码），或粘贴 Cookie `zhihu login --cookie "d_c0=...; z_c0=...; _xsrf=..."`。
 - **安全**：Cookie 仅存本地，**不得上传、转发或写入对话/日志**。
 
 ## Agent 规则（务必遵守）
@@ -20,7 +20,7 @@ description: 知乎 CLI 技能。用户想在知乎搜索、看热榜/推荐/话
 1. **低频访问**：本工具默认已限速（读 1.5–3.5s、写 ≥8s、跨进程最小间隔 3s）。**不要**用脚本批量调用；连续多条命令也会被强制间隔。若需更慢，把全局参数放在子命令之前：
    `zhihu --min-delay 4 --max-delay 8 --min-gap 10 --write-delay 30 <子命令>`。
 2. **`--json` 是全局参数，必须放在子命令之前**：数据查询用 `zhihu --json hot`、`zhihu --json search 关键词`。命令默认输出人类可读表格，解析请用 `--json`。
-3. **需登录**：先 `zhihu status`；未登录则 `zhihu login --qr`（终端渲染二维码）或 `--cookie`。
+3. **需登录**：先 `zhihu status`；未登录则 `zhihu login`（默认登录链接，`--qr` 显示二维码）或 `--cookie`。
 4. **写操作会二次确认**：赞同/关注/收藏/评论/发布/删除等默认询问，Agent 场景加 `-y`。仍建议变更类操作先向用户确认意图。
 5. **发布正文**：`publish`/`action publish` 的正文支持 HTML；用 `--edit` 会调用本地 Markdown 编辑器（MarkText）。
 6. **反爬**：命中知乎限制会报 `AntiAbuseError` 并自动冷却 120 秒，稍后重试即可，切勿高频重试。
@@ -29,7 +29,7 @@ description: 知乎 CLI 技能。用户想在知乎搜索、看热榜/推荐/话
 
 | 诉求 | 命令 |
 |------|------|
-| 登录（扫码 / Cookie） | `zhihu login --qr` / `zhihu login --cookie "d_c0=...; z_c0=...; _xsrf=..."` |
+| 登录（链接/扫码 / Cookie） | `zhihu login` / `zhihu login --qr` / `zhihu login --cookie "d_c0=...; z_c0=...; _xsrf=..."` |
 | 登录状态 / 我的资料 | `zhihu status` / `zhihu me` |
 | 热榜 | `zhihu --json hot -n 10` |
 | 推荐流 | `zhihu --json feed -n 10` |
@@ -56,7 +56,7 @@ description: 知乎 CLI 技能。用户想在知乎搜索、看热榜/推荐/话
 
 ```
 用户诉求
-  → zhihu status（未登录 → zhihu login --qr 或 --cookie）
+  → zhihu status（未登录 → zhihu login 或 --cookie）
   → 查上表得命令
   → 数据查询：加全局 --json（放子命令前）执行并解析
   → 写操作：先确认意图，加 -y 执行
@@ -81,7 +81,7 @@ wzlcarrot chat --continue
 
 ## 错误处理
 
-- **未登录 / 401 / 403**：`zhihu login --qr` 或 `--cookie` 后重试。
+- **未登录 / 401 / 403**：`zhihu login`（或 `--qr`）或 `--cookie` 后重试。
 - **AntiAbuseError（请求存在异常/暂时限制）**：已自动冷却 120 秒，稍后再试，降低频率。
 - **签名失效（403 持续）**：知乎前端更新了 `x-zse-96`，需更新 `wzlcarrot_cli/signing.py`。
 - **其他**：检查 ID / url_token 是否正确；网络超时重试。

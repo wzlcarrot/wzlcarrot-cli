@@ -4,12 +4,13 @@ Flow:
   1. GET /signin  -> seed cookies
   2. POST /udid, GET /oauth/captcha (best effort)
   3. POST /api/v3/account/api/login/qrcode -> token + link
-  4. Render ``link`` as a terminal QR and poll ``.../{token}/scan_info``
+  4. Print the login ``link`` and poll ``.../{token}/scan_info``
   5. Collect cookies once the user confirms on the phone
 """
 
 from __future__ import annotations
 
+import contextlib
 import time
 from pathlib import Path
 
@@ -89,8 +90,14 @@ def qr_login(
     timeout: int = 180,
     poll_interval: float = 1.5,
     show: bool = True,
+    show_qr: bool = False,
 ) -> Credentials:
-    """Run the QR login flow and return saved-able credentials."""
+    """Run the QR/link login flow and return saved-able credentials.
+
+    By default the raw login **link** is printed (open it in a browser that is
+    already logged in, or on your phone).  Set ``show_qr`` to also render a
+    terminal QR code.
+    """
     headers = browser_headers()
     headers["x-requested-with"] = "fetch"
     with httpx.Client(headers=headers, follow_redirects=True, timeout=15.0) as session:
@@ -109,26 +116,28 @@ def qr_login(
             resp = session.post(QRCODE_API, json={})
             data = resp.json()
         except (httpx.HTTPError, ValueError) as exc:
-            raise ZhihuError(f"获取二维码失败：{exc}") from exc
+            raise ZhihuError(f"获取登录链接失败：{exc}") from exc
 
         token = data.get("token") or data.get("qrcode_token")
         link = data.get("link") or ""
         if not token or not link:
-            raise ZhihuError(f"二维码接口未返回 token/link：{data}")
+            raise ZhihuError(f"登录接口未返回 token/link：{data}")
 
-        png_path = qrcode_file()
-        try:
-            save_qr_png(link, png_path)
-        except Exception:  # noqa: BLE001 - QR image is a convenience only
-            png_path = None  # type: ignore[assignment]
-        if show:
+        if show_qr:
+            png_path = qrcode_file()
             try:
+                save_qr_png(link, png_path)
+            except Exception:  # noqa: BLE001 - QR image is a convenience only
+                png_path = None  # type: ignore[assignment]
+            with contextlib.suppress(Exception):  # QR rendering is best-effort
                 console.print(render_terminal_qr(link))
-            except Exception:  # noqa: BLE001
-                console.print(f"请用手机浏览器打开：{link}")
             if png_path:
                 console.print(f"二维码图片：{png_path}")
-        console.print("请用知乎 App 扫码并在手机上点击「确认登录」…")
+
+        if show:
+            console.print(f"登录链接：[bold]{link}[/bold]")
+            console.print("在已登录知乎的浏览器打开上面的链接（或用手机知乎 App 打开），确认登录即可。")
+        console.print("等待确认中…")
 
         scan_url = f"{QRCODE_API}/{token}/scan_info"
         session.headers["referer"] = f"{BASE_URL}/signin?next=%2F"

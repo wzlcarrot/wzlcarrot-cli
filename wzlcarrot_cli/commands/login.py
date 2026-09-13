@@ -35,27 +35,20 @@ def _validate(credentials: Credentials, *, verbose: bool = True) -> dict:
 
 
 def login(
-    cookie: str = typer.Option(None, "--cookie", "-c", help="浏览器 Cookie 字符串"),
+    cookie: str = typer.Option(None, "--cookie", "-c", help="改用浏览器 Cookie 字符串登录"),
     cookie_file: Path = typer.Option(None, "--cookie-file", help="从文件读取 Cookie 字符串"),
-    qr: bool = typer.Option(False, "--qr", help="扫码登录（手机知乎 App 扫二维码）"),
+    qr: bool = typer.Option(False, "--qr", help="改为显示二维码（默认只给登录链接）"),
 ) -> None:
-    """保存登录凭证（知乎所有命令都要求登录）。"""
+    """登录知乎。默认给出一条登录链接；也可用 --cookie 手动粘贴 Cookie。"""
     raw = _load_cookie_input(cookie, cookie_file)
-    if qr and not raw:
-        credentials = qr_login()
-    else:
-        if not raw:
-            console.print(
-                "从浏览器 DevTools → Network → 任意 www.zhihu.com 请求 → "
-                "Request Headers → Cookie，复制整行粘贴。\n"
-                "至少需包含 [bold]d_c0[/bold]、[bold]z_c0[/bold]、[bold]_xsrf[/bold]。"
-            )
-            raw = typer.prompt("Cookie", hide_input=True)
+    if raw:
         try:
             credentials = Credentials.from_cookie_string(raw)
         except ValueError as exc:
             error_console.print(f"Cookie 解析失败：{exc}")
             raise typer.Exit(code=1) from exc
+    else:
+        credentials = qr_login(show_qr=qr)
 
     if not credentials.is_logged_in():
         error_console.print(

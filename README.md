@@ -7,7 +7,7 @@
 ## 特性
 
 - 纯 Python 实现 `x-zse-96` v2 签名，无需浏览器
-- 登录凭证本地保存（`chmod 600`），支持 Cookie 导入与纯 API 扫码登录
+- 登录凭证本地保存（`chmod 600`、加密），支持 Cookie 导入与纯 API 登录链接/扫码
 - 读：热榜 / 推荐流 / 话题 / 搜索 / 问题 / 回答 / 文章 / 评论 / 用户 / 关注 / 粉丝 / 收藏夹 / 通知
 - 写：赞同·反对·取消 / 关注用户或问题 / 收藏 / 评论 / 发布回答
 - 创作：发布提问 / 想法 / 专栏文章（支持 HTML 富文本与图片上传），删除自己的内容
@@ -92,7 +92,7 @@ wzlcarrot sessions / plugins / hooks / spill / prompt / upgrade / version
 ```bash
 zhihu hot              # 知乎热榜
 zhihu search 关键词
-zhihu login --qr
+zhihu login            # 登录链接
 zhihu comment --answer <id> -m "..."
 ```
 
@@ -108,17 +108,18 @@ zhihu comment --answer <id> -m "..."
 
 ## 登录
 
-推荐扫码登录（纯 API，无需浏览器；二维码会渲染在终端并保存为 `~/.config/zhihu-cli/qrcode.png`）：
+默认走**登录链接**（纯 API，无需浏览器）：命令会打印一条登录链接，在已登录知乎的浏览器打开它、确认登录即可；也可用手机知乎 App 打开。
 
 ```bash
-zhihu login --qr
+zhihu login            # 默认：给出登录链接
+zhihu login --qr       # 可选：改为在终端显示二维码
 ```
 
 也可以手动从浏览器复制 Cookie（最低需要 `d_c0`、`z_c0`、`_xsrf`）：
 
 1. 登录 `https://www.zhihu.com`
 2. DevTools → Network → 任意请求 → Request Headers → 复制整行 `Cookie`
-3. `zhihu login` 粘贴，或 `zhihu login --cookie-file cookie.txt`
+3. `zhihu login --cookie "粘贴"`，或 `zhihu login --cookie-file cookie.txt`
 
 ```bash
 zhihu status
