@@ -21,11 +21,13 @@ def load_memory() -> str:
     """Read user memory.
 
     Sources: the config-dir ``AGENTS.md`` (global preferences) and a
-    ``ZHIHU.md`` in the current working directory (project-specific).  We avoid
-    a bare ``AGENTS.md`` in the cwd so an unrelated one is never injected.
+    ``WZLCARROT.md`` in the current working directory (project-specific; the
+    legacy ``ZHIHU.md`` is still honored).  We avoid a bare ``AGENTS.md`` in the
+    cwd so an unrelated one is never injected.
     """
     chunks: list[str] = []
-    for path in (config_dir() / "AGENTS.md", Path.cwd() / "ZHIHU.md"):
+    candidates = (config_dir() / "AGENTS.md", Path.cwd() / "WZLCARROT.md", Path.cwd() / "ZHIHU.md")
+    for path in candidates:
         try:
             if path.is_file():
                 text = path.read_text(encoding="utf-8").strip()

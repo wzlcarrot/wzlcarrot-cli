@@ -7,14 +7,14 @@ from wzlcarrot_cli.session import Credentials
 
 
 def test_save_sets_owner_only_permissions(tmp_path, monkeypatch):
-    monkeypatch.setenv("ZHIHU_CLI_HOME", str(tmp_path))
+    monkeypatch.setenv("WZLCARROT_CLI_HOME", str(tmp_path))
     Credentials(cookies={"d_c0": "d", "z_c0": "z"}).save()
     mode = stat.S_IMODE(credentials_file().stat().st_mode)
     assert mode == 0o600
 
 
 def test_load_tightens_loosened_permissions(tmp_path, monkeypatch):
-    monkeypatch.setenv("ZHIHU_CLI_HOME", str(tmp_path))
+    monkeypatch.setenv("WZLCARROT_CLI_HOME", str(tmp_path))
     Credentials(cookies={"d_c0": "d", "z_c0": "z"}).save()
     path = credentials_file()
     path.chmod(0o644)  # something loosened it
@@ -24,7 +24,7 @@ def test_load_tightens_loosened_permissions(tmp_path, monkeypatch):
 
 
 def test_save_encrypts_at_rest(tmp_path, monkeypatch):
-    monkeypatch.setenv("ZHIHU_CLI_HOME", str(tmp_path))
+    monkeypatch.setenv("WZLCARROT_CLI_HOME", str(tmp_path))
     from wzlcarrot_cli.session import Credentials
 
     Credentials(cookies={"d_c0": "secret-dc0", "z_c0": "secret-zc0"}).save()
@@ -38,7 +38,7 @@ def test_save_encrypts_at_rest(tmp_path, monkeypatch):
 
 
 def test_load_legacy_plaintext(tmp_path, monkeypatch):
-    monkeypatch.setenv("ZHIHU_CLI_HOME", str(tmp_path))
+    monkeypatch.setenv("WZLCARROT_CLI_HOME", str(tmp_path))
     import json
 
     from wzlcarrot_cli.session import Credentials
@@ -52,7 +52,7 @@ def test_load_legacy_plaintext(tmp_path, monkeypatch):
 
 
 def test_corrupt_ciphertext_raises(tmp_path, monkeypatch):
-    monkeypatch.setenv("ZHIHU_CLI_HOME", str(tmp_path))
+    monkeypatch.setenv("WZLCARROT_CLI_HOME", str(tmp_path))
     import json
 
     import pytest

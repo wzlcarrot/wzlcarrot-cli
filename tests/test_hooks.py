@@ -55,7 +55,7 @@ def test_bad_hook_is_contained():
 
 
 def test_load_rules_from_file(tmp_path, monkeypatch):
-    monkeypatch.setenv("ZHIHU_CLI_HOME", str(tmp_path))
+    monkeypatch.setenv("WZLCARROT_CLI_HOME", str(tmp_path))
     (tmp_path / "hooks.json").write_text(
         json.dumps({
             "hooks": [

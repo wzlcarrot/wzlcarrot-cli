@@ -25,7 +25,7 @@ def test_build_prompt_sections_order():
 
 
 def test_load_local_plugin(tmp_path, monkeypatch):
-    monkeypatch.setenv("ZHIHU_CLI_HOME", str(tmp_path))
+    monkeypatch.setenv("WZLCARROT_CLI_HOME", str(tmp_path))
     plugin_dir = tmp_path / "plugins"
     plugin_dir.mkdir()
     (plugin_dir / "demo.py").write_text(
@@ -49,7 +49,7 @@ def test_load_local_plugin(tmp_path, monkeypatch):
 
 
 def test_bad_plugin_does_not_break_good_one(tmp_path, monkeypatch):
-    monkeypatch.setenv("ZHIHU_CLI_HOME", str(tmp_path))
+    monkeypatch.setenv("WZLCARROT_CLI_HOME", str(tmp_path))
     plugin_dir = tmp_path / "plugins"
     plugin_dir.mkdir()
     (plugin_dir / "bad.py").write_text(
@@ -63,8 +63,8 @@ def test_bad_plugin_does_not_break_good_one(tmp_path, monkeypatch):
 
 
 def test_env_disables_plugins(tmp_path, monkeypatch):
-    monkeypatch.setenv("ZHIHU_CLI_HOME", str(tmp_path))
-    monkeypatch.setenv("ZHIHU_CLI_NO_PLUGINS", "1")
+    monkeypatch.setenv("WZLCARROT_CLI_HOME", str(tmp_path))
+    monkeypatch.setenv("WZLCARROT_CLI_NO_PLUGINS", "1")
     api = plugins.load_plugins()
     assert api.commands == {}
     assert api.plugins == []

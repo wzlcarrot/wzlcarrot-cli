@@ -63,7 +63,7 @@ def test_tui_command_menu_and_tab_completion():
 
 
 def test_tui_connect_flow(tmp_path, monkeypatch):
-    monkeypatch.setenv("ZHIHU_CLI_HOME", str(tmp_path))
+    monkeypatch.setenv("WZLCARROT_CLI_HOME", str(tmp_path))
 
     from types import SimpleNamespace
 

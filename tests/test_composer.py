@@ -60,7 +60,7 @@ def test_edit_text_with_env_editor(tmp_path, monkeypatch):
     script = tmp_path / "ed.sh"
     script.write_text('#!/bin/bash\nprintf "# 编辑器标题\\n\\n正文" > "$1"\n', encoding="utf-8")
     os.chmod(script, 0o755)
-    monkeypatch.setenv("ZHIHU_CLI_EDITOR", f"{script} {{file}}")
+    monkeypatch.setenv("WZLCARROT_CLI_EDITOR", f"{script} {{file}}")
     result = composer.edit_text(composer.ASK_TEMPLATE)
     assert "编辑器标题" in result
     assert "正文" in result

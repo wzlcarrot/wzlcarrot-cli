@@ -2,7 +2,7 @@
 
 When Zhihu changes its ``x-zse-96`` algorithm, the pure-Python signature starts
 returning ``403``.  If Playwright is installed *and* the user opts in via
-``ZHIHU_CLI_BROWSER_FALLBACK=1``, GET requests that hit a signature failure are
+``WZLCARROT_CLI_BROWSER_FALLBACK=1``, GET requests that hit a signature failure are
 retried through a real headless browser, which signs the request itself.
 
 Playwright is an optional dependency (``pip install 'wzlcarrot-cli[browser]'``);
@@ -12,11 +12,12 @@ this module never imports it unless the fallback is actually used.
 from __future__ import annotations
 
 import json
-import os
 from collections.abc import Callable
 from typing import Any
 
-ENABLE_ENV = "ZHIHU_CLI_BROWSER_FALLBACK"
+from .config import env
+
+ENABLE_ENV = "WZLCARROT_CLI_BROWSER_FALLBACK"
 HOME_URL = "https://www.zhihu.com/"
 
 
@@ -30,7 +31,7 @@ def is_available() -> bool:
 
 
 def is_enabled() -> bool:
-    return os.environ.get(ENABLE_ENV) not in (None, "", "0", "false", "False")
+    return env("BROWSER_FALLBACK") not in (None, "", "0", "false", "False")
 
 
 def _parse_cookies(cookie_header: str, domain: str = ".zhihu.com") -> list[dict[str, Any]]:

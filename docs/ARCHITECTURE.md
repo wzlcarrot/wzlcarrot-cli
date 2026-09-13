@@ -58,7 +58,7 @@ wzlcarrot-cli 是一个纯 Python 的多平台命令行客户端（当前内置�
 
 ### 自然语言 Agent 链路
 
-- **`llm.py`** —— LLM provider 抽象与配置（`~/.config/zhihu-cli/llm.json` 或环境变量），
+- **`llm.py`** —— LLM provider 抽象与配置（`~/.config/wzlcarrot-cli/llm.json` 或环境变量），
   把自然语言请求映射为工具调用。
 - **`sessions.py` / `compaction.py` / `spill.py`** —— 会话持久化、历史压缩、
   超长上下文落盘，支撑多轮对话。
@@ -68,7 +68,7 @@ wzlcarrot-cli 是一个纯 Python 的多平台命令行客户端（当前内置�
 ### 扩展机制
 
 - **`plugins.py`** —— "Everything is a plugin"：插件从
-  `~/.config/zhihu-cli/plugins/` 动态加载，`plugins` 子命令可查看。
+  `~/.config/wzlcarrot-cli/plugins/` 动态加载，`plugins` 子命令可查看。
 - **`hooks.py`** —— 守卫式工具管线：在 Agent 工具调用前后执行
   `hooks.json` 中声明的检查逻辑。
 
@@ -76,7 +76,7 @@ wzlcarrot-cli 是一个纯 Python 的多平台命令行客户端（当前内置�
 
 - **`models.py`** —— Pydantic 数据模型（回答、用户、评论等领域对象）。
 - **`output.py`** —— Rich 终端渲染（表格、面板、进度）。
-- **`config.py`** —— 配置读取（`~/.config/zhihu-cli/`）。
+- **`config.py`** —— 配置读取（`~/.config/wzlcarrot-cli/`）。
 - **`doctor.py`** —— 自诊断：检查 Python 版本、依赖、登录态、配置文件。
 - **`exceptions.py`** —— 统一异常层次。
 

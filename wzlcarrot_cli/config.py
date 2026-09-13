@@ -6,9 +6,11 @@ import json
 import os
 from pathlib import Path
 
-APP_NAME = "zhihu-cli"
+APP_NAME = "wzlcarrot-cli"
 # Distribution (PyPI) name; the ``zhihu-cli`` name is taken by another project.
 DIST_NAME = "wzlcarrot-cli"
+ENV_PREFIX = "WZLCARROT_CLI"
+LEGACY_ENV_PREFIX = "ZHIHU_CLI"
 BASE_URL = "https://www.zhihu.com"
 API_BASE = "https://www.zhihu.com"
 
@@ -52,8 +54,13 @@ def browser_headers() -> dict[str, str]:
     }
 
 
+def env(name: str) -> str | None:
+    """Read ``WZLCARROT_CLI_<name>``, falling back to legacy ``ZHIHU_CLI_<name>``."""
+    return os.environ.get(f"{ENV_PREFIX}_{name}") or os.environ.get(f"{LEGACY_ENV_PREFIX}_{name}")
+
+
 def config_dir() -> Path:
-    override = os.environ.get("ZHIHU_CLI_HOME")
+    override = env("HOME")
     if override:
         path = Path(override).expanduser()
     else:

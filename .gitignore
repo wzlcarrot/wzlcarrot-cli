@@ -3,6 +3,7 @@ credentials.json
 .credentials.key
 *.session
 .zhihu-cli/
+.wzlcarrot-cli/
 
 # Python
 __pycache__/

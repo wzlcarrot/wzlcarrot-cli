@@ -61,7 +61,7 @@ def _notify_update() -> None:
 
         console.print(
             f"[yellow]有新版本：{DIST_NAME} {latest}（当前 {__version__}）,"
-            "运行 zhihu upgrade 升级；设置 ZHIHU_CLI_NO_UPDATE_CHECK=1 可关闭检查[/yellow]"
+            "运行 zhihu upgrade 升级；设置 WZLCARROT_CLI_NO_UPDATE_CHECK=1 可关闭检查[/yellow]"
         )
 
 

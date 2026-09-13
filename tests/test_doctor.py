@@ -4,8 +4,8 @@ from wzlcarrot_cli.doctor import run_checks
 
 
 def test_doctor_offline_reports_core_checks(tmp_path, monkeypatch):
-    monkeypatch.setenv("ZHIHU_CLI_HOME", str(tmp_path))
-    for key in ("ZHIHU_CLI_LLM_API_KEY", "DEEPSEEK_API_KEY", "OPENAI_API_KEY"):
+    monkeypatch.setenv("WZLCARROT_CLI_HOME", str(tmp_path))
+    for key in ("WZLCARROT_CLI_LLM_API_KEY", "DEEPSEEK_API_KEY", "OPENAI_API_KEY"):
         monkeypatch.delenv(key, raising=False)
 
     checks = run_checks(check_network=False)

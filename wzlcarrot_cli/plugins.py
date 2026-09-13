@@ -9,7 +9,7 @@ state).
 Discover plugins by:
 
 1. Python entry points in group ``wzlcarrot_cli.plugins`` (packaged distributions).
-2. ``*.py`` files in ``~/.config/zhihu-cli/plugins/`` (local, drop-in).
+2. ``*.py`` files in ``~/.config/wzlcarrot-cli/plugins/`` (local, drop-in).
 
 A plugin is any module exposing ``register(api: PluginAPI) -> None``.
 """
@@ -18,13 +18,12 @@ from __future__ import annotations
 
 import importlib.metadata
 import importlib.util
-import os
 from collections.abc import Callable
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
-from .config import config_dir
+from .config import config_dir, env
 from .output import error_console
 
 ENTRY_POINT_GROUP = "wzlcarrot_cli.plugins"
@@ -150,7 +149,7 @@ def _iter_local_plugins():
 
 def load_plugins() -> PluginAPI:
     api = PluginAPI()
-    if os.environ.get("ZHIHU_CLI_NO_PLUGINS"):
+    if env("NO_PLUGINS"):
         return api
     for name, module in [*_iter_entry_point_plugins(), *_iter_local_plugins()]:
         register = getattr(module, "register", None)

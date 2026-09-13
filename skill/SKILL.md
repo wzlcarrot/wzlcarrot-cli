@@ -1,14 +1,14 @@
 ---
-name: zhihu-cli
+name: wzlcarrot-cli
 description: 知乎 CLI 技能。用户想在知乎搜索、看热榜/推荐/话题、读问题/回答/文章/评论、查用户/关注/粉丝/收藏/通知、导出 Markdown、点赞/关注/收藏/评论/发布/删除，或用自然语言对话操作知乎时使用。通过执行本机的 `zhihu` 命令完成，登录态仅存本地，访问频率已强制限制为低频。
 ---
 
-# zhihu-cli 技能
+# wzlcarrot-cli 技能
 
 ## 前提
 
 - **已安装**：`zhihu`（平台命令）与 `wzlcarrot`（通用命令）在 PATH 中（`uv tool install wzlcarrot-cli` 或 `pip install wzlcarrot-cli`）。
-- **配置目录**：`~/.config/zhihu-cli/`（可用环境变量 `ZHIHU_CLI_HOME` 覆盖）
+- **配置目录**：`~/.config/wzlcarrot-cli/`（可用环境变量 `WZLCARROT_CLI_HOME` 覆盖）
   - 登录态：`credentials.json`（权限 0600）
   - 扫码登录二维码：`qrcode.png`
   - 会话：`sessions/`

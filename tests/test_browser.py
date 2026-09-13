@@ -11,7 +11,7 @@ from wzlcarrot_cli.session import Credentials
 
 @pytest.fixture()
 def home(tmp_path, monkeypatch):
-    monkeypatch.setenv("ZHIHU_CLI_HOME", str(tmp_path))
+    monkeypatch.setenv("WZLCARROT_CLI_HOME", str(tmp_path))
     return tmp_path
 
 

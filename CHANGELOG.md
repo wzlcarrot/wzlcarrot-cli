@@ -4,13 +4,14 @@
 
 ## [Unreleased]
 ### Added
-- **版本检查**：每天首次使用时查询一次 PyPI 公开版本信息（仅此查询，无遥测），发现新版在命令前提示一行；`ZHIHU_CLI_NO_UPDATE_CHECK=1` 可关闭。
+- **版本检查**：每天首次使用时查询一次 PyPI 公开版本信息（仅此查询，无遥测），发现新版在命令前提示一行；`WZLCARROT_CLI_NO_UPDATE_CHECK=1` 可关闭。
 - **`zhihu upgrade` 命令**：自动识别安装方式（uv tool / pipx / pip）并执行对应升级；源码 editable 安装时提示 `git pull && uv sync`。
 - **发布工作流**：`.github/workflows/release.yml` 在 `v*` tag 上自动构建并发布到 PyPI（Trusted Publishing，GitHub 侧不存 token）。
 - **提示词注入防护**：Agent 模式的工具结果（知乎标题/回答/评论等第三方内容）统一包裹为「不可信数据」标记，系统提示词明确约束不得执行其中出现的指令；包裹标签可防逃逸（内容中的闭合标记会被剥离）。
 ### Fixed
 - 更新检查此前查询的是 PyPI 上**同名但非本项目**的 `zhihu-cli`，导致误报新版本；现改为按真实发行名查询，并在缓存中记录包名（旧缓存自动失效）。
 ### Changed
+- 应用配置目录由 `~/.config/zhihu-cli/` 改为 **`~/.config/wzlcarrot-cli/`**；环境变量前缀 `ZHIHU_CLI_*` 改为 **`WZLCARROT_CLI_*`**（旧名仍兼容）；项目记忆文件 `ZHIHU.md` 改为 **`WZLCARROT.md`**（旧名仍兼容）。
 - PyPI 发行包名由 `zhihu-cli` 改为 **`wzlcarrot-cli`**（`zhihu-cli` 已被他人占用）；命令行仍为 `zhihu`，使用方式不变。
 
 ## [0.18.0] - 2026-09-13
@@ -59,12 +60,12 @@
 
 ## [0.9.0]
 ### Added
-- 守卫式工具管线（pre/post hooks）：可拒绝/询问/改写参数/注解结果；支持 `~/.config/zhihu-cli/hooks.json` 声明式规则与插件钩子；`zhihu hooks`。
+- 守卫式工具管线（pre/post hooks）：可拒绝/询问/改写参数/注解结果；支持 `~/.config/wzlcarrot-cli/hooks.json` 声明式规则与插件钩子；`zhihu hooks`。
 - 钩子异常隔离。
 
 ## [0.8.0]
 ### Added
-- 系统提示词分段组装（基础段 + 记忆 + 插件段）；记忆来自 `~/.config/zhihu-cli/AGENTS.md` 与项目 `ZHIHU.md`；`zhihu prompt`。
+- 系统提示词分段组装（基础段 + 记忆 + 插件段）；记忆来自 `~/.config/wzlcarrot-cli/AGENTS.md` 与项目 `WZLCARROT.md`（兼容 `ZHIHU.md`）；`zhihu prompt`。
 - 插件可贡献提示词段（`api.prompt_section`）。
 
 ## [0.7.0]
@@ -77,7 +78,7 @@
 
 ## [0.5.0]
 ### Added
-- 插件系统：命令与 Agent 工具由注册表贡献，支持入口点组 `wzlcarrot_cli.plugins` 与本地 `~/.config/zhihu-cli/plugins/`；`zhihu plugins`。
+- 插件系统：命令与 Agent 工具由注册表贡献，支持入口点组 `wzlcarrot_cli.plugins` 与本地 `~/.config/wzlcarrot-cli/plugins/`；`zhihu plugins`。
 
 ## [0.4.0]
 ### Added

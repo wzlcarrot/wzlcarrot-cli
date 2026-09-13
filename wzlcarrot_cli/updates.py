@@ -1,6 +1,6 @@
 """Lightweight update check against PyPI.
 
-Cached for a day, opt-out via ``ZHIHU_CLI_NO_UPDATE_CHECK``, and designed to
+Cached for a day, opt-out via ``WZLCARROT_CLI_NO_UPDATE_CHECK``, and designed to
 never break or slow down a command: any failure is swallowed. The only network
 call is the public PyPI JSON endpoint - no telemetry.
 """
@@ -8,18 +8,17 @@ call is the public PyPI JSON endpoint - no telemetry.
 from __future__ import annotations
 
 import json
-import os
 import time
 from pathlib import Path
 from typing import Any
 
 import httpx
 
-from .config import DIST_NAME, config_dir
+from .config import DIST_NAME, config_dir, env
 
 PYPI_JSON_URL = f"https://pypi.org/pypi/{DIST_NAME}/json"
 CHECK_INTERVAL = 24 * 3600.0
-NO_CHECK_ENV = "ZHIHU_CLI_NO_UPDATE_CHECK"
+NO_CHECK_ENV = "WZLCARROT_CLI_NO_UPDATE_CHECK"
 
 
 def _cache_path() -> Path:
@@ -79,7 +78,7 @@ def check_for_update(current: str, *, now: float | None = None) -> str | None:
     The PyPI answer is cached for :data:`CHECK_INTERVAL`; a stale or missing
     cache triggers one query. Respects :data:`NO_CHECK_ENV`.
     """
-    if os.environ.get(NO_CHECK_ENV):
+    if env("NO_UPDATE_CHECK"):
         return None
     now = time.time() if now is None else now
     cache = _read_cache()

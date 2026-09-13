@@ -47,7 +47,7 @@ def test_anti_abuse_response_is_detected(tmp_path, monkeypatch):
     from wzlcarrot_cli.client import ZhihuClient
     from wzlcarrot_cli.exceptions import AntiAbuseError
 
-    monkeypatch.setenv("ZHIHU_CLI_HOME", str(tmp_path))
+    monkeypatch.setenv("WZLCARROT_CLI_HOME", str(tmp_path))
     creds = Credentials(cookies={"d_c0": "a", "z_c0": "b"})
     client = ZhihuClient(creds, min_delay=0, max_delay=0, min_gap=0)
     resp = httpx.Response(

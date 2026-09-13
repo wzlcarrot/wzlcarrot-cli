@@ -7,7 +7,7 @@ from wzlcarrot_cli import sessions
 
 
 def test_save_load_roundtrip(tmp_path, monkeypatch):
-    monkeypatch.setenv("ZHIHU_CLI_HOME", str(tmp_path))
+    monkeypatch.setenv("WZLCARROT_CLI_HOME", str(tmp_path))
     messages = [
         {"role": "system", "content": "s"},
         {"role": "user", "content": "帮我看看热榜"},
@@ -21,7 +21,7 @@ def test_save_load_roundtrip(tmp_path, monkeypatch):
 
 
 def test_latest_and_list_order(tmp_path, monkeypatch):
-    monkeypatch.setenv("ZHIHU_CLI_HOME", str(tmp_path))
+    monkeypatch.setenv("WZLCARROT_CLI_HOME", str(tmp_path))
     sessions.save_session("a", [{"role": "user", "content": "第一个会话"}], model="m")
     time.sleep(0.02)
     sessions.save_session("b", [{"role": "user", "content": "第二个会话"}], model="m")
@@ -32,7 +32,7 @@ def test_latest_and_list_order(tmp_path, monkeypatch):
 
 
 def test_title_from_first_user_message(tmp_path, monkeypatch):
-    monkeypatch.setenv("ZHIHU_CLI_HOME", str(tmp_path))
+    monkeypatch.setenv("WZLCARROT_CLI_HOME", str(tmp_path))
     sessions.save_session("t", [
         {"role": "system", "content": "s"},
         {"role": "user", "content": "导出收藏夹里的所有回答到本地"},
@@ -42,7 +42,7 @@ def test_title_from_first_user_message(tmp_path, monkeypatch):
 
 
 def test_load_missing_session_raises(tmp_path, monkeypatch):
-    monkeypatch.setenv("ZHIHU_CLI_HOME", str(tmp_path))
+    monkeypatch.setenv("WZLCARROT_CLI_HOME", str(tmp_path))
     from wzlcarrot_cli.exceptions import ZhihuError
 
     try:
@@ -54,7 +54,7 @@ def test_load_missing_session_raises(tmp_path, monkeypatch):
 
 
 def test_agent_persists_session(tmp_path, monkeypatch):
-    monkeypatch.setenv("ZHIHU_CLI_HOME", str(tmp_path))
+    monkeypatch.setenv("WZLCARROT_CLI_HOME", str(tmp_path))
     from wzlcarrot_cli.commands.chat import ChatAgent
 
     class FakeLLM:

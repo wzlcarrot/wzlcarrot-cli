@@ -1,4 +1,4 @@
-"""Persist and resume chat sessions under ``~/.config/zhihu-cli/sessions``."""
+"""Persist and resume chat sessions under ``~/.config/wzlcarrot-cli/sessions``."""
 
 from __future__ import annotations
 

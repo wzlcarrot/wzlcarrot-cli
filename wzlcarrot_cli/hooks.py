@@ -8,7 +8,7 @@ waterfalls, scaled to a Python CLI.  Hooks may:
 * **post**: rewrite or annotate the tool result.
 
 Hooks come from plugins (``api.hook(...)``) and from a declarative rules file
-``~/.config/zhihu-cli/hooks.json``.  A throwing hook is contained so one bad
+``~/.config/wzlcarrot-cli/hooks.json``.  A throwing hook is contained so one bad
 hook can never break the pipeline.
 """
 

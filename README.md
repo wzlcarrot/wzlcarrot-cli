@@ -16,7 +16,7 @@
 - 对话上下文自动压缩（旧工具结果截断 + 超阈值 LLM 摘要，支持 `/compact`）
 - 插件可贡献 CLI 命令、Agent 工具、系统提示词段，以及工具管线钩子（`api.hook`）
 - 守卫式工具管线：pre/post 钩子可拒绝/询问/改写参数/注解结果；支持声明式规则文件
-- 系统提示词分段组装（基础段 + 记忆 + 插件段）；记忆来自 `~/.config/zhihu-cli/AGENTS.md` 与当前目录 `ZHIHU.md`，`wzlcarrot prompt` 可预览
+- 系统提示词分段组装（基础段 + 记忆 + 插件段）；记忆来自 `~/.config/wzlcarrot-cli/AGENTS.md` 与当前目录 `WZLCARROT.md`（兼容 `ZHIHU.md`），`wzlcarrot prompt` 可预览
 - 超大工具结果自动落盘（私有 0600 文件），模型可用 `read_spill` 分段回读，不再被截断丢失
 - 环境自检 `wzlcarrot doctor`：登录/模型/插件/钩子/溢出/会话/连通性一屏看清
 - 多步任务：`todo_write` 工具 + TUI 实时任务面板 + `/todos` 查看
@@ -50,14 +50,14 @@ curl -fsSL https://raw.githubusercontent.com/your-org/wzlcarrot-cli/main/scripts
 从源码：
 
 ```bash
-cd ~/zhihu-cli
+cd ~/wzlcarrot-cli
 uv sync                 # 或： pip install -e .
 ```
 
 安装后命令为 `zhihu`（也可 `uv run zhihu`）。想在任意目录直接用 `zhihu`，做一次全局安装：
 
 ```bash
-uv tool install --editable ~/zhihu-cli
+uv tool install --editable ~/wzlcarrot-cli
 ```
 
 之后直接运行 `wzlcarrot` 即进入全屏 TUI。
@@ -92,7 +92,7 @@ zhihu comment --answer <id> -m "..."
 ## 升级与版本检查
 
 - 每天首次使用时检查一次 PyPI 是否有新版本：仅查询 PyPI 公开的版本信息，
-  **无任何遥测**；发现新版会在命令前提示一行。设置 `ZHIHU_CLI_NO_UPDATE_CHECK=1`
+  **无任何遥测**；发现新版会在命令前提示一行。设置 `WZLCARROT_CLI_NO_UPDATE_CHECK=1`
   可关闭检查。
 - `wzlcarrot upgrade`：自动识别安装方式（uv tool / pipx / pip）并执行对应的升级命令；
   源码（editable）安装时提示用 `git pull && uv sync` 升级。
@@ -117,7 +117,7 @@ wzlcarrot doctor       # 自检：登录、模型、插件、钩子、溢出、�
 
 ## 凭据存储与安全
 
-- 登录凭证以 **Fernet 加密**后保存在 `~/.config/zhihu-cli/credentials.json`，权限 `600`；
+- 登录凭证以 **Fernet 加密**后保存在 `~/.config/wzlcarrot-cli/credentials.json`，权限 `600`；
   加密密钥存于同级 `.credentials.key`（权限 `600`）。保存与每次读取时都会自动收紧权限。
   旧版的明文凭证文件可被自动读取，并在下次保存时升级为加密格式。
 - 关于风险水位：加密密钥也在本机，因此其保护强度与"浏览器保存的 Cookie"相近——
@@ -181,7 +181,7 @@ zhihu --write-delay 15 action vote --answer 12345678
 
 给发布类命令加 `--edit`，会用 Markdown 编辑器打开一个临时 `.md` 文件：
 
-- 编辑器解析顺序：`$ZHIHU_CLI_EDITOR` → 自动识别 **Windows 的 MarkText** → `$EDITOR`/`nano`
+- 编辑器解析顺序：`$WZLCARROT_CLI_EDITOR` → 自动识别 **Windows 的 MarkText** → `$EDITOR`/`nano`
 - WSL 下会自动定位 `MarkText.exe`（读桌面快捷方式），并放到 Windows 临时目录打开，保存后回终端按回车
 - 首行 `# 标题` 作为标题，其余为正文
 - 正文里的本地图片 `![](/绝对路径.png)` 会**自动上传**并转成知乎富文本；网络图片原样保留
@@ -198,8 +198,8 @@ zhihu action comment --answer 12345678 --edit   # 评论仅纯文本，图片会
 自定义编辑器（模板里用 `{file}`）：
 
 ```bash
-export ZHIHU_CLI_EDITOR='code {file}'   # VS Code
-export ZHIHU_CLI_EDITOR='vim {file}'
+export WZLCARROT_CLI_EDITOR='code {file}'   # VS Code
+export WZLCARROT_CLI_EDITOR='vim {file}'
 ```
 
 ### 限速（默认已很保守）
@@ -271,7 +271,7 @@ wzlcarrot sessions             # 列出已保存的会话
 wzlcarrot chat --yes           # 写操作不再逐次确认
 ```
 
-会话保存在 `~/.config/zhihu-cli/sessions/`（权限 0600）。
+会话保存在 `~/.config/wzlcarrot-cli/sessions/`（权限 0600）。
 
 需要配置一个 **OpenAI 兼容**的模型接口。最简单：交互式配置（内置常见供应商）
 
@@ -287,11 +287,11 @@ wzlcarrot connect -p deepseek -k sk-xxx -m deepseek-chat --test
 
 ```bash
 # 环境变量
-export ZHIHU_CLI_LLM_API_KEY=sk-xxx
-export ZHIHU_CLI_LLM_BASE_URL=https://api.deepseek.com/v1   # 可选
-export ZHIHU_CLI_LLM_MODEL=deepseek-chat                    # 可选
+export WZLCARROT_CLI_LLM_API_KEY=sk-xxx
+export WZLCARROT_CLI_LLM_BASE_URL=https://api.deepseek.com/v1   # 可选
+export WZLCARROT_CLI_LLM_MODEL=deepseek-chat                    # 可选
 
-# 或配置文件 ~/.config/zhihu-cli/llm.json
+# 或配置文件 ~/.config/wzlcarrot-cli/llm.json
 { "api_key": "sk-xxx", "base_url": "https://api.deepseek.com/v1", "model": "deepseek-chat" }
 
 # 或运行时
@@ -305,12 +305,12 @@ wzlcarrot ask "热榜前3" --api-key sk-xxx --model deepseek-chat
 命令与 Agent 工具都由**注册表**贡献，插件即可扩展。发现方式：
 
 1. **入口点**：包暴露 `wzlcarrot_cli.plugins` 组的 `entry_point`（适合分发到 PyPI）。
-2. **本地目录**：把 `.py` 丢进 `~/.config/zhihu-cli/plugins/`（即插即用）。
+2. **本地目录**：把 `.py` 丢进 `~/.config/wzlcarrot-cli/plugins/`（即插即用）。
 
 插件就是一个带 `register(api)` 的模块，可以贡献：
 
 ```python
-# ~/.config/zhihu-cli/plugins/hello.py
+# ~/.config/wzlcarrot-cli/plugins/hello.py
 import typer
 
 def register(api):
@@ -334,14 +334,14 @@ def register(api):
 
 - 查看已加载：`wzlcarrot plugins`
 - 单个插件加载失败不会影响其他插件，也不会中断启动
-- 禁用全部插件：`ZHIHU_CLI_NO_PLUGINS=1`
+- 禁用全部插件：`WZLCARROT_CLI_NO_PLUGINS=1`
 - 完整示例见 `examples/plugins/hello.py`
 
 ## Hook（守卫式工具管线）
 
 每次工具调用前后都会经过 pre/post 钩子，可实现拦截、询问、改写参数、注解结果。两种来源：
 
-**1. 声明式规则文件** `~/.config/zhihu-cli/hooks.json`（示例见 `examples/hooks.json`）：
+**1. 声明式规则文件** `~/.config/wzlcarrot-cli/hooks.json`（示例见 `examples/hooks.json`）：
 
 ```json
 { "hooks": [
@@ -374,13 +374,13 @@ api.hook(POST_EXECUTE, annotate, matcher="hot")
 `skill/SKILL.md` 是一份供**其他 Agent**（opencode / Claude Code / OpenClaw 等）读取的技能说明，让它们知道如何调用 `zhihu` 命令。装到 opencode：
 
 ```bash
-mkdir -p ~/.opencode/skill/zhihu-cli
-cp skill/SKILL.md ~/.opencode/skill/zhihu-cli/SKILL.md
+mkdir -p ~/.opencode/skill/wzlcarrot-cli
+cp skill/SKILL.md ~/.opencode/skill/wzlcarrot-cli/SKILL.md
 ```
 
 之后 opencode 会把它作为可用技能加载，Agent 即可代你执行知乎读写。
 
-凭证位置：`~/.config/zhihu-cli/credentials.json`（可用 `ZHIHU_CLI_HOME` 覆盖目录）。
+凭证位置：`~/.config/wzlcarrot-cli/credentials.json`（可用 `WZLCARROT_CLI_HOME` 覆盖目录）。
 
 ## 作为 MCP 服务（给其他 Agent 用）
 

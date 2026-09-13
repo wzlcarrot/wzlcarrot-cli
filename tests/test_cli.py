@@ -10,7 +10,7 @@ runner = CliRunner()
 
 @pytest.fixture(autouse=True)
 def _no_update_check(monkeypatch):
-    monkeypatch.setenv("ZHIHU_CLI_NO_UPDATE_CHECK", "1")
+    monkeypatch.setenv("WZLCARROT_CLI_NO_UPDATE_CHECK", "1")
 
 
 def test_root_version():

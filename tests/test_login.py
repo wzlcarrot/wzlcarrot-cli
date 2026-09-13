@@ -12,8 +12,8 @@ runner = CliRunner()
 
 @pytest.fixture(autouse=True)
 def _home(tmp_path, monkeypatch):
-    monkeypatch.setenv("ZHIHU_CLI_HOME", str(tmp_path))
-    monkeypatch.setenv("ZHIHU_CLI_NO_UPDATE_CHECK", "1")
+    monkeypatch.setenv("WZLCARROT_CLI_HOME", str(tmp_path))
+    monkeypatch.setenv("WZLCARROT_CLI_NO_UPDATE_CHECK", "1")
     monkeypatch.setattr(
         commands.login, "_validate", lambda creds, **kw: {"name": "t", "url_token": "t"}
     )

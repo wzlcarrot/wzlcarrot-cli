@@ -5,7 +5,7 @@ local images (``![](/path/to.png)``).  On save we upload the images and convert
 the Markdown to the rich HTML Zhihu expects.
 
 Editor resolution order:
-  1. ``$ZHIHU_CLI_EDITOR``  — a shell command template containing ``{file}``
+  1. ``$WZLCARROT_CLI_EDITOR``  — a shell command template containing ``{file}``
   2. Auto-detected MarkText (Windows GUI, launched from WSL)
   3. ``$EDITOR`` / ``$VISUAL`` / ``nano`` (terminal editor)
 """
@@ -21,6 +21,7 @@ import tempfile
 from dataclasses import dataclass
 from pathlib import Path
 
+from .config import env
 from .exceptions import ZhihuError
 from .output import console
 
@@ -111,13 +112,15 @@ def _windows_temp_dir() -> Path | None:
 
 
 def resolve_editor() -> Editor:
-    env = os.environ.get("ZHIHU_CLI_EDITOR")
-    if env:
-        argv = shlex.split(env)
+    template = env("EDITOR")
+    if template:
+        argv = shlex.split(template)
         is_windows = argv and argv[0].lower().endswith(".exe")
         if not any("{file}" in part for part in argv):
             argv.append("{file}")
-        return Editor(argv=argv, gui=is_windows or "marktext" in env.lower(), windows_path=is_windows)
+        return Editor(
+            argv=argv, gui=is_windows or "marktext" in template.lower(), windows_path=is_windows
+        )
     marktext = _resolve_marktext()
     if marktext:
         return marktext
@@ -155,7 +158,7 @@ class EditorSession:
             try:
                 subprocess.run(argv, check=False)
             except FileNotFoundError as exc:
-                raise ZhihuError(f"找不到编辑器 {argv[0]!r}，请设置 $ZHIHU_CLI_EDITOR") from exc
+                raise ZhihuError(f"找不到编辑器 {argv[0]!r}，请设置 $WZLCARROT_CLI_EDITOR") from exc
 
     def read(self) -> str:
         return self.path.read_text(encoding="utf-8")

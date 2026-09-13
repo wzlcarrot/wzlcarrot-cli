@@ -12,7 +12,7 @@ from typing import Any
 
 import httpx
 
-from .config import config_dir
+from .config import config_dir, env
 from .exceptions import ZhihuError
 
 DEFAULT_BASE_URL = "https://api.deepseek.com/v1"
@@ -61,26 +61,26 @@ def resolve_llm_config(
     resolved = LLMConfig(
         api_key=(
             api_key
-            or os.environ.get("ZHIHU_CLI_LLM_API_KEY")
+            or env("LLM_API_KEY")
             or os.environ.get("DEEPSEEK_API_KEY")
             or os.environ.get("OPENAI_API_KEY")
             or data.get("api_key", "")
         ),
         base_url=(
             base_url
-            or os.environ.get("ZHIHU_CLI_LLM_BASE_URL")
+            or env("LLM_BASE_URL")
             or data.get("base_url", DEFAULT_BASE_URL)
         ),
         model=(
             model
-            or os.environ.get("ZHIHU_CLI_LLM_MODEL")
+            or env("LLM_MODEL")
             or data.get("model", DEFAULT_MODEL)
         ),
     )
     if not resolved.api_key:
         raise ZhihuError(
             "未配置模型 API Key。任选其一：\n"
-            "  export ZHIHU_CLI_LLM_API_KEY=sk-xxx\n"
+            "  export WZLCARROT_CLI_LLM_API_KEY=sk-xxx\n"
             f'  写入 {llm_config_file()}：'
             '{"api_key":"sk-xxx","base_url":"https://api.deepseek.com/v1","model":"deepseek-chat"}\n'
             "  或运行时传 --api-key"

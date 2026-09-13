@@ -35,7 +35,7 @@ def test_system_prompt_warns_about_injection():
 
 
 def test_tool_content_is_wrapped(tmp_path, monkeypatch):
-    monkeypatch.setenv("ZHIHU_CLI_HOME", str(tmp_path))
+    monkeypatch.setenv("WZLCARROT_CLI_HOME", str(tmp_path))
     agent = ChatAgent(object(), _StubLLM())
     content = agent._tool_content({"title": "如何看待 x"}, "question", None)
     assert content.startswith(UNTRUSTED_OPEN)

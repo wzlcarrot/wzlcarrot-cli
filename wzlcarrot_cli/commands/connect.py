@@ -37,7 +37,7 @@ def connect(
     list_providers: bool = typer.Option(False, "--list", help="列出内置供应商与模型"),
     test: bool = typer.Option(False, "--test", help="保存后做一次连通性测试"),
 ) -> None:
-    """配置模型供应商与 API Key（写入 ~/.config/zhihu-cli/llm.json）。"""
+    """配置模型供应商与 API Key（写入 ~/.config/wzlcarrot-cli/llm.json）。"""
     if list_providers:
         _print_providers()
         return

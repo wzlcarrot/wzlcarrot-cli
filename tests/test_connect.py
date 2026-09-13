@@ -19,8 +19,8 @@ def test_provider_registry_has_common_models():
 
 
 def test_save_llm_config_roundtrip(tmp_path, monkeypatch):
-    monkeypatch.setenv("ZHIHU_CLI_HOME", str(tmp_path))
-    for key in ("ZHIHU_CLI_LLM_API_KEY", "DEEPSEEK_API_KEY", "OPENAI_API_KEY"):
+    monkeypatch.setenv("WZLCARROT_CLI_HOME", str(tmp_path))
+    for key in ("WZLCARROT_CLI_LLM_API_KEY", "DEEPSEEK_API_KEY", "OPENAI_API_KEY"):
         monkeypatch.delenv(key, raising=False)
 
     save_llm_config("sk-test", "https://api.example.com/v1", "model-x")
@@ -30,7 +30,7 @@ def test_save_llm_config_roundtrip(tmp_path, monkeypatch):
 
 
 def test_connect_noninteractive_writes_config(tmp_path, monkeypatch):
-    monkeypatch.setenv("ZHIHU_CLI_HOME", str(tmp_path))
+    monkeypatch.setenv("WZLCARROT_CLI_HOME", str(tmp_path))
     result = runner.invoke(
         root_app,
         ["connect", "--provider", "deepseek", "--api-key", "sk-x", "--model", "deepseek-chat"],

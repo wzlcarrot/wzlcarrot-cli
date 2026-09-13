@@ -1,6 +1,6 @@
 """Example wzlcarrot-cli plugin.
 
-Enable it by copying this file into ``~/.config/zhihu-cli/plugins/``, or ship a
+Enable it by copying this file into ``~/.config/wzlcarrot-cli/plugins/``, or ship a
 distribution that exposes the ``wzlcarrot_cli.plugins`` entry point.
 
 A plugin is any module with ``register(api)``; ``api`` lets it contribute CLI

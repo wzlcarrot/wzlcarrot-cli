@@ -14,7 +14,7 @@ from wzlcarrot_cli.exceptions import ZhihuError
 
 @pytest.fixture()
 def home(tmp_path, monkeypatch):
-    monkeypatch.setenv("ZHIHU_CLI_HOME", str(tmp_path))
+    monkeypatch.setenv("WZLCARROT_CLI_HOME", str(tmp_path))
     monkeypatch.delenv(lic.LICENSE_ENV, raising=False)
     return tmp_path
 
