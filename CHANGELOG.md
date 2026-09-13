@@ -4,6 +4,9 @@
 
 ## [Unreleased]
 ### Added
+- **多平台入口**：所有平台同时挂在 `wzlcarrot` 下（`wzlcarrot zhihu hot`、`wzlcarrot weibo ...`），并保留各自的独立命令（`zhihu hot`）。`wzlcarrot platforms` 列出全部平台。
+- **规划中平台**：注册 `weibo`（微博）与 `xiaohongshu`（小红书）占位平台，命令已就位，实现待补。
+- **TUI 像素 banner**：对话 TUI 顶部加入像素萝卜 logo（Claude Code 风格），标题与状态栏显示当前平台。
 - **版本检查**：每天首次使用时查询一次 PyPI 公开版本信息（仅此查询，无遥测），发现新版在命令前提示一行；`WZLCARROT_CLI_NO_UPDATE_CHECK=1` 可关闭。
 - **`zhihu upgrade` 命令**：自动识别安装方式（uv tool / pipx / pip）并执行对应升级；源码 editable 安装时提示 `git pull && uv sync`。
 - **发布工作流**：`.github/workflows/release.yml` 在 `v*` tag 上自动构建并发布到 PyPI（Trusted Publishing，GitHub 侧不存 token）。

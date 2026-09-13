@@ -60,7 +60,7 @@ uv sync                 # 或： pip install -e .
 uv tool install --editable ~/wzlcarrot-cli
 ```
 
-之后直接运行 `wzlcarrot` 即进入全屏 TUI。
+之后直接运行 `wzlcarrot` 即进入全屏 TUI（Claude Code 风格，顶部有像素萝卜 banner；当前平台显示在标题与状态栏）。
 
 ## 多平台 CLI（`wzlcarrot`）
 
@@ -78,16 +78,18 @@ wzlcarrot chat / ask   # 文本对话
 wzlcarrot sessions / plugins / hooks / spill / prompt / upgrade / version
 ```
 
-**平台特定——各自的命令（当前只有知乎，命令是 `zhihu`）：**
+**平台特定——既可独立运行，也挂在 `wzlcarrot` 下：**
 
 ```bash
-zhihu hot              # 知乎热榜
+zhihu hot                  # 直接跑平台命令…
+wzlcarrot zhihu hot        # …或从总入口进
+
+zhihu login                # 打开 Edge 登录
 zhihu search 关键词
-zhihu login            # 打开 Edge 登录
 zhihu comment --answer <id> -m "..."
 ```
 
-> 平台命令**不带 `wzlcarrot` 前缀**：`zhihu ...` 就是知乎入口。后续会以同样方式加入 `weibo`、`xiaohongshu` 等平台（每个平台一个独立命令，共享同一套核心）。
+> 每个平台既保留独立入口（`zhihu ...`），也可以走总入口（`wzlcarrot zhihu ...` / `wzlcarrot weibo ...` / `wzlcarrot xiaohongshu ...`）。查看全部：`wzlcarrot platforms`。微博、小红书目前为**规划中**（命令已就位，实现待补）。
 
 ## 升级与版本检查
 

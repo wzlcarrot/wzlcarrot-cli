@@ -40,11 +40,29 @@ def test_platforms_command_lists_registered(monkeypatch):
     assert "demo" in result.output
 
 
-def test_root_app_does_not_nest_platforms():
-    # Platform commands live under their own entry (e.g. `zhihu hot`), not
-    # `wzlcarrot zhihu hot`.
+def test_root_app_nests_platforms():
+    # Platforms now live under the umbrella too: `wzlcarrot zhihu hot`.
     root = cli.build_root_app()
-    assert runner.invoke(root, ["zhihu"]).exit_code != 0
+    assert runner.invoke(root, ["zhihu", "--help"]).exit_code == 0
+    assert runner.invoke(root, ["zhihu", "hot", "--help"]).exit_code == 0
+
+
+def test_planned_platforms_are_registered_and_nested():
+    for name in ("weibo", "xiaohongshu"):
+        platform = get(name)
+        assert platform is not None and platform.source == "planned"
+    root = cli.build_root_app()
+    result = runner.invoke(root, ["weibo", "status"])
+    assert result.exit_code == 0
+    assert "规划中" in result.output
+
+
+def test_platforms_command_shows_planned():
+    result = runner.invoke(cli.build_root_app(), ["platforms"])
+    assert result.exit_code == 0
+    assert "zhihu" in result.output
+    assert "weibo" in result.output
+    assert "xiaohongshu" in result.output
 
 
 def test_zhihu_app_exposes_platform_commands():

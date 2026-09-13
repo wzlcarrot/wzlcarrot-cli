@@ -46,14 +46,37 @@ MUTED = "#8a877f"
 GREEN = "#7fb069"
 RED = "#e06c75"
 
-WELCOME = (
-    f"[bold {ACCENT}]✻ 知乎 CLI[/]\n"
-    f"[{MUTED}]用中文对话，自动调用知乎接口取真实数据[/]\n\n"
-    f"[{MUTED}]试着说：[/]\n"
-    f"[{MUTED}]  › 看看今天热榜前5[/]\n"
-    f"[{MUTED}]  › 搜一下 transformers 有哪些高赞回答[/]\n"
-    f"[{MUTED}]  › 把第2条问题的回答导出成 markdown[/]"
+# Pixel-art carrot, green leaves over an orange body (carrot = "carrot").
+CARROT_ART: tuple[tuple[str, str], ...] = (
+    (GREEN, "      ██   ██"),
+    (GREEN, "      ███ ███"),
+    (GREEN, "       █████"),
+    (ACCENT, "   ███████████"),
+    (ACCENT, "   ███████████"),
+    (ACCENT, "    █████████"),
+    (ACCENT, "     ███████"),
+    (ACCENT, "      █████"),
+    (ACCENT, "       ███"),
+    (ACCENT, "        █"),
 )
+
+
+def _welcome_text(platform: str = "") -> str:
+    """Pixel banner + hints, in the spirit of Claude Code's start screen."""
+    art = "\n".join(f"[{color}]{line}[/]" for color, line in CARROT_ART)
+    tool = f"  [{MUTED}]· {platform}[/]" if platform else ""
+    return (
+        f"{art}\n"
+        f"[bold {ACCENT}]WZLCARROT[/]{tool}  [{MUTED}]多平台 AI CLI[/]\n"
+        f"[{MUTED}]用中文对话，自动调用平台接口取真实数据[/]\n\n"
+        f"[{MUTED}]试着说：[/]\n"
+        f"[{MUTED}]  › 看看今天热榜前5[/]\n"
+        f"[{MUTED}]  › 搜一下 transformers 有哪些高赞回答[/]\n"
+        f"[{MUTED}]  › 把第2条问题的回答导出成 markdown[/]"
+    )
+
+
+WELCOME = _welcome_text()
 
 CSS = f"""
 Screen {{ background: {BG}; color: {TEXT}; }}
@@ -359,11 +382,12 @@ class ChatTUI(App):
         event.stop()
         event.prevent_default()
 
-    def __init__(self, agent, subtitle: str = "", user: str = "") -> None:
+    def __init__(self, agent, subtitle: str = "", user: str = "", platform: str = "") -> None:
         super().__init__()
         self._agent = agent
         self._subtitle = subtitle
         self._user = user
+        self._platform = platform
         self._assistant: Markdown | None = None
         self._assistant_text = ""
         self._thinking: Thinking | None = None
@@ -380,12 +404,12 @@ class ChatTUI(App):
 
     def compose(self) -> ComposeResult:
         with VerticalScroll(id="chat"):
-            yield Static(WELCOME, id="welcome")
+            yield Static(_welcome_text(self._platform), id="welcome")
         yield Static("", id="todos")
         yield Static("", id="commands")
         with Vertical(id="input-area"), Horizontal(id="input-row"):
             yield Static("›", id="prompt-mark")
-            yield Input(placeholder="给知乎 CLI 下达指令…  (输入 / 查看命令)", id="prompt")
+            yield Input(placeholder="给 WZLCARROT 下达指令…  (输入 / 查看命令)", id="prompt")
         with Horizontal(id="bottom"):
             yield Static(self._mode_text(), id="mode")
             yield Static(self._status_text(), id="status")
@@ -414,7 +438,7 @@ class ChatTUI(App):
         self.query_one("#mode", Static).update(self._mode_text())
 
     def on_mount(self) -> None:
-        self.title = "知乎 CLI"
+        self.title = f"WZLCARROT · {self._platform}" if self._platform else "WZLCARROT"
         self.query_one("#prompt", Input).focus()
 
     def action_focus_input(self) -> None:

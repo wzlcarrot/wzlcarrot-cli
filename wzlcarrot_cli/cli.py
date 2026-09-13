@@ -25,6 +25,8 @@ from .config import DIST_NAME
 from .exceptions import ZhihuError
 from .output import error_console
 from .platforms import Platform, discover, register, set_active
+from .platforms import weibo as weibo_platform
+from .platforms import xiaohongshu as xiaohongshu_platform
 from .plugins import load_plugins, plugins_dir
 from .session import Credentials
 
@@ -269,6 +271,11 @@ register(
 )
 set_active("zhihu")
 
+# Planned platforms: they show up under `wzlcarrot` and in `wzlcarrot platforms`
+# today, and will gain real clients / login / tools over time.
+register(weibo_platform.build_platform())
+register(xiaohongshu_platform.build_platform())
+
 
 def root_version() -> None:
     """显示版本号。"""
@@ -330,6 +337,14 @@ def build_root_app() -> typer.Typer:
                 typer.echo(ctx.get_help())
 
     root.add_typer(license_cmd.license_app, name="license")
+    # Each platform also lives under the umbrella: `wzlcarrot <platform> ...`
+    for platform in discover():
+        if platform.builder is None:
+            continue
+        try:
+            root.add_typer(platform.builder(), name=platform.name, help=platform.title)
+        except Exception as exc:  # noqa: BLE001 - one bad platform can't break the CLI
+            error_console.print(f"[yellow]平台 {platform.name} 挂载失败：{exc}[/yellow]")
     for plugin_name, plugin_fn in _PLUGINS.commands.items():
         root.command(plugin_name)(plugin_fn)
     return root

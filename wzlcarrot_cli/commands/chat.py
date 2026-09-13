@@ -464,6 +464,17 @@ def _platform_tools_for(client) -> list[Tool]:
     return []
 
 
+def _active_platform_label() -> str:
+    """Short human label for the active platform, e.g. ``知乎``."""
+    from ..platforms import active
+
+    platform = active()
+    if platform is None:
+        return ""
+    title = platform.title or platform.name
+    return title.split("：", 1)[0].split(":", 1)[0].strip()
+
+
 def _make_agent(ctx: typer.Context, api_key, base_url, model, assume_yes: bool) -> ChatAgent:
     config = resolve_llm_config(api_key, base_url, model)
     client = require_client(ctx)
@@ -623,7 +634,9 @@ def run_tui(
         hooks=load_hooks(plugins.hooks),
     )
     _restore_agent(agent, resume, session_id)
-    app = ChatTUI(agent, subtitle=config.model, user=user)
+    app = ChatTUI(
+        agent, subtitle=config.model, user=user, platform=_active_platform_label()
+    )
     try:
         app.run()
     finally:

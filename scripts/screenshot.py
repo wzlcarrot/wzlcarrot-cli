@@ -42,7 +42,7 @@ class FakeAgent:
 
 
 async def main() -> None:
-    app = ChatTUI(FakeAgent(), subtitle="deepseek-chat")
+    app = ChatTUI(FakeAgent(), subtitle="deepseek-chat", platform="知乎")
     async with app.run_test(size=(100, 32)) as pilot:
         prompt = app.query_one("#prompt")
         prompt.value = "帮我看看今天热榜前3"

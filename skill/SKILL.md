@@ -13,6 +13,7 @@ description: 知乎 CLI 技能。用户想在知乎搜索、看热榜/推荐/话
   - 扫码登录二维码：`qrcode.png`
   - 会话：`sessions/`
 - **登录方式**：`zhihu login` —— 自动打开一个 Edge 窗口登录知乎并抓取 Cookie（独立配置，不影响你日常的 Edge；登录一次后秒登）。
+- **也可从总入口调用**：`wzlcarrot zhihu hot` 等价于 `zhihu hot`（`wzlcarrot platforms` 可查看全部平台）。
 - **安全**：Cookie 仅存本地，**不得上传、转发或写入对话/日志**。
 
 ## MCP（优先：Agent 直接调用，无需 shell）

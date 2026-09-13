@@ -19,9 +19,9 @@ def test_root_version():
     assert "wzlcarrot" in result.output
 
 
-def test_root_does_not_nest_zhihu():
-    # Platform commands are not under wzlcarrot; they are their own entry.
-    assert runner.invoke(root_app, ["zhihu"]).exit_code != 0
+def test_root_nests_zhihu():
+    # Platforms live under the umbrella: `wzlcarrot zhihu ...`.
+    assert runner.invoke(root_app, ["zhihu", "--help"]).exit_code == 0
 
 
 def test_zhihu_app_has_platform_commands():
