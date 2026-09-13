@@ -10,13 +10,14 @@ import json as jsonlib
 import random
 import time
 import uuid
-from collections.abc import Iterator
+from collections.abc import Callable, Iterator
 from pathlib import Path
 from typing import Any
 from urllib.parse import urlencode
 
 import httpx
 
+from . import browser
 from .config import (
     ANTI_ABUSE_COOLDOWN,
     API_BASE,
@@ -61,6 +62,7 @@ class ZhihuClient:
         min_gap: float = DEFAULT_MIN_GAP,
         timeout: float = DEFAULT_TIMEOUT,
         max_retries: int = DEFAULT_RETRIES,
+        signature_fallback: Callable[[str], Any] | None = None,
     ) -> None:
         if not credentials.is_logged_in():
             raise NotLoggedInError(
@@ -74,6 +76,10 @@ class ZhihuClient:
         self.write_min_delay = write_min_delay
         self.min_gap = min_gap
         self.max_retries = max_retries
+        # Optional browser fallback used only when the signature is rejected.
+        self._signature_fallback = signature_fallback
+        if self._signature_fallback is None:
+            self._signature_fallback = browser.make_fallback(self.credentials.cookie_header())
         headers = browser_headers()
         headers["x-requested-with"] = "fetch"
         xsrf = credentials.cookies.get("_xsrf")
@@ -154,7 +160,16 @@ class ZhihuClient:
             if resp.status_code in _RETRY_STATUS and attempt < self.max_retries:
                 time.sleep(2.0 * attempt)
                 continue
-            return self._handle(resp)
+            try:
+                return self._handle(resp)
+            except SignatureError:
+                # The x-zse-96 signature was rejected. For GETs, optionally retry
+                # through a real browser that signs the request itself.
+                if method.upper() == "GET" and self._signature_fallback is not None:
+                    fallback = self._signature_fallback(url)
+                    if fallback is not None:
+                        return fallback
+                raise
         raise ApiError(f"request failed: {last_exc}")
 
     @staticmethod
