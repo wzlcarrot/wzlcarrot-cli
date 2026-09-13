@@ -26,6 +26,7 @@ from .exceptions import ZhihuError
 from .output import error_console
 from .platforms import Platform, discover, register
 from .plugins import load_plugins, plugins_dir
+from .session import Credentials
 
 app = typer.Typer(
     add_completion=False,
@@ -217,6 +218,13 @@ def doctor(
         console.print(f"{mark} {label}：{detail}")
 
 
+def mcp(
+    allow_writes: bool = typer.Option(False, "--allow-writes", help="启用写工具"),
+) -> None:
+    """以 MCP (stdio) 服务运行，把平台能力暴露给 Claude Code / opencode 等 Agent。"""
+    from .mcp import serve
+
+    serve(allow_writes=allow_writes)
 
 
 def main() -> None:
@@ -229,12 +237,34 @@ def main() -> None:
 
 # ---- umbrella CLI: ``wzlcarrot [platform] <command>`` ----------------------
 
-# The built-in Zhihu platform contributes its sub-app to the umbrella CLI.
+# The built-in Zhihu platform contributes its sub-app to the umbrella CLI,
+# plus the factories the agent/MCP use to build a client and its tools.
+def _zhihu_client_factory(credentials, settings):
+    from .client import ZhihuClient
+
+    return ZhihuClient(
+        credentials,
+        min_delay=settings.min_delay,
+        max_delay=settings.max_delay,
+        write_min_delay=settings.write_min_delay,
+        min_gap=settings.min_gap,
+    )
+
+
+def _zhihu_tools(client):
+    from .platforms.zhihu_tools import build_tools
+
+    return build_tools(client)
+
+
 register(
     Platform(
         name="zhihu",
         title="知乎：热榜 / 搜索 / 问答 / 评论 / 发布 / 导出 / Agent",
         builder=lambda: app,
+        credentials_factory=Credentials.load,
+        client_factory=_zhihu_client_factory,
+        build_tools=_zhihu_tools,
     )
 )
 
@@ -266,6 +296,7 @@ _GENERIC_COMMANDS = {
     "upgrade": upgrade,
     "sessions": show_sessions,
     "platforms": show_platforms,
+    "mcp": mcp,
     "tui": chat.tui,
     "chat": chat.chat,
     "ask": chat.ask,

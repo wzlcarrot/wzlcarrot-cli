@@ -104,7 +104,10 @@ def test_agent_dispatch_applies_post_hook():
         def get(self, *a, **k):
             return {"name": "tester"}
 
-    agent = ChatAgent(Client(), llm=FakeLLM(), hooks=registry)
+    from wzlcarrot_cli.platforms.zhihu_tools import build_tools
+
+    client = Client()
+    agent = ChatAgent(client, llm=FakeLLM(), hooks=registry, tools=build_tools(client))
     out = agent._dispatch("me", {})
     assert out["name"] == "tester"
     assert out["_hook_context"] == "post"

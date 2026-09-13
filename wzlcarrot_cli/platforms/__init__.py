@@ -30,6 +30,9 @@ class Platform:
     name: str
     title: str
     builder: Callable[[], typer.Typer]
+    credentials_factory: Callable[[], Any] | None = None
+    client_factory: Callable[..., Any] | None = None
+    build_tools: Callable[[Any], list[Any]] | None = None
     agent_tools: Callable[[], list[Any]] | None = None
     prompt_section: Callable[[], str] | None = None
     source: str = field(default="builtin")

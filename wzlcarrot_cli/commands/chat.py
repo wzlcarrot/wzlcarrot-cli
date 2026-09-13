@@ -31,11 +31,11 @@ from ..composer import (
 from ..exceptions import ZhihuError
 from ..hooks import HookRegistry, load_hooks
 from ..llm import LLMClient, resolve_llm_config
-from ..output import console, error_console, html_to_markdown, normalize_url
+from ..output import console, error_console
 from ..plugins import ToolDef, load_plugins
 from ..prompt import build_prompt_sections, load_memory
+from ..tools import Tool
 from ._common import require_client
-from .download import download_answer_impl, download_article_impl
 
 MAX_TEXT = 3000
 DEFAULT_MAX_INLINE_CHARS = 6000
@@ -46,132 +46,7 @@ def _clip(text: str, limit: int = MAX_TEXT) -> str:
     return text if len(text) <= limit else text[:limit] + f"\n…（已截断，共 {len(text)} 字）"
 
 
-def _tools_spec() -> list[dict[str, Any]]:
-    def fn(name: str, desc: str, props: dict, required: list[str]) -> dict:
-        return {
-            "type": "function",
-            "function": {
-                "name": name,
-                "description": desc,
-                "parameters": {"type": "object", "properties": props, "required": required},
-            },
-        }
 
-    return [
-        fn("hot", "获取知乎热榜", {"limit": {"type": "integer", "description": "条数，默认10"}}, []),
-        fn("search", "综合搜索知乎内容", {
-            "query": {"type": "string"},
-            "limit": {"type": "integer"},
-        }, ["query"]),
-        fn("question", "查看问题详情及其回答", {
-            "question_id": {"type": "integer"},
-            "limit": {"type": "integer", "description": "回答条数，默认5"},
-        }, ["question_id"]),
-        fn("answer", "查看某条回答全文", {"answer_id": {"type": "integer"}}, ["answer_id"]),
-        fn("article", "查看某篇专栏文章全文", {"article_id": {"type": "integer"}}, ["article_id"]),
-        fn("user", "查看用户主页及最近回答", {
-            "token": {"type": "string", "description": "url_token"},
-            "limit": {"type": "integer"},
-        }, ["token"]),
-        fn("me", "查看当前登录账号信息", {}, []),
-        fn("download_answer", "把某条回答导出为 Markdown 文件", {"answer_id": {"type": "integer"}}, ["answer_id"]),
-        fn("download_article", "把某篇文章导出为 Markdown 文件", {"article_id": {"type": "integer"}}, ["article_id"]),
-        fn("vote", "赞同或反对回答/文章（写操作）", {
-            "target": {"type": "string", "enum": ["answer", "article"]},
-            "content_id": {"type": "integer"},
-            "direction": {"type": "string", "enum": ["up", "down"]},
-        }, ["target", "content_id"]),
-        fn("collect", "收藏回答/文章到收藏夹（写操作）", {
-            "content_id": {"type": "integer"},
-            "content_type": {"type": "string", "enum": ["answer", "article"]},
-            "collection_id": {"type": "integer"},
-        }, ["content_id", "collection_id"]),
-        fn("follow", "关注用户或问题（写操作）", {
-            "member": {"type": "string", "description": "用户 url_token"},
-            "question_id": {"type": "integer"},
-        }, []),
-        fn("comment", "对回答/文章发表评论（写操作）", {
-            "target": {"type": "string", "enum": ["answer", "article"]},
-            "content_id": {"type": "integer"},
-            "content": {"type": "string"},
-        }, ["target", "content_id", "content"]),
-        fn("publish", "在问题下发布回答，content 为知乎 HTML（写操作）", {
-            "question_id": {"type": "integer"},
-            "content": {"type": "string"},
-        }, ["question_id", "content"]),
-        fn("feed", "获取首页推荐流", {"limit": {"type": "integer"}}, []),
-        fn("topic", "查看话题详情", {"topic_id": {"type": "string"}}, ["topic_id"]),
-        fn("comments", "查看回答或文章的评论", {
-            "target": {"type": "string", "enum": ["answer", "article"]},
-            "content_id": {"type": "integer"},
-            "limit": {"type": "integer"},
-        }, ["target", "content_id"]),
-        fn("collections", "列出收藏夹", {"limit": {"type": "integer"}}, []),
-        fn("followers", "列出粉丝", {"limit": {"type": "integer"}}, []),
-        fn("notifications", "查看通知消息", {"limit": {"type": "integer"}}, []),
-        fn("ask_question", "发布提问（写操作）", {
-            "title": {"type": "string"},
-            "detail": {"type": "string", "description": "支持 HTML"},
-        }, ["title"]),
-        fn("create_pin", "发布想法（写操作）", {
-            "title": {"type": "string"},
-            "content": {"type": "string"},
-        }, ["title"]),
-        fn("create_article", "发布专栏文章（写操作）", {
-            "title": {"type": "string"},
-            "content": {"type": "string", "description": "支持 HTML"},
-        }, ["title", "content"]),
-        fn("delete_content", "删除自己发布的内容（写操作）", {
-            "target": {"type": "string", "enum": ["question", "pin", "article"]},
-            "content_id": {"type": "integer"},
-        }, ["target", "content_id"]),
-        fn("uncollect", "从收藏夹移除内容（写操作）", {
-            "content_id": {"type": "integer"},
-            "collection_id": {"type": "integer"},
-            "content_type": {"type": "string", "enum": ["answer", "article"]},
-        }, ["content_id", "collection_id"]),
-        fn("delete_comment", "删除自己发表的评论（写操作）", {
-            "comment_id": {"type": "integer"},
-        }, ["comment_id"]),
-        fn("compose_publish", "打开 Markdown 编辑器（MarkText）让用户亲手撰写并发布内容。"
-           "kind=answer 时需要 question_id；提问/想法/文章会自动从首行 `# 标题` 取标题。",
-           {
-               "kind": {"type": "string", "enum": ["question", "pin", "article", "answer"]},
-               "title": {"type": "string", "description": "可选，用户未写标题时使用"},
-               "question_id": {"type": "integer", "description": "kind=answer 时必填"},
-           }, ["kind"]),
-        fn("read_spill", "读取之前因过大而溢出的工具结果（用溢出提示里的路径），支持 offset/limit 分段", {
-            "path": {"type": "string", "description": "溢出文件的 locator 路径"},
-            "offset": {"type": "integer", "description": "起始字符偏移"},
-            "limit": {"type": "integer", "description": "读取字符数，0 表示到结尾"},
-        }, ["path"]),
-        fn("todo_write", "创建或更新任务清单（多步任务时用），每次传入完整列表；status 取值 pending/in_progress/completed", {
-            "todos": {
-                "type": "array",
-                "items": {
-                    "type": "object",
-                    "properties": {
-                        "content": {"type": "string", "description": "任务描述"},
-                        "status": {
-                            "type": "string",
-                            "enum": ["pending", "in_progress", "completed"],
-                        },
-                    },
-                    "required": ["content", "status"],
-                },
-            },
-        }, ["todos"]),
-    ]
-
-
-_WRITE_TOOLS = {
-    "vote", "collect", "follow", "comment", "publish",
-    "ask_question", "create_pin", "create_article", "delete_content",
-    "uncollect", "delete_comment",
-}
-
-# Tools blocked while the agent is in "plan" mode (read-only planning).
-_PLAN_BLOCKED = _WRITE_TOOLS | {"compose_publish"}
 
 
 def _brief_result(result: Any) -> str:
@@ -239,6 +114,7 @@ class ChatAgent:
         keep_recent: int = DEFAULT_KEEP_RECENT,
         session_id: str | None = None,
         plugin_tools: dict[str, ToolDef] | None = None,
+        tools: list[Tool] | None = None,
         max_inline_chars: int = DEFAULT_MAX_INLINE_CHARS,
         memory: str = "",
         prompt_sections: list[tuple[int, str]] | None = None,
@@ -254,6 +130,7 @@ class ChatAgent:
         self.keep_recent = keep_recent
         self.session_id = session_id or sessions.new_session_id()
         self._plugin_tools = plugin_tools or {}
+        self._platform_tools = tools or []
         self.max_inline_chars = max_inline_chars
         self._memory = memory
         self._prompt_sections = prompt_sections or []
@@ -279,10 +156,74 @@ class ChatAgent:
             f"…[结果 {ref.bytes} 字节过大，已溢出到 {ref.locator}；{ref.retrieval_hint}]"
         )
 
+    def _generic_tools(self) -> list[Tool]:
+        return [
+            Tool(
+                "compose_publish",
+                "打开 Markdown 编辑器（MarkText）让用户亲手撰写并发布内容。"
+                "kind=answer 时需要 question_id；提问/想法/文章会自动从首行 `# 标题` 取标题。",
+                {
+                    "type": "object",
+                    "properties": {
+                        "kind": {"type": "string", "enum": ["question", "pin", "article", "answer"]},
+                        "title": {"type": "string", "description": "可选，用户未写标题时使用"},
+                        "question_id": {"type": "integer", "description": "kind=answer 时必填"},
+                    },
+                    "required": ["kind"],
+                },
+                self._compose_publish,
+                write=True,
+            ),
+            Tool(
+                "read_spill",
+                "读取之前因过大而溢出的工具结果（用溢出提示里的路径），支持 offset/limit 分段",
+                {
+                    "type": "object",
+                    "properties": {
+                        "path": {"type": "string", "description": "溢出文件的 locator 路径"},
+                        "offset": {"type": "integer", "description": "起始字符偏移"},
+                        "limit": {"type": "integer", "description": "读取字符数，0 表示到结尾"},
+                    },
+                    "required": ["path"],
+                },
+                self._read_spill,
+            ),
+            Tool(
+                "todo_write",
+                "创建或更新任务清单（多步任务时用），每次传入完整列表；"
+                "status 取值 pending/in_progress/completed",
+                {
+                    "type": "object",
+                    "properties": {
+                        "todos": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "content": {"type": "string", "description": "任务描述"},
+                                    "status": {
+                                        "type": "string",
+                                        "enum": ["pending", "in_progress", "completed"],
+                                    },
+                                },
+                                "required": ["content", "status"],
+                            },
+                        }
+                    },
+                    "required": ["todos"],
+                },
+                self._todo_write,
+            ),
+        ]
+
+    def _tool_map(self) -> dict[str, Any]:
+        tools: dict[str, Any] = {t.name: t for t in self._generic_tools()}
+        tools.update({t.name: t for t in self._platform_tools})
+        tools.update(self._plugin_tools)
+        return tools
+
     def _all_tools(self) -> list[dict[str, Any]]:
-        specs = _tools_spec()
-        specs.extend(tool.spec() for tool in self._plugin_tools.values())
-        return specs
+        return [tool.spec() for tool in self._tool_map().values()]
 
     def _persist(self) -> None:
         with contextlib.suppress(Exception):  # persistence must never break a turn
@@ -300,101 +241,8 @@ class ChatAgent:
         return prompt
 
     def _is_write_tool(self, name: str) -> bool:
-        if name in _PLAN_BLOCKED:
-            return True
-        tool = self._plugin_tools.get(name)
+        tool = self._tool_map().get(name)
         return bool(tool and tool.write)
-
-    # -- tool implementations ---------------------------------------------
-
-    def _hot(self, limit: int = 10) -> Any:
-        data = self.client.get("/api/v3/feed/topstory/hot-lists/total", limit=limit, desktop="true")
-        out = []
-        for item in data.get("data", [])[:limit]:
-            target = item.get("target", {})
-            title = target.get("title") or target.get("titleArea", {}).get("text", "")
-            if title:
-                out.append({"title": title, "heat": target.get("metricsArea", {}).get("text", ""),
-                            "url": normalize_url(target.get("url", ""))})
-        return out
-
-    def _search(self, query: str, limit: int = 10) -> Any:
-        data = self.client.request("GET", "/api/v4/search_v3", params={
-            "t": "general", "q": query, "correction": 1, "offset": 0, "limit": limit,
-            "lc_idx": 0, "show_all_topics": 0, "search_hash_id": "",
-            "vertical_info": "0,0,0,0,0,0,0,0,0,0",
-        })
-        out = []
-        for item in data.get("data", []):
-            obj = item.get("object", item)
-            out.append({
-                "type": obj.get("type"),
-                "title": obj.get("title") or (obj.get("question") or {}).get("title"),
-                "author": (obj.get("author") or {}).get("name"),
-                "excerpt": _clip(obj.get("excerpt") or obj.get("description") or "", 200),
-                "url": normalize_url(obj.get("url") or ""),
-            })
-        return out
-
-    def _question(self, question_id: int, limit: int = 5) -> Any:
-        q = self.client.get(f"/api/v4/questions/{question_id}")
-        answers = []
-        params = {"include": "data[*].content", "sort_by": "default"}
-        for item in self.client.paginate(
-            f"/api/v4/questions/{question_id}/answers", params, limit=20, max_items=limit
-        ):
-            answers.append({
-                "author": (item.get("author") or {}).get("name"),
-                "voteup_count": item.get("voteup_count"),
-                "content": _clip(html_to_markdown(item.get("content", ""))),
-            })
-        return {"title": q.get("title"), "detail": _clip(html_to_markdown(q.get("detail", ""))),
-                "url": normalize_url(q.get("url") or ""), "answers": answers}
-
-    def _answer(self, answer_id: int) -> Any:
-        a = self.client.get(
-            f"/api/v4/answers/{answer_id}",
-            include="content,excerpt,voteup_count,comment_count,created_time,author,question",
-        )
-        return {
-            "question": (a.get("question") or {}).get("title"),
-            "author": (a.get("author") or {}).get("name"),
-            "voteup_count": a.get("voteup_count"),
-            "url": normalize_url(a.get("url") or ""),
-            "content": _clip(html_to_markdown(a.get("content", ""))),
-        }
-
-    def _article(self, article_id: int) -> Any:
-        a = self.client.get(f"/api/v4/articles/{article_id}",
-                            include="content,voteup_count,comment_count,created,author")
-        return {
-            "title": a.get("title"),
-            "author": (a.get("author") or {}).get("name"),
-            "voteup_count": a.get("voteup_count"),
-            "url": normalize_url(a.get("url") or ""),
-            "content": _clip(html_to_markdown(a.get("content", ""))),
-        }
-
-    def _user(self, token: str, limit: int = 5) -> Any:
-        m = self.client.get(f"/api/v4/members/{token}",
-                            include="name,url_token,headline,description,answer_count,followers_count")
-        answers = []
-        params = {"include": "data[*].content", "sort_by": "created"}
-        for item in self.client.paginate(
-            f"/api/v4/members/{token}/answers", params, limit=20, max_items=limit
-        ):
-            answers.append({
-                "question": (item.get("question") or {}).get("title"),
-                "excerpt": _clip(html_to_markdown(item.get("content", "")), 300),
-            })
-        return {"name": m.get("name"), "url_token": m.get("url_token"), "headline": m.get("headline"),
-                "description": m.get("description"), "answer_count": m.get("answer_count"),
-                "followers_count": m.get("followers_count"), "recent_answers": answers}
-
-    def _me(self) -> Any:
-        return self.client.get("/api/v4/me")
-
-    # -- dispatch ----------------------------------------------------------
 
     def _read_spill(self, path: str, offset: int = 0, limit: int = 8000) -> Any:
         return {"content": spill_store.read_spill(path, offset=offset, limit=limit)}
@@ -428,33 +276,14 @@ class ChatAgent:
         return result
 
     def _dispatch_inner(self, name: str, args: dict[str, Any], hook_asked: bool) -> Any:
-        if name in self._plugin_tools:
-            tool = self._plugin_tools[name]
-            if tool.write and not hook_asked and not self._confirm(name, args):
-                return {"declined": True, "message": "用户取消了该操作。"}
-            return tool.handler(self.client, **args)
-        if name in _WRITE_TOOLS and not hook_asked and not self._confirm(name, args):
-            return {"declined": True, "message": "用户取消了该操作。"}
-        table: dict[str, Callable[..., Any]] = {
-            "hot": self._hot, "search": self._search, "question": self._question,
-            "answer": self._answer, "article": self._article, "user": self._user, "me": self._me,
-            "download_answer": lambda answer_id: download_answer_impl(self.client, answer_id),
-            "download_article": lambda article_id: download_article_impl(self.client, article_id),
-            "vote": self._vote, "collect": self._collect, "follow": self._follow,
-            "comment": self._comment, "publish": self._publish,
-            "feed": self._feed, "topic": self._topic, "comments": self._comments,
-            "collections": self._collections, "followers": self._followers,
-            "notifications": self._notifications, "ask_question": self._ask_question,
-            "create_pin": self._create_pin, "create_article": self._create_article,
-            "delete_content": self._delete_content,
-            "uncollect": self._uncollect, "delete_comment": self._delete_comment,
-            "compose_publish": self._compose_publish, "read_spill": self._read_spill,
-            "todo_write": self._todo_write,
-        }
-        func = table.get(name)
-        if func is None:
+        tool = self._tool_map().get(name)
+        if tool is None:
             return {"error": f"unknown tool {name}"}
-        return func(**args)
+        if tool.write and not hook_asked and not self._confirm(name, args):
+            return {"declined": True, "message": "用户取消了该操作。"}
+        if name in self._plugin_tools:
+            return tool.handler(self.client, **args)
+        return tool.handler(**args)
 
     def _confirm(self, name: str, args: dict[str, Any]) -> bool:
         if self.assume_yes:
@@ -464,99 +293,10 @@ class ChatAgent:
         console.print(f"[yellow]即将执行写操作[/yellow] {name} {json.dumps(args, ensure_ascii=False)}")
         return typer.confirm("确认？", default=False)
 
-    def _vote(self, target: str, content_id: int, direction: str = "up") -> Any:
-        kind = "answers" if target == "answer" else "articles"
-        return self.client.post(f"/api/v4/{kind}/{content_id}/voters", json_body={"type": direction})
 
-    def _collect(self, content_id: int, collection_id: int, content_type: str = "answer") -> Any:
-        return self.client.post(f"/api/v4/collections/{collection_id}/contents",
-                                json_body={"content_id": content_id, "content_type": content_type})
 
-    def _follow(self, member: str | None = None, question_id: int | None = None) -> Any:
-        if member:
-            return self.client.post(f"/api/v4/members/{member}/followers", json_body={})
-        if question_id:
-            return self.client.post(f"/api/v4/questions/{question_id}/followers", json_body={})
-        return {"error": "需要 member 或 question_id"}
 
-    def _comment(self, target: str, content_id: int, content: str) -> Any:
-        kind = "answers" if target == "answer" else "articles"
-        return self.client.post(f"/api/v4/{kind}/{content_id}/comments",
-                                json_body={"content": content, "type": "comment"})
 
-    def _publish(self, question_id: int, content: str) -> Any:
-        return self.client.post(f"/api/v4/questions/{question_id}/answers",
-                                json_body={"content": content, "resume": False})
-
-    def _feed(self, limit: int = 10) -> Any:
-        data = self.client.recommend_feed(limit)
-        out = []
-        for item in data.get("data", [])[:limit]:
-            target = item.get("target", {})
-            out.append({
-                "type": target.get("type"),
-                "title": target.get("title") or (target.get("question") or {}).get("title"),
-                "author": (target.get("author") or {}).get("name"),
-                "excerpt": _clip(target.get("excerpt") or "", 150),
-                "url": normalize_url(target.get("url") or ""),
-            })
-        return out
-
-    def _topic(self, topic_id: str) -> Any:
-        t = self.client.topic(topic_id)
-        return {
-            "name": t.get("name"), "introduction": _clip(t.get("introduction") or "", 300),
-            "followers_count": t.get("followers_count"), "questions_count": t.get("questions_count"),
-            "url": f"https://www.zhihu.com/topic/{topic_id}",
-        }
-
-    def _comments(self, target: str, content_id: int, limit: int = 10) -> Any:
-        data = (self.client.article_comments(content_id, limit=limit) if target == "article"
-                else self.client.answer_comments(content_id, limit=limit))
-        return [
-            {"author": (c.get("author") or {}).get("name"),
-             "content": _clip(c.get("content") or "", 300)}
-            for c in data.get("data", [])
-        ]
-
-    def _collections(self, limit: int = 10) -> Any:
-        data = self.client.favlists(limit=limit)
-        return [{"title": c.get("title"), "id": c.get("id"),
-                 "answer_count": c.get("answer_count")} for c in data.get("data", [])]
-
-    def _followers(self, limit: int = 10) -> Any:
-        token = self.client.me().get("url_token", "")
-        data = self.client.followers(token, limit=limit)
-        return [{"name": f.get("name"), "url_token": f.get("url_token"),
-                 "headline": f.get("headline")} for f in data.get("data", [])]
-
-    def _notifications(self, limit: int = 10) -> Any:
-        data = self.client.notifications(limit=limit)
-        return [{"content": (i.get("content") or {}).get("text") or i.get("text")}
-                for i in data.get("data", [])]
-
-    def _ask_question(self, title: str, detail: str = "") -> Any:
-        return self.client.create_question(title, detail)
-
-    def _create_pin(self, title: str, content: str = "") -> Any:
-        return self.client.create_pin(title, content)
-
-    def _create_article(self, title: str, content: str) -> Any:
-        return self.client.create_article(title, content)
-
-    def _delete_content(self, target: str, content_id: int) -> Any:
-        if target == "question":
-            return self.client.delete_question(content_id)
-        if target == "pin":
-            return self.client.delete_pin(content_id)
-        return self.client.delete_article(content_id)
-
-    def _uncollect(self, content_id: int, collection_id: int,
-                   content_type: str = "answer") -> Any:
-        return self.client.collection_remove(collection_id, content_id, content_type)
-
-    def _delete_comment(self, comment_id: int) -> Any:
-        return self.client.delete_comment(comment_id)
 
     def _compose(self, template: str) -> str:
         if self._compose_fn is not None:
@@ -714,6 +454,16 @@ class ChatAgent:
         yield ("done", "（工具调用次数过多，已停止）")
 
 
+def _platform_tools_for(client) -> list[Tool]:
+    """Tools contributed by the active platform (empty if none registered)."""
+    from ..platforms import active
+
+    platform = active()
+    if platform is not None and platform.build_tools is not None:
+        return list(platform.build_tools(client))
+    return []
+
+
 def _make_agent(ctx: typer.Context, api_key, base_url, model, assume_yes: bool) -> ChatAgent:
     config = resolve_llm_config(api_key, base_url, model)
     client = require_client(ctx)
@@ -724,6 +474,7 @@ def _make_agent(ctx: typer.Context, api_key, base_url, model, assume_yes: bool) 
         llm,
         assume_yes=assume_yes,
         plugin_tools=plugins.tools,
+        tools=_platform_tools_for(client),
         memory=load_memory(),
         prompt_sections=plugins.prompts,
         hooks=load_hooks(plugins.hooks),
@@ -866,6 +617,7 @@ def run_tui(
         llm,
         assume_yes=yes,
         plugin_tools=plugins.tools,
+        tools=_platform_tools_for(client),
         memory=load_memory(),
         prompt_sections=plugins.prompts,
         hooks=load_hooks(plugins.hooks),

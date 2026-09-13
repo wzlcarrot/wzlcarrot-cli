@@ -66,22 +66,13 @@ uv tool install --editable ~/zhihu-cli
 
 顶层命令是 **`wzlcarrot`**，命令分两类：
 
-**通用（跨平台）——挂在 `wzlcarrot` 下：**
-
-```bash
-wzlcarrot connect      # 配置模型供应商与 API Key
-wzlcarrot doctor       # 自检
-wzlcarrot tui          # 对话 TUI
-wzlcarrot chat / ask   # 文本对话
-wzlcarrot sessions / plugins / hooks / spill / prompt / upgrade / version
-```
-
 **通用（跨平台）——`wzlcarrot`：**
 
 ```bash
 wzlcarrot connect      # 配置模型供应商与 API Key
 wzlcarrot doctor       # 自检
 wzlcarrot platforms    # 列出已注册平台
+wzlcarrot mcp          # 作为 MCP 服务（给 Claude Code / opencode 用）
 wzlcarrot tui          # 对话 TUI
 wzlcarrot chat / ask   # 文本对话
 wzlcarrot sessions / plugins / hooks / spill / prompt / upgrade / version
@@ -92,7 +83,7 @@ wzlcarrot sessions / plugins / hooks / spill / prompt / upgrade / version
 ```bash
 zhihu hot              # 知乎热榜
 zhihu search 关键词
-zhihu login            # 登录链接
+zhihu login            # 打开 Edge 登录
 zhihu comment --answer <id> -m "..."
 ```
 
@@ -390,6 +381,37 @@ cp skill/SKILL.md ~/.opencode/skill/zhihu-cli/SKILL.md
 之后 opencode 会把它作为可用技能加载，Agent 即可代你执行知乎读写。
 
 凭证位置：`~/.config/zhihu-cli/credentials.json`（可用 `ZHIHU_CLI_HOME` 覆盖目录）。
+
+## 作为 MCP 服务（给其他 Agent 用）
+
+`wzlcarrot mcp` 以 **MCP (stdio)** 运行，把平台能力暴露成标准工具，供 Claude Code / opencode / Cursor 等直接调用（OpenCLI 没有这个）。工具从**平台注册表**生成——当前是 26 个 `zhihu_*` 工具，将来加入的平台会自动出现。
+
+```bash
+wzlcarrot mcp                 # 只读工具
+wzlcarrot mcp --allow-writes   # 额外启用写工具（赞同/关注/评论/发布…）
+```
+
+在 Claude Code 里配置（`~/.claude.json` 或项目 `.mcp.json`）：
+
+```json
+{
+  "mcpServers": {
+    "wzlcarrot": { "command": "wzlcarrot", "args": ["mcp"] }
+  }
+}
+```
+
+opencode `opencode.json`：
+
+```json
+{
+  "mcp": {
+    "wzlcarrot": { "type": "local", "command": ["wzlcarrot", "mcp"] }
+  }
+}
+```
+
+> 写工具默认关闭；需要时加 `--allow-writes`。所有请求都复用你已存的登录凭证与全局限速。
 
 ## 开发
 

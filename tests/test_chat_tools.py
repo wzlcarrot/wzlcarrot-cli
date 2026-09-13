@@ -129,7 +129,10 @@ def test_llm_client_records_usage_offline():
 
 
 def test_plan_mode_blocks_write_tools_but_allows_reads():
-    agent = ChatAgent(FakeClient(), llm=object(), plan_mode=True)
+    from wzlcarrot_cli.platforms.zhihu_tools import build_tools
+
+    client = FakeClient()
+    agent = ChatAgent(client, llm=object(), plan_mode=True, tools=build_tools(client))
     denied = agent._dispatch("vote", {"answer_id": 1, "direction": "up"})
     assert denied["denied"] is True
     # internal planning tool still allowed

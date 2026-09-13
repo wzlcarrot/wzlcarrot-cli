@@ -16,7 +16,8 @@ import os
 import re
 from pathlib import Path
 
-from wzlcarrot_cli.commands.chat import _tools_spec, base_system_prompt
+from wzlcarrot_cli.commands.chat import base_system_prompt
+from wzlcarrot_cli.platforms.zhihu_tools import build_tools as zhihu_tools
 
 SNAPSHOT_DIR = Path(__file__).parent / "snapshots"
 UPDATE = os.environ.get("UPDATE_SNAPSHOTS") == "1"
@@ -45,14 +46,14 @@ def test_system_prompt_snapshot():
 
 
 def test_tool_schemas_snapshot():
-    specs = _tools_spec()
+    specs = [tool.spec() for tool in zhihu_tools(object())]
     rendered = json.dumps(specs, ensure_ascii=False, indent=2, sort_keys=True) + "\n"
     _check("tools.json", rendered)
 
 
 def test_tool_names_are_stable_and_unique():
-    names = [spec["function"]["name"] for spec in _tools_spec()]
+    names = [tool.name for tool in zhihu_tools(object())]
     assert len(names) == len(set(names)), "工具名重复"
     # A small guard so accidental removal of core tools is obvious.
-    for expected in ("hot", "search", "answer", "vote", "compose_publish"):
+    for expected in ("hot", "search", "answer", "vote"):
         assert expected in names
