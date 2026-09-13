@@ -24,6 +24,8 @@ jobs:
         run: uv run pytest -q
       - name: Coverage gate
         run: uv run pytest -q --cov=wzlcarrot_cli --cov-report=term-missing --cov-fail-under=55
+      - name: End-to-end smoke
+        run: bash scripts/e2e.sh
 
   build:
     runs-on: ubuntu-latest
