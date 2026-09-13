@@ -10,6 +10,7 @@ from . import __version__
 from .commands import actions, chat, connect, content, download, feed, login, publish, search
 from .commands import user as user_cmd
 from .commands._common import Settings
+from .config import DIST_NAME
 from .exceptions import ZhihuError
 from .output import error_console
 from .plugins import load_plugins, plugins_dir
@@ -27,8 +28,15 @@ _GROUPS = {
 }
 
 
+_update_notified = False
+
+
 def _notify_update() -> None:
     """One-line notice when PyPI has a newer release; never raises, never blocks."""
+    global _update_notified
+    if _update_notified:
+        return
+    _update_notified = True
     try:
         from .updates import check_for_update
 
@@ -227,6 +235,48 @@ app.command("doctor")(doctor)
 def main() -> None:
     try:
         app()
+    except ZhihuError as exc:
+        error_console.print(f"[bold red]错误[/bold red] {exc}")
+        raise SystemExit(1) from exc
+
+
+# ---- umbrella CLI: ``wzlcarrot [platform] <command>`` ----------------------
+
+root_app = typer.Typer(
+    add_completion=False,
+    no_args_is_help=False,
+    help="wzlcarrot 多平台 CLI（当前内置：知乎）。",
+)
+root_app.add_typer(app, name="zhihu", help="知乎：热榜 / 搜索 / 问答 / 评论 / 发布 / 导出 / Agent")
+
+
+def root_version() -> None:
+    """显示版本号。"""
+    typer.echo(f"wzlcarrot {__version__}（发行名 {DIST_NAME}）")
+
+
+root_app.command("version")(root_version)
+
+
+@root_app.callback(invoke_without_command=True)
+def _root(
+    ctx: typer.Context,
+    min_delay: float = typer.Option(1.5, "--min-delay", help="请求最小间隔（秒）"),
+    max_delay: float = typer.Option(3.5, "--max-delay", help="请求最大间隔（秒）"),
+) -> None:
+    """wzlcarrot 入口；不带子命令时进入 TUI（当前为知乎）。"""
+    ctx.obj = Settings(min_delay=min_delay, max_delay=max_delay)
+    _notify_update()
+    if ctx.invoked_subcommand is None:
+        if sys.stdin.isatty():
+            chat.run_tui(ctx)
+        else:
+            typer.echo(ctx.get_help())
+
+
+def root_main() -> None:
+    try:
+        root_app()
     except ZhihuError as exc:
         error_console.print(f"[bold red]错误[/bold red] {exc}")
         raise SystemExit(1) from exc

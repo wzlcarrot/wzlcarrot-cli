@@ -54,6 +54,20 @@ uv tool install --editable ~/zhihu-cli
 
 之后直接运行 `zhihu` 即进入全屏 TUI。
 
+## 多平台 CLI（`wzlcarrot`）
+
+顶层命令是 **`wzlcarrot`**，平台作为子命令（当前内置知乎）：
+
+```bash
+wzlcarrot zhihu hot            # 知乎热榜
+wzlcarrot zhihu search 关键词
+wzlcarrot zhihu login --qr
+wzlcarrot zhihu tui
+wzlcarrot                      # 不带子命令直接进 TUI
+```
+
+`zhihu ...` 作为**别名仍然可用**（等价于 `wzlcarrot zhihu ...`）。后续会以同样方式加入 `weibo`、`xiaohongshu` 等平台（每个平台是独立的适配实现）。
+
 ## 升级与版本检查
 
 - 每天首次使用时检查一次 PyPI 是否有新版本：仅查询 PyPI 公开的版本信息，
