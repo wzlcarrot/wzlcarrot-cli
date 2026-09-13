@@ -296,7 +296,7 @@ zhihu ask "热榜前3" --api-key sk-xxx --model deepseek-chat
 
 命令与 Agent 工具都由**注册表**贡献，插件即可扩展。发现方式：
 
-1. **入口点**：包暴露 `zhihu_cli.plugins` 组的 `entry_point`（适合分发到 PyPI）。
+1. **入口点**：包暴露 `wzlcarrot_cli.plugins` 组的 `entry_point`（适合分发到 PyPI）。
 2. **本地目录**：把 `.py` 丢进 `~/.config/zhihu-cli/plugins/`（即插即用）。
 
 插件就是一个带 `register(api)` 的模块，可以贡献：
@@ -349,7 +349,7 @@ def register(api):
 **2. 插件钩子**（`api.hook(event, fn, matcher="*")`）：
 
 ```python
-from zhihu_cli.hooks import POST_EXECUTE, HookResult
+from wzlcarrot_cli.hooks import POST_EXECUTE, HookResult
 
 def annotate(name, args, result):
     return HookResult(context="（由插件标注）")
@@ -386,4 +386,4 @@ UPDATE_SNAPSHOTS=1 uv run pytest tests/test_snapshots.py   # 刷新提示词/工
 
 `tests/snapshots/` 用 keyless 快照固定**模型可见的契约**（基础系统提示词、内置工具 schema），改坏立刻红。
 
-签名算法位于 `zhihu_cli/signing.py`，移植自 `zly2006/zhihu-plus-plus`。若知乎更新反爬导致 403/签名失败，通常只需更新该模块。
+签名算法位于 `wzlcarrot_cli/signing.py`，移植自 `zly2006/zhihu-plus-plus`。若知乎更新反爬导致 403/签名失败，通常只需更新该模块。

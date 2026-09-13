@@ -13,9 +13,9 @@ from __future__ import annotations
 
 import pytest
 
-from zhihu_cli.client import ZhihuClient
-from zhihu_cli.exceptions import ZhihuError
-from zhihu_cli.session import Credentials
+from wzlcarrot_cli.client import ZhihuClient
+from wzlcarrot_cli.exceptions import ZhihuError
+from wzlcarrot_cli.session import Credentials
 
 pytestmark = pytest.mark.integration
 

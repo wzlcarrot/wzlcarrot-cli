@@ -8,7 +8,7 @@ state).
 
 Discover plugins by:
 
-1. Python entry points in group ``zhihu_cli.plugins`` (packaged distributions).
+1. Python entry points in group ``wzlcarrot_cli.plugins`` (packaged distributions).
 2. ``*.py`` files in ``~/.config/zhihu-cli/plugins/`` (local, drop-in).
 
 A plugin is any module exposing ``register(api: PluginAPI) -> None``.
@@ -27,7 +27,7 @@ from typing import Any
 from .config import config_dir
 from .output import error_console
 
-ENTRY_POINT_GROUP = "zhihu_cli.plugins"
+ENTRY_POINT_GROUP = "wzlcarrot_cli.plugins"
 
 
 @dataclass

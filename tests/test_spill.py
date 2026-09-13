@@ -2,9 +2,9 @@ from __future__ import annotations
 
 import pytest
 
-from zhihu_cli import spill
-from zhihu_cli.commands.chat import ChatAgent
-from zhihu_cli.exceptions import ZhihuError
+from wzlcarrot_cli import spill
+from wzlcarrot_cli.commands.chat import ChatAgent
+from wzlcarrot_cli.exceptions import ZhihuError
 
 
 @pytest.fixture()

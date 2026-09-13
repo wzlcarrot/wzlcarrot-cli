@@ -83,5 +83,5 @@ zhihu chat --continue
 
 - **未登录 / 401 / 403**：`zhihu login --qr` 或 `--cookie` 后重试。
 - **AntiAbuseError（请求存在异常/暂时限制）**：已自动冷却 120 秒，稍后再试，降低频率。
-- **签名失效（403 持续）**：知乎前端更新了 `x-zse-96`，需更新 `zhihu_cli/signing.py`。
+- **签名失效（403 持续）**：知乎前端更新了 `x-zse-96`，需更新 `wzlcarrot_cli/signing.py`。
 - **其他**：检查 ID / url_token 是否正确；网络超时重试。

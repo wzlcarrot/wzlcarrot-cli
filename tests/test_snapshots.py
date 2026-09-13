@@ -16,7 +16,7 @@ import os
 import re
 from pathlib import Path
 
-from zhihu_cli.commands.chat import _tools_spec, base_system_prompt
+from wzlcarrot_cli.commands.chat import _tools_spec, base_system_prompt
 
 SNAPSHOT_DIR = Path(__file__).parent / "snapshots"
 UPDATE = os.environ.get("UPDATE_SNAPSHOTS") == "1"

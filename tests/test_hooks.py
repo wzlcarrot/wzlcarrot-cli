@@ -2,9 +2,9 @@ from __future__ import annotations
 
 import json
 
-from zhihu_cli import hooks
-from zhihu_cli.commands.chat import ChatAgent
-from zhihu_cli.hooks import POST_EXECUTE, PRE_EXECUTE, HookRegistry, HookResult
+from wzlcarrot_cli import hooks
+from wzlcarrot_cli.commands.chat import ChatAgent
+from wzlcarrot_cli.hooks import POST_EXECUTE, PRE_EXECUTE, HookRegistry, HookResult
 
 
 def test_matches():

@@ -1,5 +1,5 @@
-from zhihu_cli.session import Credentials
-from zhihu_cli.signing import sign_zse96
+from wzlcarrot_cli.session import Credentials
+from wzlcarrot_cli.signing import sign_zse96
 
 
 def test_sign_shape_and_stability():
@@ -29,7 +29,7 @@ def test_cookie_missing_login():
 
 
 def test_client_sets_csrf_and_browser_headers():
-    from zhihu_cli.client import ZhihuClient
+    from wzlcarrot_cli.client import ZhihuClient
 
     creds = Credentials(cookies={"d_c0": "a", "z_c0": "b", "_xsrf": "xyz"})
     client = ZhihuClient(creds, min_delay=0, max_delay=0)
@@ -42,7 +42,7 @@ def test_client_sets_csrf_and_browser_headers():
 
 
 def test_terminal_qr_renders_blocks():
-    from zhihu_cli.qrlogin import render_terminal_qr
+    from wzlcarrot_cli.qrlogin import render_terminal_qr
 
     art = render_terminal_qr("https://www.zhihu.com/account/scan/login/abc")
     assert any(ch in art for ch in "█▀▄")
@@ -52,8 +52,8 @@ def test_terminal_qr_renders_blocks():
 def test_anti_abuse_response_is_detected(tmp_path, monkeypatch):
     import httpx
 
-    from zhihu_cli.client import ZhihuClient
-    from zhihu_cli.exceptions import AntiAbuseError
+    from wzlcarrot_cli.client import ZhihuClient
+    from wzlcarrot_cli.exceptions import AntiAbuseError
 
     monkeypatch.setenv("ZHIHU_CLI_HOME", str(tmp_path))
     creds = Credentials(cookies={"d_c0": "a", "z_c0": "b"})

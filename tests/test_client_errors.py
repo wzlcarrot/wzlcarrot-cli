@@ -3,14 +3,14 @@ from __future__ import annotations
 import httpx
 import pytest
 
-from zhihu_cli.client import ZhihuClient
-from zhihu_cli.doctor import run_checks
-from zhihu_cli.exceptions import (
+from wzlcarrot_cli.client import ZhihuClient
+from wzlcarrot_cli.doctor import run_checks
+from wzlcarrot_cli.exceptions import (
     ApiError,
     NotLoggedInError,
     SignatureError,
 )
-from zhihu_cli.session import Credentials
+from wzlcarrot_cli.session import Credentials
 
 
 @pytest.fixture()
@@ -91,7 +91,7 @@ def _patch_client(monkeypatch, *, me_result=None, error=None) -> None:
         def close(self):
             pass
 
-    monkeypatch.setattr("zhihu_cli.client.ZhihuClient", FakeClient)
+    monkeypatch.setattr("wzlcarrot_cli.client.ZhihuClient", FakeClient)
 
 
 def test_doctor_signature_ok(home, monkeypatch):

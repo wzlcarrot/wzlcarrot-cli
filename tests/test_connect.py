@@ -4,9 +4,9 @@ import json
 
 from typer.testing import CliRunner
 
-from zhihu_cli.cli import app
-from zhihu_cli.llm import resolve_llm_config, save_llm_config
-from zhihu_cli.providers import PROVIDERS, get_provider
+from wzlcarrot_cli.cli import app
+from wzlcarrot_cli.llm import resolve_llm_config, save_llm_config
+from wzlcarrot_cli.providers import PROVIDERS, get_provider
 
 runner = CliRunner()
 

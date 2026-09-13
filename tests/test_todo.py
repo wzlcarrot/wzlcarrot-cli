@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-from zhihu_cli import todo
-from zhihu_cli.commands.chat import ChatAgent
+from wzlcarrot_cli import todo
+from wzlcarrot_cli.commands.chat import ChatAgent
 
 
 def test_normalize_filters_and_coerces():

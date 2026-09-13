@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from zhihu_cli import imagestore
+from wzlcarrot_cli import imagestore
 
 
 def test_localize_images_downloads_and_rewrites(tmp_path, monkeypatch):

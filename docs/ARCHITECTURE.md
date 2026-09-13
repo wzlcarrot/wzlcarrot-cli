@@ -28,8 +28,8 @@ wzlcarrot-cli 是一个纯 Python 的多平台命令行客户端（当前内置�
 
 ### 入口与命令层
 
-- **`cli.py`** —— Typer 应用入口。`root_app`（`wzlcarrot = zhihu_cli.cli:root_main`）承载通用命令，
-  并把 `app`（`zhihu = zhihu_cli.cli:main`）作为 `zhihu` 平台子命令挂载；全局回调处理无子命令时的默认行为。
+- **`cli.py`** —— Typer 应用入口。`root_app`（`wzlcarrot = wzlcarrot_cli.cli:root_main`）承载通用命令，
+  并把 `app`（`zhihu = wzlcarrot_cli.cli:main`）作为 `zhihu` 平台子命令挂载；全局回调处理无子命令时的默认行为。
 - **`commands/`** —— 按功能域拆分，每个模块只负责参数解析、调用核心层、格式化展示：
   - `login.py`：登录/登出/状态
   - `feed.py`：热榜、推荐流、话题

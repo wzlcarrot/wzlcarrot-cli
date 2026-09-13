@@ -10,7 +10,7 @@ from __future__ import annotations
 import asyncio
 from pathlib import Path
 
-from zhihu_cli.tui import ChatTUI
+from wzlcarrot_cli.tui import ChatTUI
 
 
 class FakeAgent:

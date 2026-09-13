@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import os
 
-from zhihu_cli import composer
+from wzlcarrot_cli import composer
 
 
 class FakeClient:

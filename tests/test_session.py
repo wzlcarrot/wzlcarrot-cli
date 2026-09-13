@@ -2,8 +2,8 @@ from __future__ import annotations
 
 import stat
 
-from zhihu_cli.config import credentials_file
-from zhihu_cli.session import Credentials
+from wzlcarrot_cli.config import credentials_file
+from wzlcarrot_cli.session import Credentials
 
 
 def test_save_sets_owner_only_permissions(tmp_path, monkeypatch):

@@ -154,7 +154,7 @@ for plugin_command_name, plugin_command_fn in _PLUGINS.commands.items():
 def show_plugins() -> None:
     """列出已加载的插件及其贡献。"""
     if not _PLUGINS.plugins:
-        typer.echo(f"未加载任何插件。\n可放到：{plugins_dir()}/，或用入口点组 zhihu_cli.plugins 分发。")
+        typer.echo(f"未加载任何插件。\n可放到：{plugins_dir()}/，或用入口点组 wzlcarrot_cli.plugins 分发。")
         return
     for info in _PLUGINS.plugins:
         parts = []

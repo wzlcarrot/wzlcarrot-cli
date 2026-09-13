@@ -2,8 +2,8 @@
 
 from __future__ import annotations
 
-from zhihu_cli.commands.chat import ChatAgent
-from zhihu_cli.composer import ASK_TEMPLATE
+from wzlcarrot_cli.commands.chat import ChatAgent
+from wzlcarrot_cli.composer import ASK_TEMPLATE
 
 
 class FakeClient:
@@ -112,7 +112,7 @@ def test_agent_stats_reports_usage():
 
 
 def test_llm_client_records_usage_offline():
-    from zhihu_cli.llm import LLMClient, LLMConfig
+    from wzlcarrot_cli.llm import LLMClient, LLMConfig
 
     client = LLMClient(LLMConfig(api_key="x"))
     try:

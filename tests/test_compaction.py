@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-from zhihu_cli import compaction as cp
-from zhihu_cli.commands.chat import ChatAgent
+from wzlcarrot_cli import compaction as cp
+from wzlcarrot_cli.commands.chat import ChatAgent
 
 
 class FakeLLM:

@@ -3,7 +3,7 @@ from __future__ import annotations
 import time
 from types import SimpleNamespace
 
-from zhihu_cli import sessions
+from wzlcarrot_cli import sessions
 
 
 def test_save_load_roundtrip(tmp_path, monkeypatch):
@@ -43,7 +43,7 @@ def test_title_from_first_user_message(tmp_path, monkeypatch):
 
 def test_load_missing_session_raises(tmp_path, monkeypatch):
     monkeypatch.setenv("ZHIHU_CLI_HOME", str(tmp_path))
-    from zhihu_cli.exceptions import ZhihuError
+    from wzlcarrot_cli.exceptions import ZhihuError
 
     try:
         sessions.load_session(None)
@@ -55,7 +55,7 @@ def test_load_missing_session_raises(tmp_path, monkeypatch):
 
 def test_agent_persists_session(tmp_path, monkeypatch):
     monkeypatch.setenv("ZHIHU_CLI_HOME", str(tmp_path))
-    from zhihu_cli.commands.chat import ChatAgent
+    from wzlcarrot_cli.commands.chat import ChatAgent
 
     class FakeLLM:
         config = SimpleNamespace(model="m")

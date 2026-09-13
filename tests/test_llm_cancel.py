@@ -5,8 +5,8 @@ import threading
 import httpx
 import pytest
 
-from zhihu_cli.commands.chat import ChatAgent
-from zhihu_cli.llm import LLMClient, LLMConfig
+from wzlcarrot_cli.commands.chat import ChatAgent
+from wzlcarrot_cli.llm import LLMClient, LLMConfig
 
 SSE = (
     b'data: {"choices":[{"delta":{"content":"hello"}}]}\n\n'

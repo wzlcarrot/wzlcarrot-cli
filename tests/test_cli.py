@@ -3,7 +3,7 @@ from __future__ import annotations
 import pytest
 from typer.testing import CliRunner
 
-from zhihu_cli.cli import app, root_app
+from wzlcarrot_cli.cli import app, root_app
 
 runner = CliRunner()
 

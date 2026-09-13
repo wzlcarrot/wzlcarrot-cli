@@ -1,6 +1,6 @@
 import asyncio
 
-from zhihu_cli.tui import ChatTUI
+from wzlcarrot_cli.tui import ChatTUI
 
 
 class FakeAgent:
@@ -69,8 +69,8 @@ def test_tui_connect_flow(tmp_path, monkeypatch):
 
     from textual.widgets import Input
 
-    from zhihu_cli.llm import LLMConfig
-    from zhihu_cli.tui import ConnectScreen
+    from wzlcarrot_cli.llm import LLMConfig
+    from wzlcarrot_cli.tui import ConnectScreen
 
     class AgentWithLLM(FakeAgent):
         def __init__(self):
@@ -184,7 +184,7 @@ def test_tui_connect_filter_and_two_steps():
             await pilot.pause(0.05)
 
             screen = app.screen
-            from zhihu_cli.tui import ConnectScreen
+            from wzlcarrot_cli.tui import ConnectScreen
 
             assert isinstance(screen, ConnectScreen)
             assert screen.query_one("#connect-step1").display is True

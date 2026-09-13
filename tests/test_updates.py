@@ -4,8 +4,8 @@ import json
 
 import pytest
 
-from zhihu_cli import updates, upgrade
-from zhihu_cli.exceptions import ZhihuError
+from wzlcarrot_cli import updates, upgrade
+from wzlcarrot_cli.exceptions import ZhihuError
 
 
 @pytest.fixture()

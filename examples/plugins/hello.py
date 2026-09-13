@@ -1,7 +1,7 @@
 """Example wzlcarrot-cli plugin.
 
 Enable it by copying this file into ``~/.config/zhihu-cli/plugins/``, or ship a
-distribution that exposes the ``zhihu_cli.plugins`` entry point.
+distribution that exposes the ``wzlcarrot_cli.plugins`` entry point.
 
 A plugin is any module with ``register(api)``; ``api`` lets it contribute CLI
 commands and agent tools.
@@ -11,7 +11,7 @@ from __future__ import annotations
 
 import typer
 
-from zhihu_cli.hooks import PRE_EXECUTE, HookResult
+from wzlcarrot_cli.hooks import PRE_EXECUTE, HookResult
 
 
 def register(api) -> None:

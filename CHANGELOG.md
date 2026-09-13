@@ -17,7 +17,7 @@
 - **签名失效自检**：`zhihu doctor` 新增独立的「签名自检」检查项；客户端把「HTTP 403 + 错误码 100」从「未登录」中区分出来，抛出明确的签名失效错误（提示知乎可能已更新 x-zse-96 算法），不再与登录过期混淆。
 - **请求取消**：TUI 中按 `Esc` 可取消正在进行的生成（空闲时仍是聚焦输入框）；终端 `chat` 模式中 `Ctrl+C` 只取消当前一轮回答并保留会话，不再直接退出。
 ### Removed
-- 删除未被引用的死代码 `zhihu_cli/models.py`，并从依赖中移除 pydantic。
+- 删除未被引用的死代码 `wzlcarrot_cli/models.py`，并从依赖中移除 pydantic。
 
 ## [0.17.3]
 ### Changed
@@ -76,7 +76,7 @@
 
 ## [0.5.0]
 ### Added
-- 插件系统：命令与 Agent 工具由注册表贡献，支持入口点组 `zhihu_cli.plugins` 与本地 `~/.config/zhihu-cli/plugins/`；`zhihu plugins`。
+- 插件系统：命令与 Agent 工具由注册表贡献，支持入口点组 `wzlcarrot_cli.plugins` 与本地 `~/.config/zhihu-cli/plugins/`；`zhihu plugins`。
 
 ## [0.4.0]
 ### Added

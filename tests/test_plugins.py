@@ -2,9 +2,9 @@ from __future__ import annotations
 
 import textwrap
 
-from zhihu_cli import plugins
-from zhihu_cli.commands.chat import ChatAgent
-from zhihu_cli.plugins import ToolDef
+from wzlcarrot_cli import plugins
+from wzlcarrot_cli.commands.chat import ChatAgent
+from wzlcarrot_cli.plugins import ToolDef
 
 
 def test_plugin_api_collects_contributions():
@@ -18,7 +18,7 @@ def test_plugin_api_collects_contributions():
 
 
 def test_build_prompt_sections_order():
-    from zhihu_cli.prompt import build_prompt_sections
+    from wzlcarrot_cli.prompt import build_prompt_sections
 
     out = build_prompt_sections("BASE", "MEM", [(10, "P10"), (0, "P0")])
     assert out.index("BASE") < out.index("MEM") < out.index("P0") < out.index("P10")

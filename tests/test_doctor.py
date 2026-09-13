@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from zhihu_cli.doctor import run_checks
+from wzlcarrot_cli.doctor import run_checks
 
 
 def test_doctor_offline_reports_core_checks(tmp_path, monkeypatch):
