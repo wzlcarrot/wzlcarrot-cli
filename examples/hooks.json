@@ -1,0 +1,18 @@
+{
+  "hooks": [
+    {
+      "event": "pre_execute",
+      "tools": ["delete_content", "delete_comment"],
+      "action": "ask",
+      "message": "删除不可逆，请确认"
+    },
+    {
+      "event": "pre_execute",
+      "tools": ["vote"],
+      "field": "direction",
+      "pattern": "^down$",
+      "action": "deny",
+      "message": "已通过规则禁用『反对』"
+    }
+  ]
+}

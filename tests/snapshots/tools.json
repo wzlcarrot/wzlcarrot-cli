@@ -1,0 +1,651 @@
+[
+  {
+    "function": {
+      "description": "获取知乎热榜",
+      "name": "hot",
+      "parameters": {
+        "properties": {
+          "limit": {
+            "description": "条数，默认10",
+            "type": "integer"
+          }
+        },
+        "required": [],
+        "type": "object"
+      }
+    },
+    "type": "function"
+  },
+  {
+    "function": {
+      "description": "综合搜索知乎内容",
+      "name": "search",
+      "parameters": {
+        "properties": {
+          "limit": {
+            "type": "integer"
+          },
+          "query": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "query"
+        ],
+        "type": "object"
+      }
+    },
+    "type": "function"
+  },
+  {
+    "function": {
+      "description": "查看问题详情及其回答",
+      "name": "question",
+      "parameters": {
+        "properties": {
+          "limit": {
+            "description": "回答条数，默认5",
+            "type": "integer"
+          },
+          "question_id": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "question_id"
+        ],
+        "type": "object"
+      }
+    },
+    "type": "function"
+  },
+  {
+    "function": {
+      "description": "查看某条回答全文",
+      "name": "answer",
+      "parameters": {
+        "properties": {
+          "answer_id": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "answer_id"
+        ],
+        "type": "object"
+      }
+    },
+    "type": "function"
+  },
+  {
+    "function": {
+      "description": "查看某篇专栏文章全文",
+      "name": "article",
+      "parameters": {
+        "properties": {
+          "article_id": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "article_id"
+        ],
+        "type": "object"
+      }
+    },
+    "type": "function"
+  },
+  {
+    "function": {
+      "description": "查看用户主页及最近回答",
+      "name": "user",
+      "parameters": {
+        "properties": {
+          "limit": {
+            "type": "integer"
+          },
+          "token": {
+            "description": "url_token",
+            "type": "string"
+          }
+        },
+        "required": [
+          "token"
+        ],
+        "type": "object"
+      }
+    },
+    "type": "function"
+  },
+  {
+    "function": {
+      "description": "查看当前登录账号信息",
+      "name": "me",
+      "parameters": {
+        "properties": {},
+        "required": [],
+        "type": "object"
+      }
+    },
+    "type": "function"
+  },
+  {
+    "function": {
+      "description": "把某条回答导出为 Markdown 文件",
+      "name": "download_answer",
+      "parameters": {
+        "properties": {
+          "answer_id": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "answer_id"
+        ],
+        "type": "object"
+      }
+    },
+    "type": "function"
+  },
+  {
+    "function": {
+      "description": "把某篇文章导出为 Markdown 文件",
+      "name": "download_article",
+      "parameters": {
+        "properties": {
+          "article_id": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "article_id"
+        ],
+        "type": "object"
+      }
+    },
+    "type": "function"
+  },
+  {
+    "function": {
+      "description": "赞同或反对回答/文章（写操作）",
+      "name": "vote",
+      "parameters": {
+        "properties": {
+          "content_id": {
+            "type": "integer"
+          },
+          "direction": {
+            "enum": [
+              "up",
+              "down"
+            ],
+            "type": "string"
+          },
+          "target": {
+            "enum": [
+              "answer",
+              "article"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "target",
+          "content_id"
+        ],
+        "type": "object"
+      }
+    },
+    "type": "function"
+  },
+  {
+    "function": {
+      "description": "收藏回答/文章到收藏夹（写操作）",
+      "name": "collect",
+      "parameters": {
+        "properties": {
+          "collection_id": {
+            "type": "integer"
+          },
+          "content_id": {
+            "type": "integer"
+          },
+          "content_type": {
+            "enum": [
+              "answer",
+              "article"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "content_id",
+          "collection_id"
+        ],
+        "type": "object"
+      }
+    },
+    "type": "function"
+  },
+  {
+    "function": {
+      "description": "关注用户或问题（写操作）",
+      "name": "follow",
+      "parameters": {
+        "properties": {
+          "member": {
+            "description": "用户 url_token",
+            "type": "string"
+          },
+          "question_id": {
+            "type": "integer"
+          }
+        },
+        "required": [],
+        "type": "object"
+      }
+    },
+    "type": "function"
+  },
+  {
+    "function": {
+      "description": "对回答/文章发表评论（写操作）",
+      "name": "comment",
+      "parameters": {
+        "properties": {
+          "content": {
+            "type": "string"
+          },
+          "content_id": {
+            "type": "integer"
+          },
+          "target": {
+            "enum": [
+              "answer",
+              "article"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "target",
+          "content_id",
+          "content"
+        ],
+        "type": "object"
+      }
+    },
+    "type": "function"
+  },
+  {
+    "function": {
+      "description": "在问题下发布回答，content 为知乎 HTML（写操作）",
+      "name": "publish",
+      "parameters": {
+        "properties": {
+          "content": {
+            "type": "string"
+          },
+          "question_id": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "question_id",
+          "content"
+        ],
+        "type": "object"
+      }
+    },
+    "type": "function"
+  },
+  {
+    "function": {
+      "description": "获取首页推荐流",
+      "name": "feed",
+      "parameters": {
+        "properties": {
+          "limit": {
+            "type": "integer"
+          }
+        },
+        "required": [],
+        "type": "object"
+      }
+    },
+    "type": "function"
+  },
+  {
+    "function": {
+      "description": "查看话题详情",
+      "name": "topic",
+      "parameters": {
+        "properties": {
+          "topic_id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "topic_id"
+        ],
+        "type": "object"
+      }
+    },
+    "type": "function"
+  },
+  {
+    "function": {
+      "description": "查看回答或文章的评论",
+      "name": "comments",
+      "parameters": {
+        "properties": {
+          "content_id": {
+            "type": "integer"
+          },
+          "limit": {
+            "type": "integer"
+          },
+          "target": {
+            "enum": [
+              "answer",
+              "article"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "target",
+          "content_id"
+        ],
+        "type": "object"
+      }
+    },
+    "type": "function"
+  },
+  {
+    "function": {
+      "description": "列出收藏夹",
+      "name": "collections",
+      "parameters": {
+        "properties": {
+          "limit": {
+            "type": "integer"
+          }
+        },
+        "required": [],
+        "type": "object"
+      }
+    },
+    "type": "function"
+  },
+  {
+    "function": {
+      "description": "列出粉丝",
+      "name": "followers",
+      "parameters": {
+        "properties": {
+          "limit": {
+            "type": "integer"
+          }
+        },
+        "required": [],
+        "type": "object"
+      }
+    },
+    "type": "function"
+  },
+  {
+    "function": {
+      "description": "查看通知消息",
+      "name": "notifications",
+      "parameters": {
+        "properties": {
+          "limit": {
+            "type": "integer"
+          }
+        },
+        "required": [],
+        "type": "object"
+      }
+    },
+    "type": "function"
+  },
+  {
+    "function": {
+      "description": "发布提问（写操作）",
+      "name": "ask_question",
+      "parameters": {
+        "properties": {
+          "detail": {
+            "description": "支持 HTML",
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "title"
+        ],
+        "type": "object"
+      }
+    },
+    "type": "function"
+  },
+  {
+    "function": {
+      "description": "发布想法（写操作）",
+      "name": "create_pin",
+      "parameters": {
+        "properties": {
+          "content": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "title"
+        ],
+        "type": "object"
+      }
+    },
+    "type": "function"
+  },
+  {
+    "function": {
+      "description": "发布专栏文章（写操作）",
+      "name": "create_article",
+      "parameters": {
+        "properties": {
+          "content": {
+            "description": "支持 HTML",
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "title",
+          "content"
+        ],
+        "type": "object"
+      }
+    },
+    "type": "function"
+  },
+  {
+    "function": {
+      "description": "删除自己发布的内容（写操作）",
+      "name": "delete_content",
+      "parameters": {
+        "properties": {
+          "content_id": {
+            "type": "integer"
+          },
+          "target": {
+            "enum": [
+              "question",
+              "pin",
+              "article"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "target",
+          "content_id"
+        ],
+        "type": "object"
+      }
+    },
+    "type": "function"
+  },
+  {
+    "function": {
+      "description": "从收藏夹移除内容（写操作）",
+      "name": "uncollect",
+      "parameters": {
+        "properties": {
+          "collection_id": {
+            "type": "integer"
+          },
+          "content_id": {
+            "type": "integer"
+          },
+          "content_type": {
+            "enum": [
+              "answer",
+              "article"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "content_id",
+          "collection_id"
+        ],
+        "type": "object"
+      }
+    },
+    "type": "function"
+  },
+  {
+    "function": {
+      "description": "删除自己发表的评论（写操作）",
+      "name": "delete_comment",
+      "parameters": {
+        "properties": {
+          "comment_id": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "comment_id"
+        ],
+        "type": "object"
+      }
+    },
+    "type": "function"
+  },
+  {
+    "function": {
+      "description": "打开 Markdown 编辑器（MarkText）让用户亲手撰写并发布内容。kind=answer 时需要 question_id；提问/想法/文章会自动从首行 `# 标题` 取标题。",
+      "name": "compose_publish",
+      "parameters": {
+        "properties": {
+          "kind": {
+            "enum": [
+              "question",
+              "pin",
+              "article",
+              "answer"
+            ],
+            "type": "string"
+          },
+          "question_id": {
+            "description": "kind=answer 时必填",
+            "type": "integer"
+          },
+          "title": {
+            "description": "可选，用户未写标题时使用",
+            "type": "string"
+          }
+        },
+        "required": [
+          "kind"
+        ],
+        "type": "object"
+      }
+    },
+    "type": "function"
+  },
+  {
+    "function": {
+      "description": "读取之前因过大而溢出的工具结果（用溢出提示里的路径），支持 offset/limit 分段",
+      "name": "read_spill",
+      "parameters": {
+        "properties": {
+          "limit": {
+            "description": "读取字符数，0 表示到结尾",
+            "type": "integer"
+          },
+          "offset": {
+            "description": "起始字符偏移",
+            "type": "integer"
+          },
+          "path": {
+            "description": "溢出文件的 locator 路径",
+            "type": "string"
+          }
+        },
+        "required": [
+          "path"
+        ],
+        "type": "object"
+      }
+    },
+    "type": "function"
+  },
+  {
+    "function": {
+      "description": "创建或更新任务清单（多步任务时用），每次传入完整列表；status 取值 pending/in_progress/completed",
+      "name": "todo_write",
+      "parameters": {
+        "properties": {
+          "todos": {
+            "items": {
+              "properties": {
+                "content": {
+                  "description": "任务描述",
+                  "type": "string"
+                },
+                "status": {
+                  "enum": [
+                    "pending",
+                    "in_progress",
+                    "completed"
+                  ],
+                  "type": "string"
+                }
+              },
+              "required": [
+                "content",
+                "status"
+              ],
+              "type": "object"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "todos"
+        ],
+        "type": "object"
+      }
+    },
+    "type": "function"
+  }
+]

@@ -1,0 +1,63 @@
+[project]
+name = "zhihu-cli"
+version = "0.17.3"
+description = "知乎命令行客户端：纯 Python 签名、扫码登录、读写与 Markdown 编辑器创作、自然语言 Agent 与 TUI。"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "tourist" }]
+keywords = ["zhihu", "cli", "知乎", "crawler", "agent", "tui"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Utilities",
+]
+
+dependencies = [
+    "typer>=0.12.3",
+    "rich>=13.7.1",
+    "httpx>=0.27.0",
+    "pydantic>=2.7.0",
+    "markdownify>=0.12.1",
+    "markdown-it-py>=3.0.0",
+    "qrcode>=7.4.2",
+    "pillow>=10.0.0",
+    "textual>=0.80.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.2.0", "ruff>=0.5.0"]
+
+[project.scripts]
+zhihu = "zhihu_cli.cli:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["zhihu_cli"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+# B008: Typer's API requires typer.Option/Argument calls in defaults.
+# PYI034: `Self` is only available on Python >= 3.11; project targets 3.10.
+ignore = ["B008", "PYI034"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = [
+    "integration: requires a valid login session and hits the real Zhihu API",
+]
+addopts = "-m 'not integration'"
